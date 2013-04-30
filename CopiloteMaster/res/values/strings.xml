@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Copilote Master</string>
+     <string name="times_title">Temps des spéciales</string>
+    <string name="chrono_title">Chronos</string>
+    <string name="navigation_title">Navigation</string>
+    <string name="horaire_title">Calcul horaire</string>
+    <string name="menu_settings">Settings</string>
+
+</resources>

@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <com.valohyd.copilotemaster.utils.Chronometer
+        android:id="@+id/chrono"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#dedede"
+        android:gravity="center"
+        android:text="Chronometer"
+        android:textSize="50sp" />
+
+    <Button
+        android:id="@+id/partielButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chrono"
+        android:text="Partiel" />
+
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/startChronoButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Start" />
+
+        <Button
+            android:id="@+id/stopChronoButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Stop" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/partielList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/buttonsLayout"
+        android:layout_below="@id/partielButton" >
+    </ListView>
+
+</RelativeLayout>
