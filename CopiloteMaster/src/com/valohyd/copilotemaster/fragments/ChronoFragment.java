@@ -28,6 +28,7 @@ public class ChronoFragment extends Fragment {
 	private Button partielButton, startButton, stopButton;
 	private Chronometer chrono;
 	private ListView partielList;
+	private long timeWhenStopped = 0;
 
 	ArrayList<String> partielValues = new ArrayList<String>();
 	ArrayAdapter<String> listAdapter;
@@ -54,19 +55,35 @@ public class ChronoFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				partielValues.clear();
-				listAdapter.notifyDataSetChanged();
-				chrono.setBase(SystemClock.elapsedRealtime());
+				if (startButton.getText().equals("Resume")) {
+					chrono.setBase(SystemClock.elapsedRealtime()
+							+ timeWhenStopped);
+				}
 				chrono.start();
-				startButton.setText("Reset");
+				startButton.setEnabled(false);
+				stopButton.setText("Stop");
+
 			}
 		});
 		stopButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				chrono.stop();
-				startButton.setText("Reset");
+				if (stopButton.getText().equals("Reset")) {
+					chrono.stop();
+					chrono.setBase(SystemClock.elapsedRealtime());
+					startButton.setText("Start");
+					startButton.setEnabled(true);
+					partielValues.clear();
+					listAdapter.notifyDataSetChanged();
+				} else {
+					timeWhenStopped = chrono.getBase()
+							- SystemClock.elapsedRealtime();
+					chrono.stop();
+					startButton.setEnabled(true);
+					startButton.setText("Resume");
+					stopButton.setText("Reset");
+				}
 			}
 		});
 
