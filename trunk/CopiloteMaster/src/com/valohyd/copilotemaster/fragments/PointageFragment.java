@@ -165,7 +165,7 @@ public class PointageFragment extends Fragment {
 
 			public void onFinish() {
 				remainingTime.setVisibility(View.GONE);
-				elapsedTime.setBase(SystemClock.elapsedRealtime()+new Date().getTime());
+				elapsedTime.setBase(SystemClock.elapsedRealtime()+60000);
 				elapsedTime.setVisibility(View.VISIBLE);
 				elapsedTime.start();
 			}

@@ -3,23 +3,25 @@ package com.valohyd.copilotemaster;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.valohyd.copilotemaster.fragments.ChronoFragment;
 import com.valohyd.copilotemaster.fragments.NavigationFragment;
 import com.valohyd.copilotemaster.fragments.PointageFragment;
 import com.valohyd.copilotemaster.fragments.TimeFragment;
 
-public class MainActivity extends FragmentActivity implements TabListener {
+public class MainActivity extends Activity implements TabListener {
 
 	// FRAGMENTS
 	PointageFragment pointageFragment;
 	ChronoFragment chronoFragment;
 	TimeFragment timeFragment;
 	NavigationFragment mapFragment;
+	private boolean doubleBackToExitPressedOnce=false;
 
 	// Fragment frag;
 
@@ -119,4 +121,22 @@ public class MainActivity extends FragmentActivity implements TabListener {
 			ft.hide(this.timeFragment);
 		}
 	}
+
+	/**
+	 * On gère ici le backPressed pour pouvoir prevenir l'utilisateur de la
+	 * sortie de l'application et pour gérer correctement la backStack de la vue
+	 * TyreSelector
+	 */
+	@Override
+	public void onBackPressed() {
+		if (doubleBackToExitPressedOnce) {
+			super.onBackPressed();
+			return;
+		}
+		this.doubleBackToExitPressedOnce = true;
+		Toast.makeText(this,
+				"Voulez-vous quitter ?\n(Appuyez encore une fois sur RETOUR)",
+				Toast.LENGTH_SHORT).show();
+	}
+
 }
