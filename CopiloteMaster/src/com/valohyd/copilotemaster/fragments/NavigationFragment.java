@@ -1,5 +1,7 @@
 package com.valohyd.copilotemaster.fragments;
 
+import java.util.ArrayList;
+
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,6 +37,8 @@ import com.valohyd.copilotemaster.R;
  */
 public class NavigationFragment extends Fragment implements
 		OnMyLocationChangeListener {
+	
+	RelativeLayout layoutButtons;
 
 	String[] poi_types = { "Parc fermé", "Parc Assistance", "Départ ES",
 			"Arrivée ES", "Divers" };
@@ -55,6 +60,8 @@ public class NavigationFragment extends Fragment implements
 	 */
 	GeoPoint myLocation;
 
+	private ArrayList<Marker> listOfPoints = new ArrayList<Marker>();
+
 	public static final String ARG_SECTION_NUMBER = "section_number";
 
 	@Override
@@ -65,6 +72,11 @@ public class NavigationFragment extends Fragment implements
 				false);
 		map = ((MapFragment) ((MainActivity) getActivity())
 				.getFragmentManager().findFragmentById(R.id.map)).getMap();
+		
+		layoutButtons = (RelativeLayout) mainView
+				.findViewById(R.id.layoutButtonsMap);
+		
+		layoutButtons.bringToFront();
 
 		map.setMyLocationEnabled(true);
 		map.setOnMyLocationChangeListener(this);
@@ -80,11 +92,12 @@ public class NavigationFragment extends Fragment implements
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						map.addMarker(new MarkerOptions()
+						Marker m = map.addMarker(new MarkerOptions()
 								.position(position)
 								.title(poi_types[which])
 								.icon(BitmapDescriptorFactory
 										.fromResource(poi_icons[which])));
+						listOfPoints.add(m);
 					}
 				});
 				builder.show();
@@ -122,20 +135,6 @@ public class NavigationFragment extends Fragment implements
 
 		// récupérer la map
 		return mainView;
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-//		try {
-//			Fragment fragment = ((MapFragment) ((MainActivity) getActivity())
-//					.getFragmentManager().findFragmentById(R.id.map));
-//			FragmentTransaction ft = ((MainActivity) getActivity())
-//					.getFragmentManager().beginTransaction();
-//			ft.remove(fragment);
-//			ft.commit();
-//		} catch (Exception e) {
-//		}
 	}
 
 	@Override
