@@ -1,8 +1,19 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/webView"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/layoutButtonsMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_alignParentTop="true" >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/radar_icon" />
+    </RelativeLayout>
 
     <fragment
         android:id="@+id/map"
@@ -10,4 +21,4 @@
         android:layout_height="match_parent"
         class="com.google.android.gms.maps.MapFragment" />
 
-</LinearLayout>
+</RelativeLayout>
