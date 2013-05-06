@@ -5,8 +5,13 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.valohyd.copilotemaster.fragments.ChronoFragment;
@@ -21,7 +26,9 @@ public class MainActivity extends Activity implements TabListener {
 	ChronoFragment chronoFragment;
 	TimeFragment timeFragment;
 	NavigationFragment mapFragment;
-	private boolean doubleBackToExitPressedOnce=false;
+	private boolean doubleBackToExitPressedOnce = false;
+
+	private static final int RESULT_SETTINGS = 1;
 
 	// Fragment frag;
 
@@ -62,9 +69,51 @@ public class MainActivity extends Activity implements TabListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+		getMenuInflater().inflate(R.menu.settings, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+
+		case R.id.menu_settings:
+			Intent i = new Intent(this, UserSettingActivity.class);
+			startActivityForResult(i, RESULT_SETTINGS);
+			break;
+
+		}
+
+		return true;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch (requestCode) {
+		case RESULT_SETTINGS:
+			showUserSettings();
+			break;
+
+		}
+
+	}
+
+	private void showUserSettings() {
+		SharedPreferences sharedPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("\n Username: "
+				+ sharedPrefs.getString("prefUsername", "NULL"));
+
+		builder.append("\n Contacts: "
+				+ sharedPrefs.getString("prefContacts", "NULL"));
+
+		Log.d("SETTINGS", builder.toString());
+
 	}
 
 	@Override
