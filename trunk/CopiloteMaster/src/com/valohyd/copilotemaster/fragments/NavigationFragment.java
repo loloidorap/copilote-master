@@ -5,12 +5,14 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -18,7 +20,6 @@ import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Contacts;
 import android.provider.Contacts.People;
 import android.telephony.SmsManager;
@@ -61,6 +62,8 @@ public class NavigationFragment extends Fragment implements
 	public static final int DEFAULT_SPEED_LIMIT = 80;
 	public static final int HOUR_MULTIPLIER = 3600;
 	public static final double UNIT_MULTIPLIERS[] = { 0.001, 0.000621371192 };
+	public static final String TAG_PREF_NAME = "contacts_name";
+	public static final String TAG_PREF_NUMBER = "contacts_number";
 
 	LinearLayout layoutButtons;
 
@@ -68,12 +71,14 @@ public class NavigationFragment extends Fragment implements
 
 	ImageButton radarButton;
 
+	AlertDialog.Builder contact_dialog;
+
 	String[] poi_types = { "Parc fermé", "Parc Assistance", "Départ ES",
 			"Arrivée ES", "Divers" };
 
-	HashMap<String, String> contacts = new HashMap<String, String>();
-
-	HashMap<String, String> selected_numbers = new HashMap<String, String>();
+	ArrayList<String> name = new ArrayList<String>(),
+			numbers = new ArrayList<String>();
+	HashMap<String, String> selected_contacts = new HashMap<String, String>();
 
 	int[] poi_icons = { R.drawable.parc_ferme_icon, R.drawable.assistance_icon,
 			R.drawable.start_icon, R.drawable.end_icon, R.drawable.poi_icon };
@@ -108,8 +113,10 @@ public class NavigationFragment extends Fragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.navigation_layout, container,
 				false);
-		sharedPrefs = PreferenceManager
-				.getDefaultSharedPreferences(getActivity());
+		sharedPrefs = getActivity().getSharedPreferences("blop",
+				Activity.MODE_PRIVATE);
+
+		initContacts();
 
 		map = ((MapFragment) ((MainActivity) getActivity())
 				.getFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -125,7 +132,53 @@ public class NavigationFragment extends Fragment implements
 
 			@Override
 			public void onClick(View v) {
-				readcontact();
+				contact_dialog = new AlertDialog.Builder(getActivity());
+				contact_dialog.setTitle("Choisissez des contacts");
+				contact_dialog.setMultiChoiceItems(
+						name.toArray(new CharSequence[name.size()]), null,
+						new OnMultiChoiceClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which, boolean isChecked) {
+								selected_contacts.put(name.get(which)
+										.toString(), numbers.get(which)
+										.toString());
+							}
+						});
+
+				contact_dialog.setNegativeButton("Supprimer la selection",
+						new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								
+							}
+						});
+
+				contact_dialog.setPositiveButton("Partager le radar !",
+						new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								for (String nb : selected_contacts.values()) {
+									sendSms(nb, "radar sur la liaison !");
+								}
+							}
+						});
+				contact_dialog.setNeutralButton("Ajouter un contact",
+						new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								readcontact();
+							}
+						});
+				contact_dialog.show();
+				contact_dialog.setCancelable(true);
 			}
 		});
 
@@ -190,6 +243,16 @@ public class NavigationFragment extends Fragment implements
 		return mainView;
 	}
 
+	private void initContacts() {
+		Set<String> contact_init = sharedPrefs
+				.getStringSet(TAG_PREF_NAME, null);
+		Set<String> contact_nb_init = sharedPrefs.getStringSet(TAG_PREF_NUMBER,
+				null);
+
+		name = new ArrayList<String>(contact_init);
+		numbers = new ArrayList<String>(contact_nb_init);
+	}
+
 	private void sendSms(String number, String message) {
 		try {
 			SmsManager smsManager = SmsManager.getDefault();
@@ -241,28 +304,39 @@ public class NavigationFragment extends Fragment implements
 				Cursor c = getActivity().managedQuery(contactData, null, null,
 						null, null);
 				if (c.moveToFirst()) {
-					String name = c.getString(c
+					String nom = c.getString(c
 							.getColumnIndexOrThrow(People.NAME));
-					String number = c.getString(c
+					String num = c.getString(c
 							.getColumnIndexOrThrow(People.NUMBER));
-					selected_numbers.put(name, number);
-					SharedPreferences preferences = getActivity()
-							.getPreferences(Activity.MODE_PRIVATE);
-					Editor edit = preferences.edit();
+					name.add(nom);
+					numbers.add(num);
+					Editor edit = sharedPrefs.edit();
 					edit.putStringSet("contacts_name",
-							selected_numbers.keySet());
+							new HashSet<String>(name));
 					edit.putStringSet("contacts_number", new HashSet<String>(
-							selected_numbers.values()));
+							numbers));
 					edit.commit();
 					Log.d("SETTINGS",
 							"AJOUT DE contact"
-									+ preferences.getStringSet("contacts_name",
+									+ sharedPrefs.getStringSet(TAG_PREF_NAME,
 											null));
 					Log.d("SETTINGS",
 							"AJOUT DE contact"
-									+ preferences.getStringSet(
-											"contacts_number", null));
-					// sendSms(number, "radar sur la liaison !");
+									+ sharedPrefs.getStringSet(TAG_PREF_NUMBER,
+											null));
+					contact_dialog.setMultiChoiceItems(
+							name.toArray(new CharSequence[name.size()]), null,
+							new OnMultiChoiceClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which, boolean isChecked) {
+									selected_contacts.put(name.get(which)
+											.toString(), numbers.get(which)
+											.toString());
+								}
+							});
+					contact_dialog.show();
 				}
 			}
 			break;
