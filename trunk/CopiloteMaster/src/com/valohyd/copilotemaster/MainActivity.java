@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.valohyd.copilotemaster.fragments.ChronoFragment;
+import com.valohyd.copilotemaster.fragments.ContactFragment;
 import com.valohyd.copilotemaster.fragments.NavigationFragment;
 import com.valohyd.copilotemaster.fragments.PointageFragment;
 import com.valohyd.copilotemaster.fragments.TimeFragment;
@@ -26,6 +27,7 @@ public class MainActivity extends Activity implements TabListener {
 	ChronoFragment chronoFragment;
 	TimeFragment timeFragment;
 	NavigationFragment mapFragment;
+	ContactFragment contactFragment;
 	private boolean doubleBackToExitPressedOnce = false;
 
 	private static final int RESULT_SETTINGS = 1;
@@ -62,6 +64,10 @@ public class MainActivity extends Activity implements TabListener {
 		getActionBar().addTab(tab);
 
 		tab = getActionBar().newTab().setText(R.string.times_title);
+		tab.setTabListener(this);
+		getActionBar().addTab(tab);
+		
+		tab = getActionBar().newTab().setText(R.string.contacts_title);
 		tab.setTabListener(this);
 		getActionBar().addTab(tab);
 
@@ -104,6 +110,13 @@ public class MainActivity extends Activity implements TabListener {
 			}
 			ft.show(this.timeFragment);
 		}
+		if (tab.getPosition() == 4) {
+			if (this.contactFragment == null) {
+				this.contactFragment = new ContactFragment();
+				ft.add(R.id.container, this.contactFragment, null);
+			}
+			ft.show(this.contactFragment);
+		}
 	}
 
 	@Override
@@ -119,6 +132,9 @@ public class MainActivity extends Activity implements TabListener {
 		}
 		if (tab.getPosition() == 3) {
 			ft.hide(this.timeFragment);
+		}
+		if (tab.getPosition() == 4) {
+			ft.hide(this.contactFragment);
 		}
 	}
 

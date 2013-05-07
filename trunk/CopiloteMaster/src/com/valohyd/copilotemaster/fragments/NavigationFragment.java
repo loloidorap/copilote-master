@@ -1,29 +1,20 @@
 package com.valohyd.copilotemaster.fragments;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Contacts;
-import android.provider.Contacts.People;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
@@ -40,7 +30,6 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -67,18 +56,17 @@ public class NavigationFragment extends Fragment implements
 
 	LinearLayout layoutButtons;
 
-	SharedPreferences sharedPrefs;
-
 	ImageButton radarButton;
 
+	SharedPreferences sharedPrefs;
+	Editor edit;
 	AlertDialog.Builder contact_dialog;
+	private ArrayList<String> name;
+	private ArrayList<String> numbers;
+	private ArrayList<String> selected_contacts;
 
 	String[] poi_types = { "Parc fermé", "Parc Assistance", "Départ ES",
 			"Arrivée ES", "Divers" };
-
-	ArrayList<String> name = new ArrayList<String>(),
-			numbers = new ArrayList<String>();
-	HashMap<String, String> selected_contacts = new HashMap<String, String>();
 
 	int[] poi_icons = { R.drawable.parc_ferme_icon, R.drawable.assistance_icon,
 			R.drawable.start_icon, R.drawable.end_icon, R.drawable.poi_icon };
@@ -100,12 +88,8 @@ public class NavigationFragment extends Fragment implements
 
 	private ArrayList<Marker> listOfPoints = new ArrayList<Marker>();
 
-	private final int PICK_CONTACT = 69;
-
-	private TextView speedText;
-	private double speed; // vitesse
-
-	public static final String ARG_SECTION_NUMBER = "section_number";
+	private TextView speedText, accuracyText;
+	private double speed, accuracy; // vitesse,precision
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,10 +97,11 @@ public class NavigationFragment extends Fragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.navigation_layout, container,
 				false);
+
 		sharedPrefs = getActivity().getSharedPreferences("blop",
 				Activity.MODE_PRIVATE);
-
-		initContacts();
+		edit = sharedPrefs.edit();
+		selected_contacts = new ArrayList<String>();
 
 		map = ((MapFragment) ((MainActivity) getActivity())
 				.getFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -125,6 +110,7 @@ public class NavigationFragment extends Fragment implements
 				.findViewById(R.id.layoutButtonsMap);
 
 		speedText = (TextView) mainView.findViewById(R.id.speedTextMap);
+		accuracyText = (TextView) mainView.findViewById(R.id.accuracyTextMap);
 
 		radarButton = (ImageButton) mainView.findViewById(R.id.radarButtonMap);
 
@@ -132,6 +118,7 @@ public class NavigationFragment extends Fragment implements
 
 			@Override
 			public void onClick(View v) {
+				initContacts();
 				contact_dialog = new AlertDialog.Builder(getActivity());
 				contact_dialog.setTitle("Choisissez des contacts");
 				contact_dialog.setMultiChoiceItems(
@@ -141,19 +128,12 @@ public class NavigationFragment extends Fragment implements
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which, boolean isChecked) {
-								selected_contacts.put(name.get(which)
-										.toString(), numbers.get(which)
-										.toString());
-							}
-						});
-
-				contact_dialog.setNegativeButton("Supprimer la selection",
-						new OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								
+								if (isChecked)
+									selected_contacts.add(numbers.get(which)
+											.toString());
+								else
+									selected_contacts.remove(numbers.get(which)
+											.toString());
 							}
 						});
 
@@ -163,22 +143,47 @@ public class NavigationFragment extends Fragment implements
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								for (String nb : selected_contacts.values()) {
-									sendSms(nb, "radar sur la liaison !");
-								}
-							}
-						});
-				contact_dialog.setNeutralButton("Ajouter un contact",
-						new OnClickListener() {
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										getActivity());
+								builder.setTitle("Envoi de sms");
+								builder.setMessage("Envoi du radar au numéros suivants : "
+										+ selected_contacts + " ?");
+								builder.setPositiveButton(android.R.string.ok,
+										new OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								readcontact();
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+												for (String nb : selected_contacts) {
+													sendSms(nb,
+															"radar sur la liaison !");
+												}
+												selected_contacts = new ArrayList<String>(); // on
+																								// vide
+																								// la
+																								// selection
+											}
+										});
+								builder.setNegativeButton(
+										android.R.string.cancel, null);
+								builder.show();
+
 							}
 						});
+
 				contact_dialog.show();
 				contact_dialog.setCancelable(true);
+				contact_dialog.setOnCancelListener(new OnCancelListener() {
+
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						selected_contacts = new ArrayList<String>();// on
+						// vide
+						// la
+						// selection
+					}
+				});
 			}
 		});
 
@@ -251,6 +256,7 @@ public class NavigationFragment extends Fragment implements
 
 		name = new ArrayList<String>(contact_init);
 		numbers = new ArrayList<String>(contact_nb_init);
+		selected_contacts = new ArrayList<String>();// on vide la selection
 	}
 
 	private void sendSms(String number, String message) {
@@ -268,87 +274,31 @@ public class NavigationFragment extends Fragment implements
 	}
 
 	@Override
-	public void onMyLocationChange(Location lastKnownLocation) {
-		speed = lastKnownLocation.getSpeed();
+	public void onMyLocationChange(Location location) {
+		// Getting latitude of the current location
+		double latitude = location.getLatitude();
 
-		String speedString = "" + roundDecimal(convertSpeed(speed), 2);
-		speedText.setText(speedString);
-		CameraUpdate myLoc = CameraUpdateFactory
-				.newCameraPosition(new CameraPosition.Builder()
-						.target(new LatLng(lastKnownLocation.getLatitude(),
-								lastKnownLocation.getLongitude())).zoom(6)
-						.build());
-		map.moveCamera(myLoc);
-		map.setOnMyLocationChangeListener(null);
+		// Getting longitude of the current location
+		double longitude = location.getLongitude();
+
+		// Creating a LatLng object for the current location
+		LatLng latLng = new LatLng(latitude, longitude);
+
+		// Showing the current location in Google Map
+		map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+		// Zoom in the Google Map
+		//map.animateCamera(CameraUpdateFactory.zoomTo(4));
+
+		speed = location.getSpeed();
+		accuracy = location.getAccuracy();
+		String speedString = "" + Math.round(convertSpeed(speed));
+		speedText.setText("" + speedString);
+		accuracyText.setText("" + accuracy);
 	}
 
 	private double convertSpeed(double speed) {
 		return ((speed * HOUR_MULTIPLIER) * UNIT_MULTIPLIERS[INDEX_KM]);
 	}
 
-	public void readcontact() {
-		Intent intent = new Intent(Intent.ACTION_PICK,
-				Contacts.Phones.CONTENT_URI);
-		startActivityForResult(intent, PICK_CONTACT);
-
-	}
-
-	@Override
-	public void onActivityResult(int reqCode, int resultCode, Intent data) {
-		super.onActivityResult(reqCode, resultCode, data);
-
-		switch (reqCode) {
-		case (PICK_CONTACT):
-			if (resultCode == Activity.RESULT_OK) {
-				Uri contactData = data.getData();
-				Cursor c = getActivity().managedQuery(contactData, null, null,
-						null, null);
-				if (c.moveToFirst()) {
-					String nom = c.getString(c
-							.getColumnIndexOrThrow(People.NAME));
-					String num = c.getString(c
-							.getColumnIndexOrThrow(People.NUMBER));
-					name.add(nom);
-					numbers.add(num);
-					Editor edit = sharedPrefs.edit();
-					edit.putStringSet("contacts_name",
-							new HashSet<String>(name));
-					edit.putStringSet("contacts_number", new HashSet<String>(
-							numbers));
-					edit.commit();
-					Log.d("SETTINGS",
-							"AJOUT DE contact"
-									+ sharedPrefs.getStringSet(TAG_PREF_NAME,
-											null));
-					Log.d("SETTINGS",
-							"AJOUT DE contact"
-									+ sharedPrefs.getStringSet(TAG_PREF_NUMBER,
-											null));
-					contact_dialog.setMultiChoiceItems(
-							name.toArray(new CharSequence[name.size()]), null,
-							new OnMultiChoiceClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which, boolean isChecked) {
-									selected_contacts.put(name.get(which)
-											.toString(), numbers.get(which)
-											.toString());
-								}
-							});
-					contact_dialog.show();
-				}
-			}
-			break;
-		}
-	}
-
-	private double roundDecimal(double value, final int decimalPlace) {
-		BigDecimal bd = new BigDecimal(value);
-
-		bd = bd.setScale(decimalPlace, RoundingMode.HALF_UP);
-		value = bd.doubleValue();
-
-		return value;
-	}
 }
