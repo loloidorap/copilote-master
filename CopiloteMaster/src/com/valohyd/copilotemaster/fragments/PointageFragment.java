@@ -60,6 +60,7 @@ public class PointageFragment extends Fragment {
 				.findViewById(R.id.pointageDialogButton);
 		impartiTimeButton = (Button) mainView
 				.findViewById(R.id.impartiTimeDialogButton);
+		impartiTimeButton.setEnabled(false);
 
 		pointageDialogButton.setOnClickListener(new OnClickListener() {
 
@@ -93,6 +94,10 @@ public class PointageFragment extends Fragment {
 						String newString = new SimpleDateFormat("HH:mm")
 								.format(pointageDate);
 						pointageTime.setText(newString);
+						if (impartiDate!=null)
+							setRemainingTime();
+						else
+							impartiTimeButton.setEnabled(true);
 
 					}
 				}, now.getHours(), now.getMinutes(), true);
@@ -134,7 +139,7 @@ public class PointageFragment extends Fragment {
 
 		long futurems = finalDate.getTime();
 		long nowms = new Date().getTime();
-		long remaining = futurems - nowms;
+		final long remaining = futurems - nowms;
 		if (remainTimer != null)
 			remainTimer.cancel();
 		if (elapsedTime.getVisibility() == View.VISIBLE) {
@@ -165,7 +170,7 @@ public class PointageFragment extends Fragment {
 
 			public void onFinish() {
 				remainingTime.setVisibility(View.GONE);
-				elapsedTime.setBase(SystemClock.elapsedRealtime()+60000);
+				elapsedTime.setBase(SystemClock.elapsedRealtime() + remaining);
 				elapsedTime.setVisibility(View.VISIBLE);
 				elapsedTime.start();
 			}
