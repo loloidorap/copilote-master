@@ -6,9 +6,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -39,6 +42,10 @@ public class PointageFragment extends Fragment {
 	private Chronometer elapsedTime;
 	private Date pointageDate, impartiDate, finalDate;
 	private SimpleDateFormat minuteFormat = new SimpleDateFormat("HH:mm");
+	SharedPreferences sharedPrefs;
+	Editor edit;
+	private final String TAG_PREF_POINTAGE = "pointage_time",
+			TAG_PREF_IMPARTI = "imparti_time";
 
 	public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -48,6 +55,10 @@ public class PointageFragment extends Fragment {
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.pointage_layout, container, false);
+
+		sharedPrefs = getActivity().getSharedPreferences("blop",
+				Activity.MODE_PRIVATE);
+		edit = sharedPrefs.edit();
 
 		// TEXTVIEWS
 		pointageTime = (TextView) mainView.findViewById(R.id.pointageTime);
@@ -94,10 +105,12 @@ public class PointageFragment extends Fragment {
 						String newString = new SimpleDateFormat("HH:mm")
 								.format(pointageDate);
 						pointageTime.setText(newString);
-						if (impartiDate!=null)
+						if (impartiDate != null)
 							setRemainingTime();
 						else
 							impartiTimeButton.setEnabled(true);
+
+						savePreferences();
 
 					}
 				}, now.getHours(), now.getMinutes(), true);
@@ -114,6 +127,7 @@ public class PointageFragment extends Fragment {
 									.format(impartiDate);
 							impartiTime.setText(newString);
 							setRemainingTime();
+							savePreferences();
 						} catch (ParseException e) {
 							e.printStackTrace();
 						}
@@ -124,6 +138,9 @@ public class PointageFragment extends Fragment {
 		// CHRONOMETER
 		elapsedTime = (Chronometer) mainView
 				.findViewById(R.id.chronometerElapsed);
+
+		// CHARGEMENT DES PREFS
+		loadPreferences();
 		return mainView;
 	}
 
@@ -175,6 +192,38 @@ public class PointageFragment extends Fragment {
 				elapsedTime.start();
 			}
 		}.start();
+	}
 
+	private void loadPreferences() {
+		String pointage = sharedPrefs.getString(TAG_PREF_POINTAGE, "NC");
+		String imparti = sharedPrefs.getString(TAG_PREF_IMPARTI, "NC");
+		pointageTime.setText(pointage);
+		impartiTime.setText(imparti);
+
+		if (!pointage.equals("NC")) {
+			try {
+				pointageDate = new SimpleDateFormat("HH:mm").parse(pointage);
+				impartiTimeButton.setEnabled(true);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		if (!imparti.equals("NC")) {
+			try {
+				impartiDate = new SimpleDateFormat("HH:mm").parse(imparti);
+				setRemainingTime();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void savePreferences() {
+		edit.putString(TAG_PREF_POINTAGE, pointageTime.getText().toString());
+		edit.putString(TAG_PREF_IMPARTI, impartiTime.getText().toString());
+		edit.commit();
 	}
 }
