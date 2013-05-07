@@ -15,6 +15,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -203,6 +204,11 @@ public class PointageFragment extends Fragment {
 		if (!pointage.equals("NC")) {
 			try {
 				pointageDate = new SimpleDateFormat("HH:mm").parse(pointage);
+				Date d = new Date();
+				pointageDate.setYear(d.getYear());
+				pointageDate.setMonth(d.getMonth());
+				pointageDate.setDate(d.getDate());
+				Log.d("DATE",pointageDate.toGMTString());
 				impartiTimeButton.setEnabled(true);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block

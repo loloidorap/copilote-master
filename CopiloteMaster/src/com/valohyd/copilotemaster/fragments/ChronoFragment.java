@@ -29,11 +29,10 @@ public class ChronoFragment extends Fragment {
 	private Chronometer chrono;
 	private ListView partielList;
 	private long timeWhenStopped = 0;
+	private boolean firstTime = true;
 
 	ArrayList<String> partielValues = new ArrayList<String>();
 	ArrayAdapter<String> listAdapter;
-
-	public static final String ARG_SECTION_NUMBER = "section_number";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,10 +58,12 @@ public class ChronoFragment extends Fragment {
 					chrono.setBase(SystemClock.elapsedRealtime()
 							+ timeWhenStopped);
 				}
+				if (firstTime)
+					chrono.setBase(SystemClock.elapsedRealtime());
 				chrono.start();
 				startButton.setEnabled(false);
 				stopButton.setText("Stop");
-
+				firstTime = false;
 			}
 		});
 		stopButton.setOnClickListener(new OnClickListener() {
