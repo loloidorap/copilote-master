@@ -1,17 +1,27 @@
 package com.valohyd.copilotemaster.fragments;
 
+import java.util.HashSet;
+
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
+import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
 
 import com.valohyd.copilotemaster.R;
@@ -28,24 +38,60 @@ public class TimeFragment extends Fragment {
 	private WebView web;
 	private Bundle etatSauvegarde;
 	private boolean dejaCharge = false;
-
-	public static final String ARG_SECTION_NUMBER = "section_number";
+	private String home_url;
+	SharedPreferences sharedPrefs;
+	Editor edit;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.web_layout, container, false);
+
+		sharedPrefs = getActivity().getSharedPreferences("blop",
+				Activity.MODE_PRIVATE);
+		edit = sharedPrefs.edit();
+		home_url = sharedPrefs.getString("home_url", "http://www.ffsa.org");
 		// récupérer la web view
 		web = (WebView) mainView.findViewById(R.id.webView);
 
 		if (web != null) {
 			if (!dejaCharge) {
 				// charger la page
-				web.loadUrl("http://www.ffsa.org");
+				web.loadUrl(home_url);
 			} else if (etatSauvegarde != null) {
 				web.restoreState(etatSauvegarde);
 			}
+			web.setOnLongClickListener(new OnLongClickListener() {
+
+				@Override
+				public boolean onLongClick(View v) {
+					final WebView.HitTestResult hr = ((WebView) v)
+							.getHitTestResult();
+					if (hr != null
+							&& hr.getType() == HitTestResult.SRC_ANCHOR_TYPE) {
+						AlertDialog.Builder builder = new AlertDialog.Builder(
+								getActivity());
+						builder.setTitle("Changer page d'accueil");
+						builder.setMessage("Voulez-vous remplacer la page d'accueil par : "
+								+ hr.getExtra() + " ?");
+						builder.setPositiveButton(android.R.string.ok,
+								new OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										home_url = hr.getExtra();
+										savePreferences();
+									}
+								});
+						builder.setNegativeButton(android.R.string.cancel, null);
+						builder.setCancelable(true);
+						builder.show();
+					}
+					return false;
+				}
+			});
 			// paramétrer la page
 			web.getSettings().setJavaScriptEnabled(true);
 			web.getSettings().setPluginState(PluginState.ON);
@@ -104,5 +150,10 @@ public class TimeFragment extends Fragment {
 			return super.shouldOverrideUrlLoading(view, url);
 		}
 
+	}
+
+	private void savePreferences() {
+		edit.putString("home_url", home_url);
+		edit.commit();
 	}
 }

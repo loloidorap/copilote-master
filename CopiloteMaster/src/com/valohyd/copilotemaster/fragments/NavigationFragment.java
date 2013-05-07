@@ -59,7 +59,7 @@ public class NavigationFragment extends Fragment implements
 	ImageButton radarButton;
 
 	SharedPreferences sharedPrefs;
-	Editor edit;
+
 	AlertDialog.Builder contact_dialog;
 	private ArrayList<String> name;
 	private ArrayList<String> numbers;
@@ -100,7 +100,7 @@ public class NavigationFragment extends Fragment implements
 
 		sharedPrefs = getActivity().getSharedPreferences("blop",
 				Activity.MODE_PRIVATE);
-		edit = sharedPrefs.edit();
+
 		selected_contacts = new ArrayList<String>();
 
 		map = ((MapFragment) ((MainActivity) getActivity())
@@ -288,7 +288,7 @@ public class NavigationFragment extends Fragment implements
 		map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
 		// Zoom in the Google Map
-		//map.animateCamera(CameraUpdateFactory.zoomTo(4));
+		// map.animateCamera(CameraUpdateFactory.zoomTo(4));
 
 		speed = location.getSpeed();
 		accuracy = location.getAccuracy();
