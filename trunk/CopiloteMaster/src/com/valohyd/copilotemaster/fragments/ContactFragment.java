@@ -1,7 +1,6 @@
 package com.valohyd.copilotemaster.fragments;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import android.app.Activity;
@@ -36,8 +35,7 @@ import com.valohyd.copilotemaster.utils.MultiSelectionAdapter;
  */
 public class ContactFragment extends Fragment {
 
-	public static final String TAG_PREF_NAME = "contacts_name";
-	public static final String TAG_PREF_NUMBER = "contacts_number";
+	public static final String TAG_PREF_CONTACT = "contacts";
 
 	LinearLayout layoutButtons;
 
@@ -46,7 +44,7 @@ public class ContactFragment extends Fragment {
 
 	MultiSelectionAdapter<String> mAdapter;
 
-	HashMap<String, String> contacts = new HashMap<String, String>();
+	ArrayList<String> contacts = new ArrayList<String>();
 
 	private final int PICK_CONTACT = 69;
 
@@ -111,43 +109,39 @@ public class ContactFragment extends Fragment {
 
 	private void initContacts() {
 		ArrayList<String> contact_init = new ArrayList<String>(
-				sharedPrefs.getStringSet(TAG_PREF_NAME, null));
-		ArrayList<String> contact_nb_init = new ArrayList<String>(
-				sharedPrefs.getStringSet(TAG_PREF_NUMBER, null));
+				sharedPrefs.getStringSet(TAG_PREF_CONTACT, new HashSet<String>()));
 
-		for (int i = 0; i < contact_init.size(); i++) {
-			contacts.put(contact_init.get(i), contact_nb_init.get(i));
+		for (String s : contact_init) {
+			String[] contact = s.split(":");
+			contacts.add(contact[0]+":"+contact[1]);
 		}
 	}
 
-	private void removeContact(String name) {
-		if (contacts.containsKey(name)) {
-			contacts.remove(name);
+	private void removeContact(String contact) {
+		if (contacts.contains(contact)) {
+			contacts.remove(contact);
 			savePreferences();
-			Toast.makeText(getActivity(), "Contact supprimé : " + name,
+			Toast.makeText(getActivity(), "Contact supprimé : " + contact,
 					Toast.LENGTH_SHORT).show();
-			Log.d("CONTACTS",contacts.toString());
+			Log.d("CONTACTS", contacts.toString());
 		}
 	}
 
 	private void addContact(String name, String number) {
-		if (contacts.containsKey(name)) {
+		if (contacts.contains(name+":"+number)) {
 			Toast.makeText(getActivity(), "Contact existant !",
 					Toast.LENGTH_SHORT).show();
 		} else {
-			contacts.put(name, number);
+			contacts.add(name+":"+number);
 			savePreferences();
 			Toast.makeText(getActivity(), "Contact " + name + " ajouté !",
 					Toast.LENGTH_SHORT).show();
-			Log.d("CONTACTS",contacts.toString());
+			Log.d("CONTACTS", contacts.toString());
 		}
 	}
 
 	private void savePreferences() {
-		edit.putStringSet("contacts_name",
-				new HashSet<String>(contacts.keySet()));
-		edit.putStringSet("contacts_number",
-				new HashSet<String>(contacts.values()));
+		edit.putStringSet("contacts", new HashSet<String>(contacts));
 		edit.commit();
 	}
 

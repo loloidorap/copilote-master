@@ -1,6 +1,7 @@
 package com.valohyd.copilotemaster.fragments;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 import android.app.Activity;
@@ -11,7 +12,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -51,8 +51,7 @@ public class NavigationFragment extends Fragment implements
 	public static final int DEFAULT_SPEED_LIMIT = 80;
 	public static final int HOUR_MULTIPLIER = 3600;
 	public static final double UNIT_MULTIPLIERS[] = { 0.001, 0.000621371192 };
-	public static final String TAG_PREF_NAME = "contacts_name";
-	public static final String TAG_PREF_NUMBER = "contacts_number";
+	public static final String TAG_PREF_CONTACT = "contacts";
 
 	LinearLayout layoutButtons;
 
@@ -61,8 +60,7 @@ public class NavigationFragment extends Fragment implements
 	SharedPreferences sharedPrefs;
 
 	AlertDialog.Builder contact_dialog;
-	private ArrayList<String> name;
-	private ArrayList<String> numbers;
+	private ArrayList<String> contacts;
 	private ArrayList<String> selected_contacts;
 
 	String[] poi_types = { "Parc fermé", "Parc Assistance", "Départ ES",
@@ -122,18 +120,18 @@ public class NavigationFragment extends Fragment implements
 				contact_dialog = new AlertDialog.Builder(getActivity());
 				contact_dialog.setTitle("Choisissez des contacts");
 				contact_dialog.setMultiChoiceItems(
-						name.toArray(new CharSequence[name.size()]), null,
-						new OnMultiChoiceClickListener() {
+						contacts.toArray(new CharSequence[contacts.size()]),
+						null, new OnMultiChoiceClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which, boolean isChecked) {
 								if (isChecked)
-									selected_contacts.add(numbers.get(which)
+									selected_contacts.add(contacts.get(which)
 											.toString());
 								else
-									selected_contacts.remove(numbers.get(which)
-											.toString());
+									selected_contacts.remove(contacts
+											.get(which).toString());
 							}
 						});
 
@@ -156,7 +154,7 @@ public class NavigationFragment extends Fragment implements
 													DialogInterface dialog,
 													int which) {
 												for (String nb : selected_contacts) {
-													sendSms(nb,
+													sendSms(nb.split(":")[1],
 															"radar sur la liaison !");
 												}
 												selected_contacts = new ArrayList<String>(); // on
@@ -249,13 +247,10 @@ public class NavigationFragment extends Fragment implements
 	}
 
 	private void initContacts() {
-		Set<String> contact_init = sharedPrefs
-				.getStringSet(TAG_PREF_NAME, null);
-		Set<String> contact_nb_init = sharedPrefs.getStringSet(TAG_PREF_NUMBER,
-				null);
+		Set<String> contact_init = sharedPrefs.getStringSet(TAG_PREF_CONTACT,
+				new HashSet<String>());
 
-		name = new ArrayList<String>(contact_init);
-		numbers = new ArrayList<String>(contact_nb_init);
+		contacts = new ArrayList<String>(contact_init);
 		selected_contacts = new ArrayList<String>();// on vide la selection
 	}
 
@@ -291,7 +286,7 @@ public class NavigationFragment extends Fragment implements
 		// map.animateCamera(CameraUpdateFactory.zoomTo(4));
 
 		speed = location.getSpeed();
-		accuracy = location.getAccuracy();
+		accuracy = Math.round(location.getAccuracy());
 		String speedString = "" + Math.round(convertSpeed(speed));
 		speedText.setText("" + speedString);
 		accuracyText.setText("" + accuracy);
