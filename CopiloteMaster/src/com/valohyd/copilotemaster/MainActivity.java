@@ -1,26 +1,29 @@
 package com.valohyd.copilotemaster;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.ActionBar.TabListener;
 import android.app.Activity;
-import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar.TabListener;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.valohyd.copilotemaster.fragments.ChronoFragment;
 import com.valohyd.copilotemaster.fragments.ContactFragment;
 import com.valohyd.copilotemaster.fragments.NavigationFragment;
 import com.valohyd.copilotemaster.fragments.PointageFragment;
 import com.valohyd.copilotemaster.fragments.TimeFragment;
 
-public class MainActivity extends Activity implements TabListener {
+
+
+public class MainActivity extends SherlockFragmentActivity implements TabListener {
 
 	// FRAGMENTS
 	PointageFragment pointageFragment;
@@ -29,8 +32,6 @@ public class MainActivity extends Activity implements TabListener {
 	NavigationFragment mapFragment;
 	ContactFragment contactFragment;
 	private boolean doubleBackToExitPressedOnce = false;
-
-	private static final int RESULT_SETTINGS = 1;
 
 	// Fragment frag;
 
@@ -48,28 +49,28 @@ public class MainActivity extends Activity implements TabListener {
 	 * Permet de créer la barre des Tabs
 	 */
 	private void createTabs() {
-		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		ActionBar.Tab tab = getActionBar().newTab().setText(
+		ActionBar.Tab tab = getSupportActionBar().newTab().setText(
 				R.string.horaire_title);
 		tab.setTabListener(this);
-		getActionBar().addTab(tab);
+		getSupportActionBar().addTab(tab);
 
-		tab = getActionBar().newTab().setText(R.string.navigation_title);
+		tab = getSupportActionBar().newTab().setText(R.string.navigation_title);
 		tab.setTabListener(this);
-		getActionBar().addTab(tab);
+		getSupportActionBar().addTab(tab);
 
-		tab = getActionBar().newTab().setText(R.string.chrono_title);
+		tab = getSupportActionBar().newTab().setText(R.string.chrono_title);
 		tab.setTabListener(this);
-		getActionBar().addTab(tab);
+		getSupportActionBar().addTab(tab);
 
-		tab = getActionBar().newTab().setText(R.string.times_title);
+		tab = getSupportActionBar().newTab().setText(R.string.times_title);
 		tab.setTabListener(this);
-		getActionBar().addTab(tab);
-		
-		tab = getActionBar().newTab().setText(R.string.contacts_title);
+		getSupportActionBar().addTab(tab);
+
+		tab = getSupportActionBar().newTab().setText(R.string.contacts_title);
 		tab.setTabListener(this);
-		getActionBar().addTab(tab);
+		getSupportActionBar().addTab(tab);
 
 	}
 
@@ -153,6 +154,42 @@ public class MainActivity extends Activity implements TabListener {
 		Toast.makeText(this,
 				"Voulez-vous quitter ?\n(Appuyez encore une fois sur RETOUR)",
 				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.settings, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		case R.id.raz_pref:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("RAZ données");
+			builder.setMessage("Etes-vous sûr de vouloir supprimer les données ?");
+			builder.setPositiveButton(android.R.string.ok,
+					new OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							getSharedPreferences("blop", Activity.MODE_PRIVATE)
+									.edit().clear().commit();
+							Toast.makeText(MainActivity.this,
+									"Données supprimées !", Toast.LENGTH_SHORT)
+									.show();
+						}
+					});
+			builder.setNegativeButton(android.R.string.no, null);
+			builder.show();
+			builder.setCancelable(true);
+			break;
+		}
+		return true;
 	}
 
 }
