@@ -4,13 +4,12 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true" >
 
-    <TextClock
+    <DigitalClock
         android:id="@+id/digitalClock1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#264382"
-        android:format24Hour="kk:mm:ss"
         android:gravity="center"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"

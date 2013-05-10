@@ -1,13 +1,10 @@
 package com.valohyd.copilotemaster.fragments;
 
-import java.util.HashSet;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -24,21 +21,28 @@ import android.webkit.WebView;
 import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.valohyd.copilotemaster.R;
 
 /**
- * Classe representant le fragment de pointage
+ * Classe representant le fragment de la vue des temps
  * 
  * @author parodi
  * 
  */
-public class TimeFragment extends Fragment {
+public class TimeFragment extends SherlockFragment {
 
 	private View mainView;
-	private WebView web;
-	private Bundle etatSauvegarde;
-	private boolean dejaCharge = false;
-	private String home_url;
+
+	private WebView web; // WebView
+
+	private Bundle etatSauvegarde; // Sauvegarde de la vue
+
+	private boolean dejaCharge = false; // Etat de la page
+
+	private String home_url; // Page d'accueil
+
+	// PREFERENCES
 	SharedPreferences sharedPrefs;
 	Editor edit;
 
@@ -48,10 +52,20 @@ public class TimeFragment extends Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.web_layout, container, false);
 
+		// PREFERENCES
 		sharedPrefs = getActivity().getSharedPreferences("blop",
 				Activity.MODE_PRIVATE);
 		edit = sharedPrefs.edit();
-		home_url = sharedPrefs.getString("home_url", "http://www.ffsa.org");
+
+		home_url = sharedPrefs.getString("home_url", "http://www.ffsa.org"); // Chargement
+																				// de
+																				// la
+																				// page
+																				// d'accueil
+																				// au
+																				// travers
+																				// des
+																				// preferences
 		// récupérer la web view
 		web = (WebView) mainView.findViewById(R.id.webView);
 
@@ -62,12 +76,14 @@ public class TimeFragment extends Fragment {
 			} else if (etatSauvegarde != null) {
 				web.restoreState(etatSauvegarde);
 			}
+			// Action au clic long sur un lien
 			web.setOnLongClickListener(new OnLongClickListener() {
 
 				@Override
 				public boolean onLongClick(View v) {
 					final WebView.HitTestResult hr = ((WebView) v)
 							.getHitTestResult();
+					// Si on a bien cliqué sur un lien
 					if (hr != null
 							&& hr.getType() == HitTestResult.SRC_ANCHOR_TYPE) {
 						AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -81,7 +97,10 @@ public class TimeFragment extends Fragment {
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										home_url = hr.getExtra();
+										home_url = hr.getExtra(); // On remplace
+																	// la page
+																	// d'accueil
+																	// actuelle
 										savePreferences();
 									}
 								});
@@ -152,6 +171,9 @@ public class TimeFragment extends Fragment {
 
 	}
 
+	/**
+	 * Sauvegarde des préférences
+	 */
 	private void savePreferences() {
 		edit.putString("home_url", home_url);
 		edit.commit();

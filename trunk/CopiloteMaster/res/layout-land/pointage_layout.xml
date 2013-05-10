@@ -1,11 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="horizontal"
+    android:weightSum="2" >
 
     <LinearLayout
+        android:id="@+id/layoutPointageTop"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="horizontal"
         android:weightSum="2" >
 
@@ -17,7 +20,7 @@
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:background="#dedede"
                 android:gravity="center"
                 android:text="Heure de pointage"
@@ -36,7 +39,7 @@
             <Button
                 android:id="@+id/pointageDialogButton"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="100dp"
                 android:gravity="center"
                 android:text="Définir heure"
                 android:textSize="20sp" />
@@ -50,7 +53,7 @@
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:background="#dedede"
                 android:gravity="center"
                 android:text="Temps imparti"
@@ -69,59 +72,67 @@
             <Button
                 android:id="@+id/impartiTimeDialogButton"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="100dp"
                 android:gravity="center"
                 android:text="Définir temps imparti"
                 android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="#dedede"
-        android:gravity="center"
-        android:text="Heure d&apos;arrivée"
-        android:textSize="25sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/finishHour"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:text="NC"
-        android:textSize="30sp" />
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#dedede"
-        android:gravity="center"
-        android:text="Temps restants"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textFinishHour"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="#dedede"
+            android:gravity="center"
+            android:text="Heure d&apos;arrivée"
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/remainingTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-       android:layout_margin="10dp"
-        android:gravity="center"
-        android:text="NC"
-        android:textSize="30sp" />
+        <TextView
+            android:id="@+id/finishHour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="NC"
+            android:textSize="30sp" />
 
-    <com.valohyd.copilotemaster.utils.Chronometer
-        android:id="@+id/chronometerElapsed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"
-        android:gravity="center"
-        android:text="Chronometer"
-        android:textColor="#ffffff"
-        android:textSize="30sp"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/textRemainingTime"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="#dedede"
+            android:gravity="center"
+            android:text="Temps restants"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/remainingTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="NC"
+            android:textSize="30sp" />
+
+        <com.valohyd.copilotemaster.utils.Chronometer
+            android:id="@+id/chronometerElapsed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffcc0000"
+            android:gravity="center"
+            android:text="Chronometer"
+            android:textColor="#ffffff"
+            android:textSize="30sp"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </LinearLayout>
