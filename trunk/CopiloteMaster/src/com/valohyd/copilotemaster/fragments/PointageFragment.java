@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.SharedPreferences;
@@ -24,6 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.utils.Chronometer;
 
@@ -33,22 +33,34 @@ import com.valohyd.copilotemaster.utils.Chronometer;
  * @author parodi
  * 
  */
-public class PointageFragment extends Fragment {
+public class PointageFragment extends SherlockFragment {
 
 	private View mainView;
-	private TimePickerDialog dialogPointage, dialogImparti;
+
+	private TimePickerDialog dialogPointage, dialogImparti; // Selecteur de
+															// temps
+
 	private Button pointageDialogButton, impartiTimeButton;
+
 	private TextView pointageTime, impartiTime, remainingTime, finishTime;
-	private CountDownTimer remainTimer;
-	private Chronometer elapsedTime;
-	private Date pointageDate, impartiDate, finalDate;
-	private SimpleDateFormat minuteFormat = new SimpleDateFormat("HH:mm");
+
+	private CountDownTimer remainTimer; // Temps restants dans le temps imparti
+
+	private Chronometer elapsedTime; // Temps écoulés hors temps
+
+	private Date pointageDate, impartiDate, finalDate; // Heure de pointage,
+														// temps imparti et
+														// heure d'arrivée
+
+	private SimpleDateFormat minuteFormat = new SimpleDateFormat("HH:mm"); // Formatteur
+																			// de
+																			// date
+
+	// PREFERENCES
 	SharedPreferences sharedPrefs;
 	Editor edit;
-	private final String TAG_PREF_POINTAGE = "pointage_time",
-			TAG_PREF_IMPARTI = "imparti_time";
-
-	public static final String ARG_SECTION_NUMBER = "section_number";
+	private final static String TAG_PREF_POINTAGE = "pointage_time",
+			TAG_PREF_IMPARTI = "imparti_time", TAG_PREF_FILE = "pref_file";
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -57,7 +69,8 @@ public class PointageFragment extends Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.pointage_layout, container, false);
 
-		sharedPrefs = getActivity().getSharedPreferences("blop",
+		// PREFERENCES
+		sharedPrefs = getActivity().getSharedPreferences(TAG_PREF_FILE,
 				Activity.MODE_PRIVATE);
 		edit = sharedPrefs.edit();
 
@@ -91,6 +104,7 @@ public class PointageFragment extends Fragment {
 
 		// TIMEPICKER DIALOGS
 		Date now = new Date();
+		// POINTAGE
 		dialogPointage = new TimePickerDialog(getActivity(),
 				new OnTimeSetListener() {
 
@@ -98,23 +112,35 @@ public class PointageFragment extends Fragment {
 					public void onTimeSet(TimePicker view, int hourOfDay,
 							int minute) {
 
-						Date d = new Date();
+						// Construction de la date
+						Date d = new Date(); // ATTENTION on part de la date
+												// actuelle pour avoir deja
+												// l'année le mois et le jour de
+												// selectionné
 						d.setHours(hourOfDay);
 						d.setMinutes(minute);
 						d.setSeconds(0);
-						pointageDate = d;
+						pointageDate = d; // Heure de pointage créée
 						String newString = new SimpleDateFormat("HH:mm")
 								.format(pointageDate);
-						pointageTime.setText(newString);
+						pointageTime.setText(newString); // On affiche le retour
+															// pour
+															// l'utilisateur
 						if (impartiDate != null)
-							setRemainingTime();
+							setRemainingTime(); // On affiche le temps restant
+												// si le temps imparti est deja
+												// rempli
 						else
-							impartiTimeButton.setEnabled(true);
+							impartiTimeButton.setEnabled(true); // Sinon on
+																// active la
+																// suite
 
-						savePreferences();
+						savePreferences(); // On sauvegarde les preferences pour
+											// un retour rapide
 
 					}
 				}, now.getHours(), now.getMinutes(), true);
+		// TEMPS IMPARTI
 		dialogImparti = new TimePickerDialog(getActivity(),
 				new OnTimeSetListener() {
 
@@ -123,12 +149,15 @@ public class PointageFragment extends Fragment {
 							int minute) {
 						try {
 							impartiDate = new SimpleDateFormat("HH:mm")
-									.parse(hourOfDay + ":" + minute);
+									.parse(hourOfDay + ":" + minute); // Creation
+																		// de la
+																		// date
+																		// imparti
 							String newString = new SimpleDateFormat("HH:mm")
 									.format(impartiDate);
 							impartiTime.setText(newString);
-							setRemainingTime();
-							savePreferences();
+							setRemainingTime(); // On affiche le temps restant
+							savePreferences(); // On sauvegarde
 						} catch (ParseException e) {
 							e.printStackTrace();
 						}
@@ -145,29 +174,42 @@ public class PointageFragment extends Fragment {
 		return mainView;
 	}
 
+	/**
+	 * Affiche le temps restant en se basant sur l'heure de pointage et le temps
+	 * imparti accordé
+	 */
 	protected void setRemainingTime() {
+		// CONSTRUCTION DE L'HEURE D'ARRIVEE
 		Calendar c = new GregorianCalendar();
-
 		c.setTime(new Date(pointageDate.getTime()));
 		c.add(Calendar.HOUR, impartiDate.getHours());
 		c.add(Calendar.MINUTE, impartiDate.getMinutes());
 		finalDate = c.getTime();
 
+		// Affichage de l'heure d'arrivée
 		finishTime.setText(minuteFormat.format(finalDate));
 
+		// Calcul des temps
 		long futurems = finalDate.getTime();
 		long nowms = new Date().getTime();
 		final long remaining = futurems - nowms;
+
+		// Si le timer est deja actif
 		if (remainTimer != null)
-			remainTimer.cancel();
+			remainTimer.cancel(); // On le stoppe
+		// Si le temps etait dépassé on cache le chrono
 		if (elapsedTime.getVisibility() == View.VISIBLE) {
 			elapsedTime.setVisibility(View.GONE);
 		}
 
+		// On recréer le timer avec le nouveau temps
 		remainTimer = new CountDownTimer(remaining, 1000) {
 
 			public void onTick(long millisUntilFinished) {
-				remainingTime.setVisibility(View.VISIBLE);
+				remainingTime.setVisibility(View.VISIBLE); // On affiche le
+															// timer a chaque
+															// tick
+				// Decoupage du temps restant pour l'affichage
 				long sec = (millisUntilFinished / 1000) % 60;
 				String secondes = "" + sec;
 				if (sec < 10) {
@@ -186,15 +228,25 @@ public class PointageFragment extends Fragment {
 				remainingTime.setText(hours + ":" + minutes + ":" + secondes);
 			}
 
+			/**
+			 * Lors de la fin du temps imparti
+			 */
 			public void onFinish() {
-				remainingTime.setVisibility(View.GONE);
-				elapsedTime.setBase(SystemClock.elapsedRealtime() + remaining);
-				elapsedTime.setVisibility(View.VISIBLE);
-				elapsedTime.start();
+				remainingTime.setVisibility(View.GONE); // On cache le timer
+				elapsedTime.setBase(SystemClock.elapsedRealtime() + remaining); // On
+																				// RAZ
+																				// le
+																				// chrono
+				elapsedTime.setVisibility(View.VISIBLE); // On affiche le chrono
+				elapsedTime.start(); // On declenche le chrono du temps
+										// supplémentaire
 			}
 		}.start();
 	}
 
+	/**
+	 * Chargement des préférences
+	 */
 	private void loadPreferences() {
 		String pointage = sharedPrefs.getString(TAG_PREF_POINTAGE, "NC");
 		String imparti = sharedPrefs.getString(TAG_PREF_IMPARTI, "NC");
@@ -208,7 +260,7 @@ public class PointageFragment extends Fragment {
 				pointageDate.setYear(d.getYear());
 				pointageDate.setMonth(d.getMonth());
 				pointageDate.setDate(d.getDate());
-				Log.d("DATE",pointageDate.toGMTString());
+				Log.d("DATE", pointageDate.toGMTString());
 				impartiTimeButton.setEnabled(true);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
@@ -227,6 +279,9 @@ public class PointageFragment extends Fragment {
 		}
 	}
 
+	/**
+	 * Sauvegarde des préférences
+	 */
 	private void savePreferences() {
 		edit.putString(TAG_PREF_POINTAGE, pointageTime.getText().toString());
 		edit.putString(TAG_PREF_IMPARTI, impartiTime.getText().toString());
