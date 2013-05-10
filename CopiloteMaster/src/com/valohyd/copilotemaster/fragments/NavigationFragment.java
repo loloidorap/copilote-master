@@ -6,7 +6,6 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
@@ -28,7 +27,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -38,36 +37,44 @@ import com.valohyd.copilotemaster.MainActivity;
 import com.valohyd.copilotemaster.R;
 
 /**
- * Classe representant le fragment de pointage
+ * Classe representant le fragment de navigation
  * 
  * @author parodi
  * 
  */
-public class NavigationFragment extends Fragment implements
+public class NavigationFragment extends SupportMapFragment implements
 		OnMyLocationChangeListener {
 
+	// CONSTANTES VITESSE
 	public static final int INDEX_KM = 0;
 	public static final int INDEX_MILES = 0;
-	public static final int DEFAULT_SPEED_LIMIT = 80;
+	public static final int DEFAULT_SPEED_LIMIT = 80; // TODO ?
 	public static final int HOUR_MULTIPLIER = 3600;
 	public static final double UNIT_MULTIPLIERS[] = { 0.001, 0.000621371192 };
-	public static final String TAG_PREF_CONTACT = "contacts";
 
-	LinearLayout layoutButtons;
+	// TAGS
+	public static final String TAG_PREF_CONTACT = "contacts",
+			TAG_NAME_PREF = "pref_file";
 
-	ImageButton radarButton;
+	LinearLayout layoutButtons; // Layout par dessus la map
 
-	SharedPreferences sharedPrefs;
+	ImageButton radarButton; // Bouton de radar
 
-	AlertDialog.Builder contact_dialog;
-	private ArrayList<String> contacts;
-	private ArrayList<String> selected_contacts;
+	SharedPreferences sharedPrefs; // Preferences
+
+	AlertDialog.Builder contact_dialog; // Dialog de contact
+
+	private ArrayList<String> contacts, selected_contacts; // Contacts et
+															// contacts
+															// selectionnés
 
 	String[] poi_types = { "Parc fermé", "Parc Assistance", "Départ ES",
-			"Arrivée ES", "Divers" };
+			"Arrivée ES", "Divers" }; // Types des POI
 
 	int[] poi_icons = { R.drawable.parc_ferme_icon, R.drawable.assistance_icon,
-			R.drawable.start_icon, R.drawable.end_icon, R.drawable.poi_icon };
+			R.drawable.start_icon, R.drawable.end_icon, R.drawable.poi_icon }; // Icones
+																				// des
+																				// POI
 
 	/**
 	 * La carte
@@ -84,9 +91,11 @@ public class NavigationFragment extends Fragment implements
 	 */
 	GeoPoint myLocation;
 
-	private ArrayList<Marker> listOfPoints = new ArrayList<Marker>();
+	private ArrayList<Marker> listOfPoints = new ArrayList<Marker>(); // Liste
+																		// des
+																		// POIs
 
-	private TextView speedText, accuracyText;
+	private TextView speedText, accuracyText; // Texte Vitesse et précision
 	private double speed, accuracy; // vitesse,precision
 
 	@Override
@@ -96,13 +105,16 @@ public class NavigationFragment extends Fragment implements
 		mainView = inflater.inflate(R.layout.navigation_layout, container,
 				false);
 
-		sharedPrefs = getActivity().getSharedPreferences("blop",
+		// PREFERENCES
+		sharedPrefs = getActivity().getSharedPreferences(TAG_NAME_PREF,
 				Activity.MODE_PRIVATE);
 
 		selected_contacts = new ArrayList<String>();
 
-		map = ((MapFragment) ((MainActivity) getActivity())
-				.getFragmentManager().findFragmentById(R.id.map)).getMap();
+		// MAP
+		map = ((SupportMapFragment) ((MainActivity) getActivity())
+				.getSupportFragmentManager().findFragmentById(R.id.map))
+				.getMap();
 
 		layoutButtons = (LinearLayout) mainView
 				.findViewById(R.id.layoutButtonsMap);
@@ -110,22 +122,26 @@ public class NavigationFragment extends Fragment implements
 		speedText = (TextView) mainView.findViewById(R.id.speedTextMap);
 		accuracyText = (TextView) mainView.findViewById(R.id.accuracyTextMap);
 
+		// RADAR
 		radarButton = (ImageButton) mainView.findViewById(R.id.radarButtonMap);
 
 		radarButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				initContacts();
+				initContacts(); // Initialisation des contacts
+				// CONSTRUCTION DIALOG
 				contact_dialog = new AlertDialog.Builder(getActivity());
 				contact_dialog.setTitle("Choisissez des contacts");
 				contact_dialog.setMultiChoiceItems(
+						// Selection multiple
 						contacts.toArray(new CharSequence[contacts.size()]),
 						null, new OnMultiChoiceClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which, boolean isChecked) {
+								// Selection d'un contact ou deselection
 								if (isChecked)
 									selected_contacts.add(contacts.get(which)
 											.toString());
@@ -135,12 +151,14 @@ public class NavigationFragment extends Fragment implements
 							}
 						});
 
+				// PARTAGE DU RADAR
 				contact_dialog.setPositiveButton("Partager le radar !",
 						new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
+								// CONSTRUCTION DU DIALOG
 								AlertDialog.Builder builder = new AlertDialog.Builder(
 										getActivity());
 								builder.setTitle("Envoi de sms");
@@ -155,7 +173,10 @@ public class NavigationFragment extends Fragment implements
 													int which) {
 												for (String nb : selected_contacts) {
 													sendSms(nb.split(":")[1],
-															"radar sur la liaison !");
+															"radar sur la liaison !"); // On
+																						// envoi
+																						// le
+																						// sms
 												}
 												selected_contacts = new ArrayList<String>(); // on
 																								// vide
@@ -185,11 +206,13 @@ public class NavigationFragment extends Fragment implements
 			}
 		});
 
-		layoutButtons.bringToFront();
+		layoutButtons.bringToFront(); // Pour voir le layout par dessus la map
 
+		// GEOLOCALISATION API V2
 		map.setMyLocationEnabled(true);
 		map.setOnMyLocationChangeListener(this);
 		map.setTrafficEnabled(true);
+		// Ajout d'un POI au longClick
 		map.setOnMapLongClickListener(new OnMapLongClickListener() {
 
 			@Override
@@ -201,12 +224,13 @@ public class NavigationFragment extends Fragment implements
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						// Construction du POI
 						Marker m = map.addMarker(new MarkerOptions()
 								.position(position)
 								.title(poi_types[which])
 								.icon(BitmapDescriptorFactory
 										.fromResource(poi_icons[which])));
-						listOfPoints.add(m);
+						listOfPoints.add(m); // Ajout du POI
 					}
 				});
 				builder.show();
@@ -215,7 +239,7 @@ public class NavigationFragment extends Fragment implements
 
 			}
 		});
-
+		// Action au clic sur le POI
 		map.setOnMarkerClickListener(new OnMarkerClickListener() {
 
 			@Override
@@ -231,7 +255,7 @@ public class NavigationFragment extends Fragment implements
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								marker.remove();
+								marker.remove(); // Suppression du marker
 							}
 						});
 				builder.setPositiveButton("Naviguer vers ce point", null); // TODO
@@ -246,6 +270,7 @@ public class NavigationFragment extends Fragment implements
 		return mainView;
 	}
 
+	// Initialisation des contacts via les preferences
 	private void initContacts() {
 		Set<String> contact_init = sharedPrefs.getStringSet(TAG_PREF_CONTACT,
 				new HashSet<String>());
@@ -254,6 +279,7 @@ public class NavigationFragment extends Fragment implements
 		selected_contacts = new ArrayList<String>();// on vide la selection
 	}
 
+	// Envoi d'un sms
 	private void sendSms(String number, String message) {
 		try {
 			SmsManager smsManager = SmsManager.getDefault();
@@ -268,30 +294,34 @@ public class NavigationFragment extends Fragment implements
 
 	}
 
+	// Ecouteur sur la position de l'utilisateur
 	@Override
 	public void onMyLocationChange(Location location) {
-		// Getting latitude of the current location
+		// Latitude
 		double latitude = location.getLatitude();
 
-		// Getting longitude of the current location
+		// Longitude
 		double longitude = location.getLongitude();
 
-		// Creating a LatLng object for the current location
+		// Position
 		LatLng latLng = new LatLng(latitude, longitude);
 
-		// Showing the current location in Google Map
+		// Centrage sur la position
 		map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-		// Zoom in the Google Map
+		// Zoom sur la position
 		// map.animateCamera(CameraUpdateFactory.zoomTo(4));
 
+		// Vitesse
 		speed = location.getSpeed();
+		speedText.setText("" + Math.round(convertSpeed(speed)));
+
+		// Precision
 		accuracy = Math.round(location.getAccuracy());
-		String speedString = "" + Math.round(convertSpeed(speed));
-		speedText.setText("" + speedString);
 		accuracyText.setText("" + accuracy);
 	}
 
+	// Conversion de la vitesse selon l'unité choisie
 	private double convertSpeed(double speed) {
 		return ((speed * HOUR_MULTIPLIER) * UNIT_MULTIPLIERS[INDEX_KM]);
 	}

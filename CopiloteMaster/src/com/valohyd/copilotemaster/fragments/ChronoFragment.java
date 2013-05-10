@@ -1,8 +1,6 @@
 package com.valohyd.copilotemaster.fragments;
 
 import java.util.ArrayList;
-
-import android.app.Fragment;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -13,25 +11,27 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.utils.Chronometer;
 
 /**
- * Classe representant le fragment de pointage
+ * Classe representant le fragment du chronometre
  * 
  * @author parodi
  * 
  */
-public class ChronoFragment extends Fragment {
+public class ChronoFragment extends SherlockFragment {
 
 	private View mainView;
-	private Button partielButton, startButton, stopButton;
-	private Chronometer chrono;
-	private ListView partielList;
-	private long timeWhenStopped = 0;
-	private boolean firstTime = true;
+	private Button partielButton, startButton, stopButton; // Boutons chronos
+	private Chronometer chrono; // Chronometre
+	private ListView partielList; // Liste des temps partiels
+	private long timeWhenStopped = 0; // Stocke un temps pour le resume du
+										// chrono
+	private boolean firstTime = true; // Au start du chrono
 
-	ArrayList<String> partielValues = new ArrayList<String>();
+	ArrayList<String> partielValues = new ArrayList<String>(); // Les partiels
 	ArrayAdapter<String> listAdapter;
 
 	@Override
@@ -39,6 +39,9 @@ public class ChronoFragment extends Fragment {
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.chrono_layout, container, false);
+
+		// CHRONOMETER
+		chrono = (Chronometer) mainView.findViewById(R.id.chrono);
 
 		// LIST
 		partielList = (ListView) mainView.findViewById(R.id.partielList);
@@ -54,14 +57,19 @@ public class ChronoFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				// Si on doit reprendre le chrono
 				if (startButton.getText().equals("Resume")) {
 					chrono.setBase(SystemClock.elapsedRealtime()
-							+ timeWhenStopped);
+							+ timeWhenStopped); // On reprend ou on s'etait
+												// arrêté
 				}
+				// Si on declenche pour la premiere fois le chrono
 				if (firstTime)
-					chrono.setBase(SystemClock.elapsedRealtime());
+					chrono.setBase(SystemClock.elapsedRealtime()); // On remet à
+																	// 0
 				chrono.start();
-				startButton.setEnabled(false);
+				startButton.setEnabled(false); // On ne peux plus rappuyer sur
+												// start
 				stopButton.setText("Stop");
 				firstTime = false;
 			}
@@ -70,17 +78,24 @@ public class ChronoFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				// Reset du chrono
 				if (stopButton.getText().equals("Reset")) {
-					chrono.stop();
-					chrono.setBase(SystemClock.elapsedRealtime());
-					startButton.setText("Start");
-					startButton.setEnabled(true);
-					partielValues.clear();
-					listAdapter.notifyDataSetChanged();
-				} else {
+					chrono.stop(); // On stop le chrono
+					chrono.setBase(SystemClock.elapsedRealtime()); // On RAZ le
+																	// chrono
+					startButton.setText("Start"); // On remet start
+					startButton.setEnabled(true); // On reactive le bouton start
+					partielValues.clear(); // On vide la liste des partiels
+					listAdapter.notifyDataSetChanged(); // On notifie le
+														// changement des
+														// données
+				}
+				// Sinon c'est qu'on pause le chrono
+				else {
 					timeWhenStopped = chrono.getBase()
-							- SystemClock.elapsedRealtime();
-					chrono.stop();
+							- SystemClock.elapsedRealtime(); // On stocke le
+																// temps
+					chrono.stop(); // On stoppe le chrono
 					startButton.setEnabled(true);
 					startButton.setText("Resume");
 					stopButton.setText("Reset");
@@ -92,14 +107,19 @@ public class ChronoFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				// Ajout d'un temps partiel
 				listAdapter.add(chrono.getText().toString());
 				listAdapter.notifyDataSetChanged();
-				partielList.setSelection(partielList.getCount() - 1);
+				partielList.setSelection(partielList.getCount() - 1); // On
+																		// descend
+																		// la
+																		// liste
+																		// au
+																		// dernier
+																		// element
 			}
 		});
 
-		// CHRONOMETER
-		chrono = (Chronometer) mainView.findViewById(R.id.chrono);
 		return mainView;
 	}
 }
