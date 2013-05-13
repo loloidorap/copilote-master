@@ -10,8 +10,10 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.LayoutInflater;
@@ -258,8 +260,22 @@ public class NavigationFragment extends SupportMapFragment implements
 								marker.remove(); // Suppression du marker
 							}
 						});
-				builder.setPositiveButton("Naviguer vers ce point", null); // TODO
-																			// navigation
+				builder.setPositiveButton("Naviguer vers ce point",
+						new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								Intent intent = new Intent(
+										android.content.Intent.ACTION_VIEW,
+										Uri.parse("google.navigation:q="
+												+ marker.getPosition().latitude
+												+ ","
+												+ marker.getPosition().longitude));
+								startActivity(intent);
+							}
+						}); // TODO
+							// navigation
 				builder.show();
 
 				return false;
