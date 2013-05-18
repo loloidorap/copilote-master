@@ -1,86 +1,96 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_pointage_portrait"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:weightSum="2" >
 
     <LinearLayout
-        android:id="@+id/layoutPointageTop"
+        android:id="@+id/layout_pointage_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
         android:orientation="horizontal"
         android:weightSum="2" >
 
         <LinearLayout
+            android:id="@+id/layout_pointage_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical" >
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2" >
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="#dedede"
-                android:gravity="center"
-                android:text="Heure de pointage"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/pointageTime"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="NC"
-                android:textSize="25sp" />
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
-            <Button
-                android:id="@+id/pointageDialogButton"
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:background="#dedede"
+                    android:gravity="center"
+                    android:text="Heure de pointage"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/pointageTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="NC"
+                    android:textSize="25sp" />
+
+                <Button
+                    android:id="@+id/pointageDialogButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:gravity="center"
+                    android:text="Définir heure"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:gravity="center"
-                android:text="Définir heure"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical" >
-
-            <TextView
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="#dedede"
-                android:gravity="center"
-                android:text="Temps imparti"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/impartiTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="NC"
-                android:textSize="25sp" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:background="#dedede"
+                    android:gravity="center"
+                    android:text="Temps imparti"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/impartiTimeDialogButton"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:gravity="center"
-                android:text="Définir temps imparti"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/impartiTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="NC"
+                    android:textSize="25sp" />
+
+                <Button
+                    android:id="@+id/impartiTimeDialogButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:gravity="center"
+                    android:text="Définir temps imparti"
+                    android:textSize="20sp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layout_pointage_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -90,8 +100,7 @@
         <TextView
             android:id="@+id/textFinishHour"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="50dp"
             android:background="#dedede"
             android:gravity="center"
             android:text="Heure d&apos;arrivée"
@@ -110,7 +119,7 @@
         <TextView
             android:id="@+id/textRemainingTime"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+             android:layout_height="50dp"
             android:background="#dedede"
             android:gravity="center"
             android:text="Temps restants"

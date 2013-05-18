@@ -11,6 +11,7 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -20,8 +21,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.valohyd.copilotemaster.R;
@@ -41,6 +44,8 @@ public class PointageFragment extends SherlockFragment {
 															// temps
 
 	private Button pointageDialogButton, impartiTimeButton;
+	
+	private LinearLayout layoutHorizontal,layoutVertical,layout_2;
 
 	private TextView pointageTime, impartiTime, remainingTime, finishTime;
 
@@ -62,6 +67,23 @@ public class PointageFragment extends SherlockFragment {
 	private final static String TAG_PREF_POINTAGE = "pointage_time",
 			TAG_PREF_IMPARTI = "imparti_time", TAG_PREF_FILE = "pref_file";
 
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+
+		// Checks the orientation of the screen
+		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			// paysage
+			layoutVertical.removeView(layout_2);
+			layoutHorizontal.addView(layout_2);
+		} else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+			// portrait
+			layoutHorizontal.removeView(layout_2);
+			layoutVertical.addView(layout_2);
+		}
+
+		super.onConfigurationChanged(newConfig);
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +95,11 @@ public class PointageFragment extends SherlockFragment {
 		sharedPrefs = getActivity().getSharedPreferences(TAG_PREF_FILE,
 				Activity.MODE_PRIVATE);
 		edit = sharedPrefs.edit();
+		
+		//LINEAR LAYOUTS
+		layout_2 = (LinearLayout)mainView.findViewById(R.id.layout_pointage_2);
+		layoutHorizontal = (LinearLayout)mainView.findViewById(R.id.layout_pointage_horizontal);
+		layoutVertical = (LinearLayout)mainView.findViewById(R.id.layout_pointage_portrait);
 
 		// TEXTVIEWS
 		pointageTime = (TextView) mainView.findViewById(R.id.pointageTime);

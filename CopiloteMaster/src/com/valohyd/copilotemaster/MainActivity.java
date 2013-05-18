@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
@@ -21,9 +22,8 @@ import com.valohyd.copilotemaster.fragments.NavigationFragment;
 import com.valohyd.copilotemaster.fragments.PointageFragment;
 import com.valohyd.copilotemaster.fragments.TimeFragment;
 
-
-
-public class MainActivity extends SherlockFragmentActivity implements TabListener {
+public class MainActivity extends SherlockFragmentActivity implements
+		TabListener {
 
 	// FRAGMENTS
 	PointageFragment pointageFragment;
@@ -82,12 +82,12 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+
 		if (tab.getPosition() == 0) {
 			if (this.pointageFragment == null) {
 				this.pointageFragment = new PointageFragment();
 				ft.add(R.id.container, this.pointageFragment);
 			}
-
 			ft.show(this.pointageFragment);
 		}
 		if (tab.getPosition() == 1) {
