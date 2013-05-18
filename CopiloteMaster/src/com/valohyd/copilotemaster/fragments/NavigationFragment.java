@@ -16,7 +16,11 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -283,7 +287,6 @@ public class NavigationFragment extends SupportMapFragment implements
 				return false;
 			}
 		});
-
 		// récupérer la map
 		return mainView;
 	}
@@ -338,7 +341,7 @@ public class NavigationFragment extends SupportMapFragment implements
 		// Precision
 		accuracy = Math.round(location.getAccuracy());
 		accuracyText.setText("" + accuracy);
-		
+
 		firstFix = false;
 	}
 
