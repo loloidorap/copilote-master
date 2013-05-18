@@ -54,6 +54,8 @@ public class NavigationFragment extends SupportMapFragment implements
 	public static final int HOUR_MULTIPLIER = 3600;
 	public static final double UNIT_MULTIPLIERS[] = { 0.001, 0.000621371192 };
 
+	private boolean firstFix = true;
+
 	// TAGS
 	public static final String TAG_PREF_CONTACT = "contacts",
 			TAG_NAME_PREF = "pref_file";
@@ -326,7 +328,8 @@ public class NavigationFragment extends SupportMapFragment implements
 		map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
 		// Zoom sur la position
-		// map.animateCamera(CameraUpdateFactory.zoomTo(4));
+		if (firstFix)
+			map.animateCamera(CameraUpdateFactory.zoomTo(18));
 
 		// Vitesse
 		speed = location.getSpeed();
@@ -335,6 +338,8 @@ public class NavigationFragment extends SupportMapFragment implements
 		// Precision
 		accuracy = Math.round(location.getAccuracy());
 		accuracyText.setText("" + accuracy);
+		
+		firstFix = false;
 	}
 
 	// Conversion de la vitesse selon l'unité choisie
