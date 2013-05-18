@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
@@ -157,39 +156,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 
+//		switch (item.getItemId()) {
+//		case R.id.raz_pref:
+//			
+//			break;
+//		}
+		return true;
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.settings, menu);
 		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-		case R.id.raz_pref:
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("RAZ données");
-			builder.setMessage("Etes-vous sûr de vouloir supprimer les données ?");
-			builder.setPositiveButton(android.R.string.ok,
-					new OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							getSharedPreferences("blop", Activity.MODE_PRIVATE)
-									.edit().clear().commit();
-							Toast.makeText(MainActivity.this,
-									"Données supprimées !", Toast.LENGTH_SHORT)
-									.show();
-						}
-					});
-			builder.setNegativeButton(android.R.string.no, null);
-			builder.show();
-			builder.setCancelable(true);
-			break;
-		}
-		return true;
 	}
 
 }

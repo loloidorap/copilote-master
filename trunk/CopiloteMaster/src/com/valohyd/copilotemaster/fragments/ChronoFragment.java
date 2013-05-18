@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.utils.Chronometer;
 
@@ -119,7 +122,6 @@ public class ChronoFragment extends SherlockFragment {
 																		// element
 			}
 		});
-
 		return mainView;
 	}
 }

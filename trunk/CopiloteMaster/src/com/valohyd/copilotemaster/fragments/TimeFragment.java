@@ -22,6 +22,9 @@ import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.valohyd.copilotemaster.R;
 
 /**

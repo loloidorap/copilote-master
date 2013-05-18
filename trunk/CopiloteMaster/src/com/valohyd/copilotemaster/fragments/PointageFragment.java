@@ -7,8 +7,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.app.AlertDialog.Builder;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
@@ -24,9 +27,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.utils.Chronometer;
 
@@ -44,8 +50,8 @@ public class PointageFragment extends SherlockFragment {
 															// temps
 
 	private Button pointageDialogButton, impartiTimeButton;
-	
-	private LinearLayout layoutHorizontal,layoutVertical,layout_2;
+
+	private LinearLayout layoutHorizontal, layoutVertical, layout_2;
 
 	private TextView pointageTime, impartiTime, remainingTime, finishTime;
 
@@ -75,10 +81,12 @@ public class PointageFragment extends SherlockFragment {
 			// paysage
 			layoutVertical.removeView(layout_2);
 			layoutHorizontal.addView(layout_2);
+			layout_2.setOrientation(LinearLayout.VERTICAL);
 		} else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
 			// portrait
 			layoutHorizontal.removeView(layout_2);
 			layoutVertical.addView(layout_2);
+			layout_2.setOrientation(LinearLayout.HORIZONTAL);
 		}
 
 		super.onConfigurationChanged(newConfig);
@@ -95,11 +103,13 @@ public class PointageFragment extends SherlockFragment {
 		sharedPrefs = getActivity().getSharedPreferences(TAG_PREF_FILE,
 				Activity.MODE_PRIVATE);
 		edit = sharedPrefs.edit();
-		
-		//LINEAR LAYOUTS
-		layout_2 = (LinearLayout)mainView.findViewById(R.id.layout_pointage_2);
-		layoutHorizontal = (LinearLayout)mainView.findViewById(R.id.layout_pointage_horizontal);
-		layoutVertical = (LinearLayout)mainView.findViewById(R.id.layout_pointage_portrait);
+
+		// LINEAR LAYOUTS
+		layout_2 = (LinearLayout) mainView.findViewById(R.id.layout_pointage_2);
+		layoutHorizontal = (LinearLayout) mainView
+				.findViewById(R.id.layout_pointage_horizontal);
+		layoutVertical = (LinearLayout) mainView
+				.findViewById(R.id.layout_pointage_portrait);
 
 		// TEXTVIEWS
 		pointageTime = (TextView) mainView.findViewById(R.id.pointageTime);
@@ -198,7 +208,62 @@ public class PointageFragment extends SherlockFragment {
 
 		// CHARGEMENT DES PREFS
 		loadPreferences();
+		setHasOptionsMenu(true);
 		return mainView;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		MenuItem item = menu.findItem(R.id.stop_pointage);
+		item.setVisible(isVisible());
+		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getActivity());
+				builder.setTitle("Remise à zéro");
+				builder.setMessage("Etes-vous sur de vouloir remettre à zéro les données ?");
+				builder.setPositiveButton(android.R.string.yes,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (elapsedTime != null) {
+									elapsedTime.stop();
+									elapsedTime.setVisibility(View.GONE);
+								}
+								finishTime.setText("NC");
+								impartiTime.setText("NC");
+								impartiTimeButton.setEnabled(false);
+								pointageTime.setText("NC");
+								remainingTime.setText("NC");
+								remainingTime.setVisibility(View.VISIBLE);
+								if (remainTimer != null)
+									remainTimer.cancel();
+								finalDate = null;
+								impartiDate = null;
+								pointageDate = null;
+								savePreferences();
+
+							}
+						});
+				builder.setNegativeButton(android.R.string.no, null);
+				builder.show();
+				return false;
+			}
+		});
+	}
+
+	/**
+	 * permet de dire de redessiner le menu
+	 */
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		getActivity().invalidateOptionsMenu();
 	}
 
 	/**
@@ -260,10 +325,12 @@ public class PointageFragment extends SherlockFragment {
 			 */
 			public void onFinish() {
 				remainingTime.setVisibility(View.GONE); // On cache le timer
-				elapsedTime.setBase(SystemClock.elapsedRealtime() + remaining); // On
-																				// RAZ
-																				// le
-																				// chrono
+				// On RAZ le chrono
+				if (remaining > 0)
+					elapsedTime.setBase(SystemClock.elapsedRealtime());
+				else
+					elapsedTime.setBase(SystemClock.elapsedRealtime()
+							+ remaining);
 				elapsedTime.setVisibility(View.VISIBLE); // On affiche le chrono
 				elapsedTime.start(); // On declenche le chrono du temps
 										// supplémentaire

@@ -7,10 +7,11 @@
         android:showAsAction="never"
         android:title="@string/menu_settings"/>
     <item
-        android:id="@+id/raz_pref"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:id="@+id/stop_pointage"
+        android:icon="@drawable/stop_icon"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/menu_raz_pref"/>
+        android:showAsAction="always"
+        android:title="@string/menu_stop_pointage"
+        android:visible="false"/>
 
 </menu>
