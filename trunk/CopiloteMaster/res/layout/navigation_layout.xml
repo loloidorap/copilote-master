@@ -4,6 +4,14 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <ImageButton
+        android:id="@+id/gpsButtonMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/gps_off" />
+
     <LinearLayout
         android:id="@+id/layoutButtonsMap"
         android:layout_width="wrap_content"

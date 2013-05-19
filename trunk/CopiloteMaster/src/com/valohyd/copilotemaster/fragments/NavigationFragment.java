@@ -6,21 +6,22 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -58,6 +59,12 @@ public class NavigationFragment extends SupportMapFragment implements
 	public static final int HOUR_MULTIPLIER = 3600;
 	public static final double UNIT_MULTIPLIERS[] = { 0.001, 0.000621371192 };
 
+	// GPS
+	protected static final long GPS_UPDATE_TIME_INTERVAL = 3000; // millis
+	protected static final float GPS_UPDATE_DISTANCE_INTERVAL = 0; // meters
+	private LocationManager mlocManager;
+	private MyGPSListener mGpsListener;
+
 	private boolean firstFix = true;
 
 	// TAGS
@@ -66,7 +73,7 @@ public class NavigationFragment extends SupportMapFragment implements
 
 	LinearLayout layoutButtons; // Layout par dessus la map
 
-	ImageButton radarButton; // Bouton de radar
+	ImageButton radarButton, gpsButton; // Bouton de radar
 
 	SharedPreferences sharedPrefs; // Preferences
 
@@ -129,6 +136,24 @@ public class NavigationFragment extends SupportMapFragment implements
 
 		speedText = (TextView) mainView.findViewById(R.id.speedTextMap);
 		accuracyText = (TextView) mainView.findViewById(R.id.accuracyTextMap);
+
+		// GPS
+		mGpsListener = new MyGPSListener();
+		mlocManager = (LocationManager) getActivity().getSystemService(
+				Context.LOCATION_SERVICE);
+		mlocManager.addGpsStatusListener(mGpsListener);
+
+		gpsButton = (ImageButton) mainView.findViewById(R.id.gpsButtonMap);
+		gpsButton.bringToFront();
+		gpsButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(
+						Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+				getActivity().startActivity(intent);
+			}
+		});
 
 		// RADAR
 		radarButton = (ImageButton) mainView.findViewById(R.id.radarButtonMap);
@@ -280,8 +305,7 @@ public class NavigationFragment extends SupportMapFragment implements
 												+ marker.getPosition().longitude));
 								startActivity(intent);
 							}
-						}); // TODO
-							// navigation
+						});
 				builder.show();
 
 				return false;
@@ -348,6 +372,29 @@ public class NavigationFragment extends SupportMapFragment implements
 	// Conversion de la vitesse selon l'unité choisie
 	private double convertSpeed(double speed) {
 		return ((speed * HOUR_MULTIPLIER) * UNIT_MULTIPLIERS[INDEX_KM]);
+	}
+
+	private class MyGPSListener implements GpsStatus.Listener {
+		public void onGpsStatusChanged(int event) {
+			switch (event) {
+
+			case GpsStatus.GPS_EVENT_FIRST_FIX:
+				Log.d("GPS", "FISRTFIX");
+				gpsButton.setImageDrawable(getActivity().getResources()
+						.getDrawable(R.drawable.gps_on));
+				break;
+			case GpsStatus.GPS_EVENT_STARTED:
+				Log.d("GPS", "STARTED");
+				gpsButton.setImageDrawable(getActivity().getResources()
+						.getDrawable(R.drawable.gps_started));
+				break;
+			case GpsStatus.GPS_EVENT_STOPPED:
+				Log.d("GPS", "STOPPED");
+				gpsButton.setImageDrawable(getActivity().getResources()
+						.getDrawable(R.drawable.gps_off));
+				break;
+			}
+		}
 	}
 
 }
