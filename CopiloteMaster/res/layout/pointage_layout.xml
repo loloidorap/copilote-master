@@ -118,10 +118,10 @@
                 android:id="@+id/finishHour"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:gravity="center"
+                android:padding="10dp"
                 android:text="NC"
-                android:textSize="30sp" />
+                android:textSize="27sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -140,27 +140,43 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/remainingTime"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:gravity="center"
-                android:text="NC"
-                android:textSize="30sp" />
+                android:id="@+id/layoutRemainingTime"
+                android:orientation="horizontal" >
 
-            <com.valohyd.copilotemaster.utils.Chronometer
-                android:id="@+id/chronometerElapsed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#ffcc0000"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="Chronometer"
-                android:textColor="#ffffff"
-                android:textSize="30sp"
-                android:visibility="gone" >
-            </com.valohyd.copilotemaster.utils.Chronometer>
+                <TextView
+                    android:id="@+id/signRemainingTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="-"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/remainingTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="NC"
+                    android:textSize="27sp" />
+
+                <com.valohyd.copilotemaster.utils.Chronometer
+                    android:id="@+id/chronometerElapsed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/holo_red_light"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Chronometer"
+                    android:textColor="#ffffff"
+                    android:textSize="30sp"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

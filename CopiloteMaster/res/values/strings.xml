@@ -22,5 +22,11 @@
     <string name="pref_user_name_summary">Set your username</string>
     <string name="pref_user_profile">User Profile</string>
     <string name="pref_contact_setting">Contacts rapide</string>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+      <!-- A dark Holo shade of orange -->
+    <color name="holo_orange_dark">#ffff8800</color>
+    <!-- A light Holo shade of red -->
+    <color name="holo_red_light">#ffcc0000</color>
 
 </resources>
