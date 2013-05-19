@@ -9,7 +9,6 @@ import java.util.GregorianCalendar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
-import android.app.AlertDialog.Builder;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -51,9 +50,10 @@ public class PointageFragment extends SherlockFragment {
 
 	private Button pointageDialogButton, impartiTimeButton;
 
-	private LinearLayout layoutHorizontal, layoutVertical, layout_2;
+	private LinearLayout layoutHorizontal, layoutVertical, layout_2,
+			layoutRemainingTime;
 
-	private TextView pointageTime, impartiTime, remainingTime, finishTime;
+	private TextView pointageTime, impartiTime, remainingTime, finishTime,signRemainingTime;
 
 	private CountDownTimer remainTimer; // Temps restants dans le temps imparti
 
@@ -110,6 +110,8 @@ public class PointageFragment extends SherlockFragment {
 				.findViewById(R.id.layout_pointage_horizontal);
 		layoutVertical = (LinearLayout) mainView
 				.findViewById(R.id.layout_pointage_portrait);
+		layoutRemainingTime = (LinearLayout) mainView
+				.findViewById(R.id.layoutRemainingTime);
 
 		// TEXTVIEWS
 		pointageTime = (TextView) mainView.findViewById(R.id.pointageTime);
@@ -205,6 +207,9 @@ public class PointageFragment extends SherlockFragment {
 		// CHRONOMETER
 		elapsedTime = (Chronometer) mainView
 				.findViewById(R.id.chronometerElapsed);
+		
+		//SIGNE
+		signRemainingTime = (TextView)mainView.findViewById(R.id.signRemainingTime);
 
 		// CHARGEMENT DES PREFS
 		loadPreferences();
@@ -298,6 +303,16 @@ public class PointageFragment extends SherlockFragment {
 		remainTimer = new CountDownTimer(remaining, 1000) {
 
 			public void onTick(long millisUntilFinished) {
+				signRemainingTime.setText("-");
+				signRemainingTime.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+				signRemainingTime.setTextColor(getResources().getColor(R.color.black));
+				if (millisUntilFinished < 600000) {
+					layoutRemainingTime.setBackgroundColor(getResources().getColor(
+							R.color.holo_orange_dark));
+				} else {
+					layoutRemainingTime.setBackgroundColor(getResources().getColor(
+							android.R.color.transparent));
+				}
 				remainingTime.setVisibility(View.VISIBLE); // On affiche le
 															// timer a chaque
 															// tick
@@ -317,6 +332,7 @@ public class PointageFragment extends SherlockFragment {
 				if (hrs < 10) {
 					hours = "0" + hrs;
 				}
+
 				remainingTime.setText(hours + ":" + minutes + ":" + secondes);
 			}
 
@@ -332,6 +348,9 @@ public class PointageFragment extends SherlockFragment {
 					elapsedTime.setBase(SystemClock.elapsedRealtime()
 							+ remaining);
 				elapsedTime.setVisibility(View.VISIBLE); // On affiche le chrono
+				signRemainingTime.setText("+");
+				signRemainingTime.setBackgroundColor(getResources().getColor(R.color.holo_red_light));
+				signRemainingTime.setTextColor(getResources().getColor(R.color.white));
 				elapsedTime.start(); // On declenche le chrono du temps
 										// supplémentaire
 			}
