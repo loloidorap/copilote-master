@@ -46,6 +46,12 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCxIPZClcl5x_bd-qoFbJZxetudwx5P1P8" />
+
+        <service
+            android:name="com.valohyd.copilotemaster.service.PointageService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>
