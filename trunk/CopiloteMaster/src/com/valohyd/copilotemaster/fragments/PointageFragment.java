@@ -266,8 +266,9 @@ public class PointageFragment extends SherlockFragment {
                         remainingTime.setText("NC");
                         signRemainingTime.setText("");
                         remainingTime.setVisibility(View.VISIBLE);
-                        if (servicePointage != null)
-                            servicePointage.stopCountDownTimer();
+                        if (servicePointage != null){
+                            servicePointage.stopTout();
+                        }
                         finalDate = null;
                         impartiDate = null;
                         pointageDate = null;
@@ -275,7 +276,6 @@ public class PointageFragment extends SherlockFragment {
                         signRemainingTime.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                         signRemainingTime.setTextColor(getResources().getColor(R.color.black));
                         savePreferences();
-
                     }
                 });
                 builder.setNegativeButton(android.R.string.no, null);
