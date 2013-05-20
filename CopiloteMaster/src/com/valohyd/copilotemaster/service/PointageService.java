@@ -95,6 +95,9 @@ public class PointageService extends Service {
 				if (hrs < 10) {
 					hours = "0" + hrs;
 				}
+				
+				// notification : temps restant et icone normale
+				notif.setSmallIcon(R.drawable.ic_launcher);
 				notif.setContentText("temps : -" + hours + ":" + minutes + ":"
 						+ secondes);
 				notificationManager.notify(0, notif.build());
@@ -157,7 +160,8 @@ public class PointageService extends Service {
 				if (hrs < 10) {
 					hours = "0" + hrs;
 				}
-
+				// notification : temps dépassé et panneau attention
+				notif.setSmallIcon(android.R.drawable.stat_notify_error);
 				notif.setContentText("ATTENTION ! Temps : +" + hours + ":" + minutes + ":"
 						+ secondes);
 				notificationManager.notify(0, notif.build());
