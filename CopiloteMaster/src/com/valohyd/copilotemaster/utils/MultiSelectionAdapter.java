@@ -18,38 +18,39 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.valohyd.copilotemaster.R;
+import com.valohyd.copilotemaster.models.Contact;
 
-public class MultiSelectionAdapter<T> extends BaseAdapter {
+public class MultiSelectionAdapter extends BaseAdapter {
 
 	Context mContext;
 
 	LayoutInflater mInflater;
 
-	ArrayList<T> mList;
+	ArrayList<Contact> mList;
 
 	SparseBooleanArray mSparseBooleanArray;
 
-	public MultiSelectionAdapter(Context context, ArrayList<T> list) {
+	public MultiSelectionAdapter(Context context, ArrayList<Contact> list) {
 		this.mContext = context;
 
 		mInflater = LayoutInflater.from(mContext);
 
 		mSparseBooleanArray = new SparseBooleanArray();
 
-		mList = new ArrayList<T>();
+		mList = new ArrayList<Contact>();
 
-		this.mList = new ArrayList<T>(list);
+		this.mList = new ArrayList<Contact>(list);
 
 	}
 
-	public void setList(ArrayList<T> list) {
-		this.mList = new ArrayList<T>(list);
+	public void setList(ArrayList<Contact> list) {
+		this.mList = new ArrayList<Contact>(list);
 		this.mSparseBooleanArray = new SparseBooleanArray();
 	}
 
-	public ArrayList<T> getCheckedItems() {
+	public ArrayList<Contact> getCheckedItems() {
 
-		ArrayList<T> mTempArry = new ArrayList<T>();
+		ArrayList<Contact> mTempArry = new ArrayList<Contact>();
 
 		for (int i = 0; i < mList.size(); i++) {
 
@@ -93,7 +94,7 @@ public class MultiSelectionAdapter<T> extends BaseAdapter {
 
 		TextView name = (TextView) convertView.findViewById(R.id.contactName);
 
-		name.setText(mList.get(position).toString().split(":")[0]);
+		name.setText(mList.get(position).getName());
 
 		CheckBox mCheckBox = (CheckBox) convertView
 				.findViewById(R.id.chkEnable);
@@ -110,8 +111,7 @@ public class MultiSelectionAdapter<T> extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				String uri = "tel:"
-						+ mList.get(position).toString().split(":")[1].trim();
+				String uri = "tel:" + mList.get(position).getNumber().trim();
 				Intent intent = new Intent(Intent.ACTION_CALL);
 				intent.setData(Uri.parse(uri));
 				mContext.startActivity(intent);
@@ -126,8 +126,7 @@ public class MultiSelectionAdapter<T> extends BaseAdapter {
 			public void onClick(View v) {
 				Intent smsIntent = new Intent(Intent.ACTION_VIEW);
 				smsIntent.setType("vnd.android-dir/mms-sms");
-				smsIntent.putExtra("address", mList.get(position).toString()
-						.split(":")[1].trim());
+				smsIntent.putExtra("address", mList.get(position).getNumber().trim());
 				// smsIntent.putExtra("sms_body","Body of Message");
 				mContext.startActivity(smsIntent);
 			}

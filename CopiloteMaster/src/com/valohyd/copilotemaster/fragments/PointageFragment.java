@@ -264,6 +264,7 @@ public class PointageFragment extends SherlockFragment {
                         impartiTimeButton.setEnabled(false);
                         pointageTime.setText("NC");
                         remainingTime.setText("NC");
+                        signRemainingTime.setText("");
                         remainingTime.setVisibility(View.VISIBLE);
                         if (servicePointage != null)
                             servicePointage.stopCountDownTimer();
@@ -352,7 +353,7 @@ public class PointageFragment extends SherlockFragment {
         if (millisUntilFinished < 600000) {
             layoutRemainingTime.setBackgroundColor(getResources().getColor(R.color.holo_orange_dark));
         } else {
-            layoutRemainingTime.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            layoutRemainingTime.setBackgroundDrawable(getResources().getDrawable(R.drawable.vignette_bg));
         }
         remainingTime.setVisibility(View.VISIBLE); // On affiche le
                                                    // timer a chaque

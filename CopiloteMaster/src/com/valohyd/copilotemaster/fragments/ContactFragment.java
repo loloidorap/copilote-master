@@ -1,7 +1,6 @@
 package com.valohyd.copilotemaster.fragments;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,6 +25,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.valohyd.copilotemaster.R;
+import com.valohyd.copilotemaster.models.Contact;
+import com.valohyd.copilotemaster.sqlite.ContactsBDD;
 import com.valohyd.copilotemaster.utils.MultiSelectionAdapter;
 
 /**
@@ -41,9 +42,11 @@ public class ContactFragment extends SherlockFragment {
 	SharedPreferences sharedPrefs; // Prefs
 	Editor edit; // Editeur des prefs
 
-	MultiSelectionAdapter<String> mAdapter;
+	ContactsBDD bdd;
 
-	ArrayList<String> contacts = new ArrayList<String>(); // Les contacts
+	MultiSelectionAdapter mAdapter;
+
+	ArrayList<Contact> contacts = new ArrayList<Contact>(); // Les contacts
 
 	private final int PICK_CONTACT = 69; // Le request code pour choisir un
 											// contact
@@ -63,12 +66,13 @@ public class ContactFragment extends SherlockFragment {
 		sharedPrefs = getActivity().getSharedPreferences(TAG_NAME_PREF,
 				Activity.MODE_PRIVATE);
 		edit = sharedPrefs.edit();
+		bdd = new ContactsBDD(getActivity());
 
 		// INITIALISATION DES CONTACTS
 		initContacts();
 
 		list = (ListView) mainView.findViewById(R.id.contactList);
-		mAdapter = new MultiSelectionAdapter<String>(getActivity(), contacts);
+		mAdapter = new MultiSelectionAdapter(getActivity(), contacts);
 		list.setAdapter(mAdapter);
 
 		// AJOUT D'UN CONTACT
@@ -92,10 +96,10 @@ public class ContactFragment extends SherlockFragment {
 			public void onClick(View v) {
 				if (mAdapter != null) {
 					// On supprime la selection
-					ArrayList<String> mArraySelected = mAdapter
+					ArrayList<Contact> mArraySelected = mAdapter
 							.getCheckedItems();
 
-					for (String selected : mArraySelected) {
+					for (Contact selected : mArraySelected) {
 						removeContact(selected);
 					}
 					refreshAdapter();
@@ -109,14 +113,18 @@ public class ContactFragment extends SherlockFragment {
 	 * Initialise la liste des contacts avec les preferences
 	 */
 	private void initContacts() {
-		ArrayList<String> contact_init = new ArrayList<String>(
-				sharedPrefs.getStringSet(TAG_PREF_CONTACT,
-						new HashSet<String>()));
-
-		for (String s : contact_init) {
-			String[] contact = s.split(":");
-			contacts.add(contact[0] + ":" + contact[1]);
-		}
+		bdd.open();
+		contacts = bdd.getAllContacts();
+		Log.d("INIT", contacts.toString());
+		bdd.close();
+		// ArrayList<String> contact_init = new ArrayList<String>(
+		// sharedPrefs.getStringSet(TAG_PREF_CONTACT,
+		// new HashSet<String>()));
+		//
+		// for (String s : contact_init) {
+		// String[] contact = s.split(":");
+		// contacts.add(contact[0] + ":" + contact[1]);
+		// }
 	}
 
 	/**
@@ -124,14 +132,28 @@ public class ContactFragment extends SherlockFragment {
 	 * 
 	 * @param contact
 	 */
-	private void removeContact(String contact) {
+	private void removeContact(Contact contact) {
 		if (contacts.contains(contact)) {
+			Log.d("REMOVE", contact.toString());
+			bdd.open();
+			bdd.removeContactWithID(contact.getId());
 			contacts.remove(contact);
-			savePreferences();
-			Toast.makeText(getActivity(), "Contact supprimé : " + contact,
-					Toast.LENGTH_SHORT).show();
-			Log.d("CONTACTS", contacts.toString());
+			bdd.close();
+			// contacts.remove(contact);
+			// savePreferences();
+			// Toast.makeText(getActivity(), "Contact supprimé : " + contact,
+			// Toast.LENGTH_SHORT).show();
+			// Log.d("CONTACTS", contacts.toString());
 		}
+	}
+
+	private boolean isContactExits(String name) {
+		for (Contact c : contacts) {
+			if (c.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -141,30 +163,44 @@ public class ContactFragment extends SherlockFragment {
 	 * @param number
 	 */
 	private void addContact(String name, String number) {
-		if (contacts.contains(name + ":" + number)) {
+		Contact c = new Contact(name, number);
+
+		if (isContactExits(name)) {
 			Toast.makeText(getActivity(), "Contact existant !",
 					Toast.LENGTH_SHORT).show();
 		} else {
-			contacts.add(name + ":" + number);
-			savePreferences();
-			Toast.makeText(getActivity(), "Contact " + name + " ajouté !",
-					Toast.LENGTH_SHORT).show();
-			Log.d("CONTACTS", contacts.toString());
+			Log.d("ADD", c.toString());
+			bdd.open();
+			bdd.insertContact(c);
+			contacts.add(c);
+			bdd.close();
 		}
+		// if (contacts.contains(name + ":" + number)) {
+		// Toast.makeText(getActivity(), "Contact existant !",
+		// Toast.LENGTH_SHORT).show();
+		// } else {
+		// contacts.add(name + ":" + number);
+		// savePreferences();
+		// Toast.makeText(getActivity(), "Contact " + name + " ajouté !",
+		// Toast.LENGTH_SHORT).show();
+		// Log.d("CONTACTS", contacts.toString());
+		// }
 	}
 
-	/**
-	 * Sauvegarde les préférences
-	 */
-	private void savePreferences() {
-		edit.putStringSet("contacts", new HashSet<String>(contacts));
-		edit.commit();
-	}
+	//
+	// /**
+	// * Sauvegarde les préférences
+	// */
+	// private void savePreferences() {
+	// edit.putStringSet("contacts", new HashSet<String>(contacts));
+	// edit.commit();
+	// }
 
 	/**
 	 * Actualise l'adapter
 	 */
 	private void refreshAdapter() {
+		Log.d("REFRESH", contacts.toString());
 		mAdapter.setList(contacts);
 		mAdapter.notifyDataSetChanged();
 	}
