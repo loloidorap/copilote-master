@@ -41,9 +41,15 @@ public class PointageService extends Service {
 	private Timer timer; // timer for the past time
 
 	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+	    return super.onStartCommand(intent, flags, startId);
+	}
+	
+	@Override
 	public IBinder onBind(Intent arg0) {
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		intent = new Intent(this, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 		notif = new NotificationCompat.Builder(PointageService.this);
 		notif.setContentTitle("Pointage").setSmallIcon(R.drawable.ic_launcher)
@@ -141,7 +147,6 @@ public class PointageService extends Service {
 
 			@Override
 			public void run() {
-				Log.d("TIMER", "run");
 				seconds++;
 
 				// Decoupage du temps écoulé pour l'affichage

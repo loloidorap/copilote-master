@@ -234,6 +234,10 @@ public class PointageFragment extends SherlockFragment {
 
         // DEMARRAGE SERVICE
         Intent i = new Intent(getActivity(), PointageService.class);
+        // /!\ les deux lignes ici sont nécessaires : on veut que le service continue de tourner
+        // jusqu'à qu'on appelle stopService => donc on doit faire un startService
+        // et on veux être bindé au service, donc bind 
+        getActivity().startService(i);
         getActivity().bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 
         return mainView;
@@ -443,6 +447,8 @@ public class PointageFragment extends SherlockFragment {
     @Override
     public void onDestroy() {
         servicePointage.setHook(null);
+        getActivity().unbindService(mConnection);
+        Log.d("DESTROY","DESTROY");
         super.onDestroy();
     }
 }
