@@ -172,6 +172,12 @@ public class PointageService extends Service {
 			timer.purge();
 		}
 	}
+	
+	public void stopTout(){
+	    stopCountDownTimer();
+	    stopPastTimer();
+	    notificationManager.cancel(0);
+	}
 
 	/**
 	 * classe du binder, pour obtenir le service
