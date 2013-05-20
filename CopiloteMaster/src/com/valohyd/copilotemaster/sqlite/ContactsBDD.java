@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.valohyd.copilotemaster.models.Contact;
 
@@ -73,6 +74,11 @@ public class ContactsBDD {
 		return bdd.delete(TABLE_CONTACTS, COL_ID + " = " + id, null);
 	}
 
+	public int removeContactWithPhone(String phone) {
+		// Suppression d'un contact de la BDD grâce à l'ID
+		return bdd.delete(TABLE_CONTACTS, COL_PHONE + " = " + phone, null);
+	}
+
 	public Contact getContactWithName(String titre) {
 		// Récupère dans un Cursor les valeur correspondant à un contact contenu
 		// dans la BDD (ici on sélectionne le contact grâce à son nom)
@@ -89,7 +95,7 @@ public class ContactsBDD {
 	 */
 	public ArrayList<Contact> getAllContacts() {
 		ArrayList<Contact> contacts = new ArrayList<Contact>();
-		Cursor cursor = bdd.rawQuery("select * from "+TABLE_CONTACTS, null);
+		Cursor cursor = bdd.rawQuery("select * from " + TABLE_CONTACTS, null);
 		if (cursor.moveToFirst()) {
 
 			while (cursor.isAfterLast() == false) {

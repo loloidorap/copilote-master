@@ -136,8 +136,13 @@ public class ContactFragment extends SherlockFragment {
 		if (contacts.contains(contact)) {
 			Log.d("REMOVE", contact.toString());
 			bdd.open();
-			bdd.removeContactWithID(contact.getId());
-			contacts.remove(contact);
+			Log.d("REMOVE", bdd.getAllContacts().toString());
+			int res = bdd.removeContactWithPhone(contact.getNumber());
+			if (res == 1)
+				contacts.remove(contact);
+			else{
+				Toast.makeText(getActivity(), "Erreur suppression", 1000).show();
+			}
 			bdd.close();
 			// contacts.remove(contact);
 			// savePreferences();
@@ -237,6 +242,7 @@ public class ContactFragment extends SherlockFragment {
 							.getColumnIndexOrThrow(People.NAME));
 					String num = c.getString(c
 							.getColumnIndexOrThrow(People.NUMBER));
+					Log.d("oo", "" + num);
 					addContact(nom, num); // On l'ajoute
 					refreshAdapter(); // On refresh
 				}
