@@ -251,6 +251,9 @@ public class PointageFragment extends SherlockFragment {
 								finalDate = null;
 								impartiDate = null;
 								pointageDate = null;
+								signRemainingTime.setText("");
+								signRemainingTime.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+				                signRemainingTime.setTextColor(getResources().getColor(R.color.black));
 								savePreferences();
 
 							}
