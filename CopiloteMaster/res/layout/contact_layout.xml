@@ -1,14 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#cecece"
     android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/textContact"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Contact Rapides" />
 
     <LinearLayout
         android:id="@+id/buttonsContactLayout"
@@ -16,6 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center"
+        android:background="@drawable/vignette_bg"
+        android:padding="10dp"
+        android:layout_margin="5dp"
         android:orientation="horizontal"
         android:weightSum="2" >
 
@@ -37,9 +34,12 @@
     <ListView
         android:id="@+id/contactList"
         android:layout_width="match_parent"
+        android:padding="5dp"
+        android:dividerHeight="5dp"
+        android:divider="@android:color/transparent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttonsContactLayout"
-        android:layout_below="@id/textContact" >
+        android:layout_alignParentTop="true" >
     </ListView>
 
 </RelativeLayout>

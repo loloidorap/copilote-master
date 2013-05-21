@@ -1,6 +1,7 @@
 package com.valohyd.copilotemaster.fragments;
 
 import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -12,9 +13,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.utils.Chronometer;
 
@@ -53,6 +51,9 @@ public class ChronoFragment extends SherlockFragment {
 		partielList.setAdapter(listAdapter);
 		// BUTTONS
 		partielButton = (Button) mainView.findViewById(R.id.partielButton);
+		partielButton.setEnabled(false); // Desactivation des partiels si chrono
+											// eteint
+
 		startButton = (Button) mainView.findViewById(R.id.startChronoButton);
 		stopButton = (Button) mainView.findViewById(R.id.stopChronoButton);
 
@@ -60,6 +61,7 @@ public class ChronoFragment extends SherlockFragment {
 
 			@Override
 			public void onClick(View v) {
+				partielButton.setEnabled(true); // activation des partiels
 				// Si on doit reprendre le chrono
 				if (startButton.getText().equals("Resume")) {
 					chrono.setBase(SystemClock.elapsedRealtime()
@@ -67,9 +69,10 @@ public class ChronoFragment extends SherlockFragment {
 												// arrêté
 				}
 				// Si on declenche pour la premiere fois le chrono
-				if (firstTime)
+				if (firstTime) {
 					chrono.setBase(SystemClock.elapsedRealtime()); // On remet à
 																	// 0
+				}
 				chrono.start();
 				startButton.setEnabled(false); // On ne peux plus rappuyer sur
 												// start
@@ -81,6 +84,7 @@ public class ChronoFragment extends SherlockFragment {
 
 			@Override
 			public void onClick(View v) {
+				partielButton.setEnabled(false); // desactivation des partiels
 				// Reset du chrono
 				if (stopButton.getText().equals("Reset")) {
 					chrono.stop(); // On stop le chrono

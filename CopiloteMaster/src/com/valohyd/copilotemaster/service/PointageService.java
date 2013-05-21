@@ -3,7 +3,6 @@ package com.valohyd.copilotemaster.service;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -12,7 +11,6 @@ import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.valohyd.copilotemaster.MainActivity;
 import com.valohyd.copilotemaster.R;
@@ -55,6 +53,12 @@ public class PointageService extends Service {
 		notif.setContentTitle("Pointage").setSmallIcon(R.drawable.ic_launcher)
 				.setContentIntent(pIntent).build();
 		return mBinder;
+	}
+	
+	@Override
+	public boolean onUnbind(Intent intent) {
+		stopTout();
+		return super.onUnbind(intent);
 	}
 
 	public CountDownTimer getRemainTimer() {

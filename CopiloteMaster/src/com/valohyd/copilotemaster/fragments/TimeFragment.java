@@ -15,16 +15,12 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
-import android.webkit.WebSettings.PluginState;
 import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.valohyd.copilotemaster.R;
 
 /**
@@ -115,13 +111,15 @@ public class TimeFragment extends SherlockFragment {
 				}
 			});
 			// paramétrer la page
-			web.getSettings().setJavaScriptEnabled(true);
-			web.getSettings().setPluginState(PluginState.ON);
+//			web.getSettings().setJavaScriptEnabled(true);
+//			web.getSettings().setPluginState(PluginState.ON);
 			web.getSettings().setBuiltInZoomControls(true);
 			web.getSettings().setSupportZoom(true);
 			web.getSettings().setRenderPriority(RenderPriority.HIGH);
-			web.getSettings().setCacheMode(WebSettings.LOAD_NORMAL);
+			web.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 			web.getSettings().setGeolocationEnabled(false);
+			web.getSettings().setUseWideViewPort(true);
+			web.getSettings().setLoadWithOverviewMode(true);
 
 			// autoriser la navigation dans les pages
 			web.setWebViewClient(new MyWebViewClient());

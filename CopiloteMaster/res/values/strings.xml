@@ -3,11 +3,13 @@
 
     <string name="app_name">Copilote Master</string>
     <string name="times_title">Temps des spéciales</string>
-     <string name="contacts_title">Contacts rapides</string>
+    <string name="contacts_title">Contacts rapides</string>
     <string name="chrono_title">Chronos</string>
     <string name="navigation_title">Navigation</string>
     <string name="horaire_title">Calcul horaire</string>
+    <string name="about_title">A propos</string>
     <string name="menu_settings">Settings</string>
+    <string name="close_app">Arrêter l\'application</string>
     <string name="menu_raz_pref">RAZ données</string>
     <string name="menu_stop_pointage">Effacer données</string>
     <string name="gps_off">Le GPS est désactivé. Voulez-vous l\'activer ?</string>
@@ -22,11 +24,14 @@
     <string name="pref_user_name_summary">Set your username</string>
     <string name="pref_user_profile">User Profile</string>
     <string name="pref_contact_setting">Contacts rapide</string>
+
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
-      <!-- A dark Holo shade of orange -->
+    <!-- A dark Holo shade of orange -->
     <color name="holo_orange_dark">#ffff8800</color>
     <!-- A light Holo shade of red -->
     <color name="holo_red_light">#ffcc0000</color>
+    <!-- Dark Blue CopiloteMaster -->
+    <color name="dark_blue_copilotmaster">#264382</color>
 
 </resources>
