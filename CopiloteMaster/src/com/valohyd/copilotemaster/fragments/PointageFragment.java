@@ -266,8 +266,8 @@ public class PointageFragment extends SherlockFragment {
 
 	public void setService(PointageService service,ServiceConnection mConnection) {
 		this.servicePointage = service;
-		Intent i = new Intent(getActivity(), PointageService.class);
-		getActivity().bindService(i, mConnection, Context.BIND_AUTO_CREATE);
+//		Intent i = new Intent(getActivity(), PointageService.class);
+//		getActivity().bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	@Override

@@ -203,7 +203,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onBackPressed() {
 		// if (doubleBackToExitPressedOnce) {
 		super.onBackPressed();
-		servicePointage.unbindService(mConnection);
+		//servicePointage.unbindService(mConnection);
 		// return;
 		// }
 		// this.doubleBackToExitPressedOnce = true;
