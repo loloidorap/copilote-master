@@ -1,8 +1,6 @@
 package com.valohyd.copilotemaster.fragments;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -42,6 +40,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.maps.GeoPoint;
 import com.valohyd.copilotemaster.MainActivity;
 import com.valohyd.copilotemaster.R;
+import com.valohyd.copilotemaster.models.Contact;
+import com.valohyd.copilotemaster.sqlite.ContactsBDD;
 
 /**
  * Classe representant le fragment de navigation
@@ -66,6 +66,9 @@ public class NavigationFragment extends SupportMapFragment implements
 	private MyGPSListener mGpsListener;
 
 	private boolean firstFix = true;
+
+	// BDD
+	ContactsBDD bdd;
 
 	// TAGS
 	public static final String TAG_PREF_CONTACT = "contacts",
@@ -120,6 +123,9 @@ public class NavigationFragment extends SupportMapFragment implements
 		mainView = inflater.inflate(R.layout.navigation_layout, container,
 				false);
 
+		// BDD
+		bdd = new ContactsBDD(getActivity());
+
 		// PREFERENCES
 		sharedPrefs = getActivity().getSharedPreferences(TAG_NAME_PREF,
 				Activity.MODE_PRIVATE);
@@ -163,79 +169,87 @@ public class NavigationFragment extends SupportMapFragment implements
 			@Override
 			public void onClick(View v) {
 				initContacts(); // Initialisation des contacts
-				// CONSTRUCTION DIALOG
-				contact_dialog = new AlertDialog.Builder(getActivity());
-				contact_dialog.setTitle("Choisissez des contacts");
-				contact_dialog.setMultiChoiceItems(
-						// Selection multiple
-						contacts.toArray(new CharSequence[contacts.size()]),
-						null, new OnMultiChoiceClickListener() {
+				if (contacts.isEmpty()) {
+					Toast.makeText(getActivity(), "Aucun contacts rapides !",
+							Toast.LENGTH_SHORT).show();
 
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which, boolean isChecked) {
-								// Selection d'un contact ou deselection
-								if (isChecked)
-									selected_contacts.add(contacts.get(which)
-											.toString());
-								else
-									selected_contacts.remove(contacts
-											.get(which).toString());
-							}
-						});
+				} else {
+					// CONSTRUCTION DIALOG
+					contact_dialog = new AlertDialog.Builder(getActivity());
+					contact_dialog.setTitle("Choisissez des contacts");
+					contact_dialog.setMultiChoiceItems(
+							// Selection multiple
+							contacts.toArray(new CharSequence[contacts.size()]),
+							null, new OnMultiChoiceClickListener() {
 
-				// PARTAGE DU RADAR
-				contact_dialog.setPositiveButton("Partager le radar !",
-						new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which, boolean isChecked) {
+									// Selection d'un contact ou deselection
+									if (isChecked)
+										selected_contacts.add(contacts.get(
+												which).toString());
+									else
+										selected_contacts.remove(contacts.get(
+												which).toString());
+								}
+							});
 
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// CONSTRUCTION DU DIALOG
-								AlertDialog.Builder builder = new AlertDialog.Builder(
-										getActivity());
-								builder.setTitle("Envoi de sms");
-								builder.setMessage("Envoi du radar au numéros suivants : "
-										+ selected_contacts + " ?");
-								builder.setPositiveButton(android.R.string.ok,
-										new OnClickListener() {
+					// PARTAGE DU RADAR
 
-											@Override
-											public void onClick(
-													DialogInterface dialog,
-													int which) {
-												for (String nb : selected_contacts) {
-													sendSms(nb.split(":")[1],
-															"radar sur la liaison !"); // On
-																						// envoi
-																						// le
-																						// sms
+					contact_dialog.setPositiveButton("Partager le radar !",
+							new OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// CONSTRUCTION DU DIALOG
+									AlertDialog.Builder builder = new AlertDialog.Builder(
+											getActivity());
+									builder.setTitle("Envoi de sms");
+									builder.setMessage("Envoi du radar au numéros suivants : "
+											+ selected_contacts + " ?");
+									builder.setPositiveButton(
+											android.R.string.ok,
+											new OnClickListener() {
+
+												@Override
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+													for (String nb : selected_contacts) {
+														sendSms(nb.split(":")[1],
+																"radar sur la liaison !"); // On
+																							// envoi
+																							// le
+																							// sms
+													}
+													selected_contacts = new ArrayList<String>(); // on
+																									// vide
+																									// la
+																									// selection
 												}
-												selected_contacts = new ArrayList<String>(); // on
-																								// vide
-																								// la
-																								// selection
-											}
-										});
-								builder.setNegativeButton(
-										android.R.string.cancel, null);
-								builder.show();
+											});
+									builder.setNegativeButton(
+											android.R.string.cancel, null);
+									builder.show();
 
-							}
-						});
+								}
+							});
 
-				contact_dialog.show();
-				contact_dialog.setCancelable(true);
-				contact_dialog.setOnCancelListener(new OnCancelListener() {
+					contact_dialog.show();
+					contact_dialog.setCancelable(true);
+					contact_dialog.setOnCancelListener(new OnCancelListener() {
 
-					@Override
-					public void onCancel(DialogInterface dialog) {
-						selected_contacts = new ArrayList<String>();// on
-						// vide
-						// la
-						// selection
-					}
-				});
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							selected_contacts = new ArrayList<String>();// on
+							// vide
+							// la
+							// selection
+						}
+					});
+				}
 			}
 		});
 
@@ -317,11 +331,15 @@ public class NavigationFragment extends SupportMapFragment implements
 
 	// Initialisation des contacts via les preferences
 	private void initContacts() {
-		Set<String> contact_init = sharedPrefs.getStringSet(TAG_PREF_CONTACT,
-				new HashSet<String>());
+		bdd.open();
 
-		contacts = new ArrayList<String>(contact_init);
+		ArrayList<Contact> contact_temp = bdd.getAllContacts();
+		contacts = new ArrayList<String>();
+		for (Contact c : contact_temp) {
+			contacts.add(c.getName() + ":" + c.getNumber());
+		}
 		selected_contacts = new ArrayList<String>();// on vide la selection
+		bdd.close();
 	}
 
 	// Envoi d'un sms
@@ -332,7 +350,7 @@ public class NavigationFragment extends SupportMapFragment implements
 			Toast.makeText(getActivity(), "SMS envoyé au " + number + " !",
 					Toast.LENGTH_LONG).show();
 		} catch (Exception e) {
-			Toast.makeText(getActivity(), "SMS fail !", Toast.LENGTH_LONG)
+			Toast.makeText(getActivity(), "SMS non envoyé !", Toast.LENGTH_LONG)
 					.show();
 			e.printStackTrace();
 		}

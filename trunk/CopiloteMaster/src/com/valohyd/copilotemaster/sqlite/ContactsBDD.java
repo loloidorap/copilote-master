@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.valohyd.copilotemaster.models.Contact;
 
@@ -71,12 +70,16 @@ public class ContactsBDD {
 
 	public int removeContactWithID(int id) {
 		// Suppression d'un contact de la BDD grâce à l'ID
-		return bdd.delete(TABLE_CONTACTS, COL_ID + " = " + id, null);
+		String where = COL_ID + "= " + "?";
+		String whereArgs[] = { "" + id };
+		return bdd.delete(TABLE_CONTACTS, where, whereArgs);
 	}
 
 	public int removeContactWithPhone(String phone) {
 		// Suppression d'un contact de la BDD grâce à l'ID
-		return bdd.delete(TABLE_CONTACTS, COL_PHONE + " = " + phone, null);
+		String where = COL_PHONE + "= " + "?";
+		String whereArgs[] = { phone };
+		return bdd.delete(TABLE_CONTACTS, where, whereArgs);
 	}
 
 	public Contact getContactWithName(String titre) {

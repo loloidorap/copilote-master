@@ -9,8 +9,7 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Contacts;
-import android.provider.Contacts.People;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +20,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.models.Contact;
 import com.valohyd.copilotemaster.sqlite.ContactsBDD;
@@ -140,15 +136,11 @@ public class ContactFragment extends SherlockFragment {
 			int res = bdd.removeContactWithPhone(contact.getNumber());
 			if (res == 1)
 				contacts.remove(contact);
-			else{
-				Toast.makeText(getActivity(), "Erreur suppression", 1000).show();
+			else {
+				Toast.makeText(getActivity(), "Erreur suppression",
+						Toast.LENGTH_SHORT).show();
 			}
 			bdd.close();
-			// contacts.remove(contact);
-			// savePreferences();
-			// Toast.makeText(getActivity(), "Contact supprimé : " + contact,
-			// Toast.LENGTH_SHORT).show();
-			// Log.d("CONTACTS", contacts.toString());
 		}
 	}
 
@@ -180,16 +172,6 @@ public class ContactFragment extends SherlockFragment {
 			contacts.add(c);
 			bdd.close();
 		}
-		// if (contacts.contains(name + ":" + number)) {
-		// Toast.makeText(getActivity(), "Contact existant !",
-		// Toast.LENGTH_SHORT).show();
-		// } else {
-		// contacts.add(name + ":" + number);
-		// savePreferences();
-		// Toast.makeText(getActivity(), "Contact " + name + " ajouté !",
-		// Toast.LENGTH_SHORT).show();
-		// Log.d("CONTACTS", contacts.toString());
-		// }
 	}
 
 	//
@@ -215,7 +197,7 @@ public class ContactFragment extends SherlockFragment {
 	 */
 	public void readcontact() {
 		Intent intent = new Intent(Intent.ACTION_PICK,
-				Contacts.Phones.CONTENT_URI);
+				ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
 		startActivityForResult(intent, PICK_CONTACT);
 
 	}
@@ -234,18 +216,25 @@ public class ContactFragment extends SherlockFragment {
 			// Si tout s'est bien déroulé
 			if (resultCode == Activity.RESULT_OK) {
 				Uri contactData = data.getData();
-				Cursor c = getActivity().managedQuery(contactData, null, null,
-						null, null);
-				if (c.moveToFirst()) {
-					// On recupère les infos du contact
-					String nom = c.getString(c
-							.getColumnIndexOrThrow(People.NAME));
-					String num = c.getString(c
-							.getColumnIndexOrThrow(People.NUMBER));
-					Log.d("oo", "" + num);
-					addContact(nom, num); // On l'ajoute
+				String[] projection = new String[] {
+						ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+						ContactsContract.CommonDataKinds.Phone.NUMBER };
+
+				Cursor people = getActivity().getContentResolver().query(
+						contactData, projection, null, null, null);
+
+				int indexName = people
+						.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+				int indexNumber = people
+						.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+				people.moveToFirst();
+				do {
+					String name = people.getString(indexName);
+					String number = people.getString(indexNumber);
+					addContact(name, number); // On l'ajoute
 					refreshAdapter(); // On refresh
-				}
+				} while (people.moveToNext());
 			}
 			break;
 		}

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#264382"
+        android:background="@color/dark_blue_copilotmaster"
         android:gravity="center"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
