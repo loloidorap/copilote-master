@@ -17,7 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/chrono"
-        android:text="Partiel" />
+        android:layout_margin="5dp"
+        android:background="@drawable/button_selector"
+        android:lines="2"
+        android:text="Partiel"
+        android:textColor="#ffffff" />
 
     <LinearLayout
         android:id="@+id/buttonsLayout"
@@ -32,15 +36,23 @@
             android:id="@+id/startChronoButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Start" />
+            android:background="@drawable/button_selector"
+            android:lines="2"
+            android:text="Start"
+            android:textColor="#ffffff" />
 
         <Button
             android:id="@+id/stopChronoButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Stop" />
+            android:background="@drawable/button_selector"
+            android:lines="2"
+            android:text="Stop"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
     <ListView

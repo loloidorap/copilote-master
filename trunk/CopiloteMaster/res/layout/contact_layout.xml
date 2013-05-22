@@ -9,37 +9,56 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:background="@drawable/vignette_bg"
-        android:padding="10dp"
         android:layout_margin="5dp"
+        android:background="@drawable/vignette_bg"
+        android:gravity="center"
         android:orientation="horizontal"
+        android:padding="10dp"
         android:weightSum="2" >
 
         <Button
             android:id="@+id/removeContactButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:lines="2"
             android:layout_weight="1"
-            android:text="Supprimer la selection" />
+            android:background="@drawable/button_selector"
+            android:text="Supprimer la selection"
+            android:textColor="#ffffff" />
 
         <Button
             android:id="@+id/addContactButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:lines="2"
             android:layout_weight="1"
-            android:text="Ajouter un contact" />
+            android:background="@drawable/button_selector"
+            android:text="Ajouter un contact"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/contactList"
         android:layout_width="match_parent"
-        android:padding="5dp"
-        android:dividerHeight="5dp"
-        android:divider="@android:color/transparent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttonsContactLayout"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="5dp"
+        android:padding="5dp" >
     </ListView>
+
+    <TextView
+        android:id="@+id/no_contacts"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/buttonsContactLayout"
+        android:layout_alignParentTop="true"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:text="Aucun contacts rapides !" />
 
 </RelativeLayout>

@@ -56,6 +56,7 @@
     </style>
 
     <style name="ActionBarTabStyle.Copilotemaster" parent="@style/Widget.Sherlock.ActionBar.TabView">
+        <item name="android:layout_width">20dp</item>
         <item name="android:background">@drawable/tab_indicator_ab_copilotemaster</item>
     </style>
 	

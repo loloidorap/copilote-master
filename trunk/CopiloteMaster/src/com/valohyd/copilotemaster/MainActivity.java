@@ -1,5 +1,6 @@
 package com.valohyd.copilotemaster;
 
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +17,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.valohyd.copilotemaster.fragments.AboutFragment;
 import com.valohyd.copilotemaster.fragments.ChronoFragment;
 import com.valohyd.copilotemaster.fragments.ContactFragment;
 import com.valohyd.copilotemaster.fragments.NavigationFragment;
@@ -33,7 +33,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	TimeFragment timeFragment;
 	NavigationFragment mapFragment;
 	ContactFragment contactFragment;
-	AboutFragment aboutFragment;
 	// private boolean doubleBackToExitPressedOnce = false;
 
 	// SERVICES
@@ -79,7 +78,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				isServiceBounded = false;
 			}
 		};
-		
+
 		Intent i = new Intent(MainActivity.this, PointageService.class);
 		startService(i);
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
@@ -132,10 +131,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
-		tab = getSupportActionBar().newTab().setText(R.string.about_title);
-		tab.setTabListener(this);
-		getSupportActionBar().addTab(tab);
-
 	}
 
 	@Override
@@ -181,13 +176,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 			ft.show(this.contactFragment);
 		}
-		if (tab.getPosition() == 5) {
-			if (this.aboutFragment == null) {
-				this.aboutFragment = new AboutFragment();
-				ft.add(R.id.container, this.aboutFragment, null);
-			}
-			ft.show(this.aboutFragment);
-		}
 	}
 
 	@Override
@@ -206,9 +194,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 		if (tab.getPosition() == 4) {
 			ft.hide(this.contactFragment);
-		}
-		if (tab.getPosition() == 5) {
-			ft.hide(this.aboutFragment);
 		}
 	}
 
@@ -241,9 +226,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 				unbindService(mConnection);
 				servicePointage.setHook(null);
 				servicePointage.stopSelf();
+				servicePointage = null;
 			}
 			// doubleBackToExitPressedOnce = true;
 			onBackPressed();
+			break;
+		case R.id.about:
+			Dialog d = new Dialog(this);
+			d.setTitle(getString(R.string.about_title));
+			d.setContentView(R.layout.about_layout);
+			d.show();
 			break;
 		}
 		return true;
