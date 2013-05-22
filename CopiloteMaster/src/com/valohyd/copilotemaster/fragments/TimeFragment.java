@@ -100,6 +100,7 @@ public class TimeFragment extends SherlockFragment {
 																	// la page
 																	// d'accueil
 																	// actuelle
+										web.loadUrl(home_url);
 										savePreferences();
 									}
 								});

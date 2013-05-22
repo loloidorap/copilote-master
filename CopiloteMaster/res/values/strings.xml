@@ -12,6 +12,7 @@
     <string name="close_app">Arrêter l\'application</string>
     <string name="menu_raz_pref">RAZ données</string>
     <string name="menu_stop_pointage">Effacer données</string>
+    <string name="menu_about">A propos</string>
     <string name="gps_off">Le GPS est désactivé. Voulez-vous l\'activer ?</string>
     <string name="gps_settings">Allez dans les paramètres</string>
     <string name="hello_world">Hello world!</string>

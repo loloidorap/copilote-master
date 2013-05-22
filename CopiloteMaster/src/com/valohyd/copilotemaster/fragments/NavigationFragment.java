@@ -78,8 +78,6 @@ public class NavigationFragment extends SupportMapFragment implements
 
 	ImageButton radarButton, gpsButton; // Bouton de radar
 
-	SharedPreferences sharedPrefs; // Preferences
-
 	AlertDialog.Builder contact_dialog; // Dialog de contact
 
 	private ArrayList<String> contacts, selected_contacts; // Contacts et
@@ -125,10 +123,6 @@ public class NavigationFragment extends SupportMapFragment implements
 
 		// BDD
 		bdd = new ContactsBDD(getActivity());
-
-		// PREFERENCES
-		sharedPrefs = getActivity().getSharedPreferences(TAG_NAME_PREF,
-				Activity.MODE_PRIVATE);
 
 		selected_contacts = new ArrayList<String>();
 
@@ -218,7 +212,8 @@ public class NavigationFragment extends SupportMapFragment implements
 														DialogInterface dialog,
 														int which) {
 													for (String nb : selected_contacts) {
-														sendSms(nb.split(":")[1],
+														sendSms(nb
+																.split("\n\t")[1],
 																"radar sur la liaison !"); // On
 																							// envoi
 																							// le
@@ -336,7 +331,7 @@ public class NavigationFragment extends SupportMapFragment implements
 		ArrayList<Contact> contact_temp = bdd.getAllContacts();
 		contacts = new ArrayList<String>();
 		for (Contact c : contact_temp) {
-			contacts.add(c.getName() + ":" + c.getNumber());
+			contacts.add(c.getName() + "\n\t" + c.getNumber());
 		}
 		selected_contacts = new ArrayList<String>();// on vide la selection
 		bdd.close();

@@ -113,6 +113,8 @@ public class ContactFragment extends SherlockFragment {
 		contacts = bdd.getAllContacts();
 		Log.d("INIT", contacts.toString());
 		bdd.close();
+		if(contacts.isEmpty())
+			mainView.findViewById(R.id.no_contacts).setVisibility(View.VISIBLE);
 		// ArrayList<String> contact_init = new ArrayList<String>(
 		// sharedPrefs.getStringSet(TAG_PREF_CONTACT,
 		// new HashSet<String>()));
@@ -141,6 +143,9 @@ public class ContactFragment extends SherlockFragment {
 						Toast.LENGTH_SHORT).show();
 			}
 			bdd.close();
+			if (contacts.isEmpty())
+				mainView.findViewById(R.id.no_contacts).setVisibility(
+						View.VISIBLE);
 		}
 	}
 
@@ -172,6 +177,7 @@ public class ContactFragment extends SherlockFragment {
 			contacts.add(c);
 			bdd.close();
 		}
+		mainView.findViewById(R.id.no_contacts).setVisibility(View.GONE);
 	}
 
 	//

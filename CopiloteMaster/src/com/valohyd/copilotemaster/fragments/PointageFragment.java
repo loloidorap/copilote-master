@@ -57,9 +57,6 @@ public class PointageFragment extends SherlockFragment {
 	private TextView pointageTime, impartiTime, remainingTime, finishTime,
 			signRemainingTime;
 
-	// private CountDownTimer remainTimer; // Temps restants dans le temps
-	// imparti
-
 	private Chronometer elapsedTime; // Temps écoulés hors temps
 
 	private Date pointageDate, impartiDate, finalDate; // Heure de pointage,
@@ -71,29 +68,6 @@ public class PointageFragment extends SherlockFragment {
 																			// date
 
 	private PointageService servicePointage; // service pointage
-
-	// // service connection : pour se connecter au service
-	// private ServiceConnection mConnection;
-	// = new ServiceConnection() {
-	//
-	// public void onServiceConnected(ComponentName className, IBinder binder) {
-	// // récupérer le service
-	// servicePointage = ((PointageService.MyBinder) binder).getService();
-	//
-	// // lui donner le remainTimer
-	// //servicePointage.setRemainTimer(remainTimer);
-	//
-	// // donner un hook de du fragment
-	// servicePointage.setHook(PointageFragment.this);
-	//
-	// //Toast.makeText(PointageFragment.this.getActivity(), "Connected",
-	// Toast.LENGTH_SHORT).show();
-	// }
-	//
-	// public void onServiceDisconnected(ComponentName className) {
-	// servicePointage = null;
-	// }
-	// };
 
 	// PREFERENCES
 	SharedPreferences sharedPrefs;
@@ -246,40 +220,28 @@ public class PointageFragment extends SherlockFragment {
 		// CHARGEMENT DES PREFS
 		loadPreferences();
 		setHasOptionsMenu(true);
-		//
-		// // RECUPERATION SERVICE
-		// servicePointage = ((MainActivity) getActivity()).getService();
-		// Intent i = new Intent(getActivity(), PointageService.class);
-		// // /!\ les deux lignes ici sont nécessaires : on veut que le service
-		// continue de tourner
-		// // jusqu'à qu'on appelle stopService => donc on doit faire un
-		// startService
-		// // et on veux être bindé au service, donc bind
-		// getActivity().startService(i);
-		// getActivity().bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 
 		return mainView;
 	}
 
-	public void setService(PointageService service,ServiceConnection mConnection) {
+	public void setService(PointageService service,
+			ServiceConnection mConnection) {
 		this.servicePointage = service;
-//		Intent i = new Intent(getActivity(), PointageService.class);
-//		getActivity().bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		MenuItem item = menu.findItem(R.id.stop_pointage);
-		item.setVisible(isVisible());
+		item.setVisible(true);
 		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
-				builder.setTitle("Remise à zéro");
-				builder.setMessage("Etes-vous sur de vouloir remettre à zéro les données ?");
+				builder.setTitle("Arrêt du pointage");
+				builder.setMessage("Etes-vous sur de vouloir arrêter le pointage ?");
 				builder.setPositiveButton(android.R.string.yes,
 						new DialogInterface.OnClickListener() {
 
@@ -290,6 +252,10 @@ public class PointageFragment extends SherlockFragment {
 									elapsedTime.stop();
 									elapsedTime.setVisibility(View.GONE);
 								}
+								layoutRemainingTime
+										.setBackgroundDrawable(getResources()
+												.getDrawable(
+														R.drawable.vignette_bg));
 								finishTime.setText("NC");
 								impartiTime.setText("NC");
 								impartiTimeButton.setEnabled(false);
@@ -478,13 +444,5 @@ public class PointageFragment extends SherlockFragment {
 		edit.putString(TAG_PREF_POINTAGE, pointageTime.getText().toString());
 		edit.putString(TAG_PREF_IMPARTI, impartiTime.getText().toString());
 		edit.commit();
-	}
-
-	@Override
-	public void onDestroy() {
-		//servicePointage.setHook(null);
-		// getActivity().unbindService(mConnection);
-		Log.d("DESTROY", "DESTROY");
-		super.onDestroy();
 	}
 }
