@@ -311,7 +311,7 @@ public class PointageFragment extends SherlockFragment {
 		finishTime.setText(minuteFormat.format(finalDate));
 
 		// Calcul des temps
-		long futurems = finalDate.getTime();
+		final long futurems = finalDate.getTime();
 		long nowms = new Date().getTime();
 		final long remaining = futurems - nowms;
 

@@ -5,9 +5,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -68,9 +70,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 				isServiceBounded = true;
 
-				Toast.makeText(getApplicationContext(), "Connected",
-						Toast.LENGTH_SHORT).show();
-
 			}
 
 			public void onServiceDisconnected(ComponentName className) {
@@ -110,24 +109,46 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private void createTabs() {
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		ActionBar.Tab tab = getSupportActionBar().newTab().setText(
-				R.string.horaire_title);
+		
+		ActionBar.Tab tab = getSupportActionBar().newTab();
+		
+		TextView tv = new TextView(this);
+		tv.setTextColor(Color.WHITE);
+		tv.setTextSize(11);
+		tv.setText(getString(R.string.horaire_title));
+		tab = getSupportActionBar().newTab().setCustomView(tv);
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
-		tab = getSupportActionBar().newTab().setText(R.string.navigation_title);
+		tv = new TextView(this);
+		tv.setTextColor(Color.WHITE);
+		tv.setTextSize(11);
+		tv.setText(R.string.navigation_title);
+		tab = getSupportActionBar().newTab().setCustomView(tv);
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
-		tab = getSupportActionBar().newTab().setText(R.string.chrono_title);
+		tv = new TextView(this);
+		tv.setTextColor(Color.WHITE);
+		tv.setTextSize(11);
+		tv.setText(R.string.chrono_title);
+		tab = getSupportActionBar().newTab().setCustomView(tv);
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
-		tab = getSupportActionBar().newTab().setText(R.string.times_title);
+		tv = new TextView(this);
+		tv.setTextColor(Color.WHITE);
+		tv.setTextSize(11);
+		tv.setText(R.string.times_title);
+		tab = getSupportActionBar().newTab().setCustomView(tv);
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
-		tab = getSupportActionBar().newTab().setText(R.string.contacts_title);
+		tv = new TextView(this);
+		tv.setTextColor(Color.WHITE);
+		tv.setTextSize(11);
+		tv.setText(R.string.contacts_title);
+		tab = getSupportActionBar().newTab().setCustomView(tv);
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
