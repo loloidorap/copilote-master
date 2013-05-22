@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
@@ -35,13 +34,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 	NavigationFragment mapFragment;
 	ContactFragment contactFragment;
 	AboutFragment aboutFragment;
-	Fragment frag = new Fragment();
 	// private boolean doubleBackToExitPressedOnce = false;
+
+	// SERVICES
 	private PointageService servicePointage;
 	// service connection : pour se connecter au service
 	private ServiceConnection mConnection;
-
-	// Fragment frag;
+	private boolean isServiceBounded = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +49,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		// For each of the sections in the app, add a tab to the action bar.
 		createTabs();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
 		// BIND SERVICE
 		mConnection = new ServiceConnection() {
 
@@ -61,7 +65,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 				// donner un hook de du fragment
 				servicePointage.setHook(pointageFragment);
 
-				pointageFragment.setService(servicePointage,mConnection);
+				pointageFragment.setService(servicePointage, mConnection);
+
+				isServiceBounded = true;
 
 				Toast.makeText(getApplicationContext(), "Connected",
 						Toast.LENGTH_SHORT).show();
@@ -70,12 +76,24 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			public void onServiceDisconnected(ComponentName className) {
 				servicePointage = null;
+				isServiceBounded = false;
 			}
 		};
-		Intent i = new Intent(this, PointageService.class);
+		
+		Intent i = new Intent(MainActivity.this, PointageService.class);
 		startService(i);
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (servicePointage != null && mConnection != null && isServiceBounded) {
+			unbindService(mConnection);
+			servicePointage.setHook(null);
+			isServiceBounded = false;
+		}
 	}
 
 	/**
@@ -203,7 +221,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onBackPressed() {
 		// if (doubleBackToExitPressedOnce) {
 		super.onBackPressed();
-		//servicePointage.unbindService(mConnection);
+		// servicePointage.unbindService(mConnection);
 		// return;
 		// }
 		// this.doubleBackToExitPressedOnce = true;
@@ -217,9 +235,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		switch (item.getItemId()) {
 		case R.id.close_app:
-			if (servicePointage != null) {
+			if (servicePointage != null && mConnection != null
+					&& isServiceBounded) {
 				servicePointage.stopTout();
-				servicePointage.unbindService(mConnection);
+				unbindService(mConnection);
 				servicePointage.setHook(null);
 				servicePointage.stopSelf();
 			}
