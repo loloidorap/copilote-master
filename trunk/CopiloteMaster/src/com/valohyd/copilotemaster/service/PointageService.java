@@ -7,10 +7,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.valohyd.copilotemaster.MainActivity;
 import com.valohyd.copilotemaster.R;
@@ -40,9 +42,9 @@ public class PointageService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-	    return super.onStartCommand(intent, flags, startId);
+		return super.onStartCommand(intent, flags, startId);
 	}
-	
+
 	@Override
 	public IBinder onBind(Intent arg0) {
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -50,11 +52,12 @@ public class PointageService extends Service {
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 		notif = new NotificationCompat.Builder(PointageService.this);
-		notif.setContentTitle("Pointage").setSmallIcon(R.drawable.ic_launcher)
+		notif.setContentTitle("Pointage").setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                R.drawable.ic_launcher))
 				.setContentIntent(pIntent).build();
 		return mBinder;
 	}
-	
+
 	@Override
 	public boolean onUnbind(Intent intent) {
 		stopTout();
@@ -80,6 +83,7 @@ public class PointageService extends Service {
 		// stop the other timer
 		stopCountDownTimer();
 		stopPastTimer();
+		notif.setContentTitle("Pointage");
 
 		// start the new
 		remainTimer = new CountDownTimer(millisInFuture, countDownInterval) {
@@ -105,9 +109,11 @@ public class PointageService extends Service {
 				if (hrs < 10) {
 					hours = "0" + hrs;
 				}
-				
+
 				// notification : temps restant et icone normale
 				notif.setSmallIcon(R.drawable.ic_launcher);
+				notif.setProgress((int) millisUntilFinished,
+						(int) (millisInFuture - millisUntilFinished), false);
 				notif.setContentText("temps : -" + hours + ":" + minutes + ":"
 						+ secondes);
 				notificationManager.notify(0, notif.build());
@@ -134,6 +140,8 @@ public class PointageService extends Service {
 	}
 
 	public void startPastTimer(long millisSecondes) {
+		notif = new NotificationCompat.Builder(PointageService.this);
+		notif.setContentTitle("Pointage en retard !").setContentIntent(pIntent).build();
 		// démarrer le timer au temps passé à 0
 		if (millisSecondes < 0) {
 			seconds = -millisSecondes / 1000;
@@ -171,8 +179,8 @@ public class PointageService extends Service {
 				}
 				// notification : temps dépassé et panneau attention
 				notif.setSmallIcon(android.R.drawable.stat_notify_error);
-				notif.setContentText("ATTENTION ! Temps : +" + hours + ":" + minutes + ":"
-						+ secondes);
+				notif.setContentText("ATTENTION ! Temps : +" + hours + ":"
+						+ minutes + ":" + secondes);
 				notificationManager.notify(0, notif.build());
 			}
 		}, 1000, 1000);
@@ -185,11 +193,11 @@ public class PointageService extends Service {
 			timer.purge();
 		}
 	}
-	
-	public void stopTout(){
-	    stopCountDownTimer();
-	    stopPastTimer();
-	    notificationManager.cancel(0);
+
+	public void stopTout() {
+		stopCountDownTimer();
+		stopPastTimer();
+		notificationManager.cancel(0);
 	}
 
 	/**
