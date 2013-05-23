@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Titre app -->
+    <string name="app_name">Copilote Master</string>
+    <!-- Titres tabs -->
+    <string name="horaire_title">Calcul horaire</string>
+    <string name="navigation_title">Navigation</string>
+    <string name="chrono_title">Chronomètre</string>
+    <string name="times_title">Temps des spéciales</string>
+    <string name="contacts_title">Contacts rapides</string>
+
+    <!-- Menu -->
+    <string name="menu_settings">Paramètres</string>
+    <string name="close_app">Quitter l\'application</string>
+    <string name="menu_stop_pointage">Reinitialiser le pointage</string>
+    <string name="menu_about">A propos</string>
+
+    <!-- Messages -->
+    <string name="gps_off">GPS désactivé. Voulez-vous l\'activer ?</string>
+    <string name="gps_settings">Aller dans les paramètres</string>
+    <string name="resume_chrono">Reprendre</string>
+    <string name="stop_chrono">Arrêter</string>
+    <string name="reset_chrono">RAZ</string>
+    <string name="start_chrono">Démarrer</string>
+    <string name="erreur_suppression_contact">Erreur suppression du contact</string>
+    <string name="contact_existant">Le contact existe déjà !</string>
+    <string name="poi_parc_ferme">Parc fermé</string>
+    <string name="poi_parc_assistance">Parc Assistance</string>
+    <string name="poi_depart_es">Départ ES</string>
+    <string name="poi_arrivee_es">Arrivée ES</string>
+    <string name="poi_divers">Divers</string>
+    <string name="aucun_contacts">Aucun contacts rapides !</string>
+    <string name="titre_choix_contact">Choisissez des contacts</string>
+    <string name="share_radar">Partager le radar !</string>
+    <string name="envoi_sms_title">Envoi de sms</string>
+    <string name="confirmation_envoi_sms">"Envoi du radar aux numéros suivants : "</string>
+    <string name="message_sms">radar sur la liaison !</string>
+    <string name="poi_title">Choisissez un type de POI</string>
+    <string name="erase_poi">Effacer ce POI</string>
+    <string name="navigate_to">Naviguer vers ce point</string>
+    <string name="contact_separator">\n\t</string>
+    <string name="send_to">"SMS envoyé au "</string>
+    <string name="sms_error">SMS non envoyé !</string>
+    <string name="stop_pointage">Arrêt du pointage</string>
+    <string name="confirm_stop_pointage">Etes-vous sur de vouloir arrêter le pointage ?</string>
+    <string name="unknown">NC</string>
+    <string name="url_ffsa">http://www.ffsa.org</string>
+    <string name="change_home_title">Changer page d\'accueil</string>
+    <string name="message_homepage">"Voulez-vous remplacer la page d'accueil par : "</string>
+    <string name="pointage_title_notif">Pointage</string>
+    <string name="late_pointage_title">Pointage en retard !</string>
+    <string name="developpers">Développeurs :</string>
+    <string name="other_app">Autre application :</string>
+    <string name="ns_resume">NextSeries : Restez informé sur vos séries TV favorites et ne ratez aucun épisode !</string>
+    <string name="part_time">Partiel</string>
+    <string name="delete_contacts">Supprimer la selection</string>
+    <string name="add_contact">Ajouter un contact</string>
+    <string name="no_contacts">Aucun contact rapide !</string>
+    <string name="unit_kmh">km/h</string>
+    <string name="accuracy">"Précision : "</string>
+    <string name="set_hour">Définir heure</string>
+    <string name="pointage_time">Heure de pointage</string>
+    <string name="imparti_time">Temps imparti</string>
+    <string name="set_imparti_time">Définir temps imparti</string>
+    <string name="finish_hour">Heure d\'arrivée</string>
+    <string name="remaining_time">Temps restant</string>
+
+</resources>

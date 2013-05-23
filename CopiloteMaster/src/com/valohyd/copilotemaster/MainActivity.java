@@ -5,12 +5,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -35,7 +35,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	TimeFragment timeFragment;
 	NavigationFragment mapFragment;
 	ContactFragment contactFragment;
-	// private boolean doubleBackToExitPressedOnce = false;
 
 	// SERVICES
 	private PointageService servicePointage;
@@ -49,7 +48,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		setContentView(R.layout.activity_main);
 
 		// For each of the sections in the app, add a tab to the action bar.
-		createTabs();
+		createTabs(Configuration.ORIENTATION_PORTRAIT);
 	}
 
 	@Override
@@ -106,48 +105,80 @@ public class MainActivity extends SherlockFragmentActivity implements
 	/**
 	 * Permet de créer la barre des Tabs
 	 */
-	private void createTabs() {
+	private void createTabs(int orientation) {
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		
-		ActionBar.Tab tab = getSupportActionBar().newTab();
-		
 		TextView tv = new TextView(this);
 		tv.setTextColor(Color.WHITE);
-		tv.setTextSize(11);
-		tv.setText(getString(R.string.horaire_title));
-		tab = getSupportActionBar().newTab().setCustomView(tv);
+		tv.setTextSize(12);
+		tv.setText(R.string.horaire_title);
+		if (orientation == Configuration.ORIENTATION_PORTRAIT)
+			tv.setCompoundDrawablesWithIntrinsicBounds(0,
+					R.drawable.ic_menu_home, 0, 0);
+		else {
+			tv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_home,
+					0, 0, 0);
+		}
+		ActionBar.Tab tab = getSupportActionBar().newTab().setCustomView(tv);
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
 		tv = new TextView(this);
 		tv.setTextColor(Color.WHITE);
-		tv.setTextSize(11);
+		tv.setTextSize(12);
 		tv.setText(R.string.navigation_title);
+		if (orientation == Configuration.ORIENTATION_PORTRAIT)
+			tv.setCompoundDrawablesWithIntrinsicBounds(0,
+					R.drawable.ic_menu_map, 0, 0);
+		else {
+			tv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_map,
+					0, 0, 0);
+		}
 		tab = getSupportActionBar().newTab().setCustomView(tv);
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
 		tv = new TextView(this);
 		tv.setTextColor(Color.WHITE);
-		tv.setTextSize(11);
+		tv.setTextSize(12);
 		tv.setText(R.string.chrono_title);
+		if (orientation == Configuration.ORIENTATION_PORTRAIT)
+			tv.setCompoundDrawablesWithIntrinsicBounds(0,
+					R.drawable.ic_menu_chrono, 0, 0);
+		else {
+			tv.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.ic_menu_chrono, 0, 0, 0);
+		}
 		tab = getSupportActionBar().newTab().setCustomView(tv);
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
 		tv = new TextView(this);
 		tv.setTextColor(Color.WHITE);
-		tv.setTextSize(11);
+		tv.setTextSize(12);
 		tv.setText(R.string.times_title);
+		if (orientation == Configuration.ORIENTATION_PORTRAIT)
+			tv.setCompoundDrawablesWithIntrinsicBounds(0,
+					R.drawable.ic_menu_ffsa, 0, 0);
+		else {
+			tv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_ffsa,
+					0, 0, 0);
+		}
 		tab = getSupportActionBar().newTab().setCustomView(tv);
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
 		tv = new TextView(this);
 		tv.setTextColor(Color.WHITE);
-		tv.setTextSize(11);
+		tv.setTextSize(12);
 		tv.setText(R.string.contacts_title);
+		if (orientation == Configuration.ORIENTATION_PORTRAIT)
+			tv.setCompoundDrawablesWithIntrinsicBounds(0,
+					R.drawable.ic_menu_contact, 0, 0);
+		else {
+			tv.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.ic_menu_contact, 0, 0, 0);
+		}
 		tab = getSupportActionBar().newTab().setCustomView(tv);
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
@@ -218,24 +249,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 	}
 
-	/**
-	 * On gère ici le backPressed pour pouvoir prevenir l'utilisateur de la
-	 * sortie de l'application et pour gérer correctement la backStack de la vue
-	 * TyreSelector
-	 */
-	@Override
-	public void onBackPressed() {
-		// if (doubleBackToExitPressedOnce) {
-		super.onBackPressed();
-		// servicePointage.unbindService(mConnection);
-		// return;
-		// }
-		// this.doubleBackToExitPressedOnce = true;
-		// Toast.makeText(this,
-		// "Voulez-vous quitter ?\n(Appuyez encore une fois sur RETOUR)",
-		// Toast.LENGTH_SHORT).show();
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -249,12 +262,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 				servicePointage.stopSelf();
 				servicePointage = null;
 			}
-			// doubleBackToExitPressedOnce = true;
 			onBackPressed();
 			break;
 		case R.id.about:
 			Dialog d = new Dialog(this);
-			d.setTitle(getString(R.string.about_title));
+			d.setTitle(getString(R.string.menu_about));
 			d.setContentView(R.layout.about_layout);
 			d.show();
 			break;
@@ -267,6 +279,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.settings, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		getSupportActionBar().removeAllTabs();
+		createTabs(newConfig.orientation);
 	}
 
 }

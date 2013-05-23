@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:background="#dedede"
         android:gravity="center"
-        android:text="Chronometer"
         android:textSize="50sp" />
 
     <Button
@@ -20,7 +19,7 @@
         android:layout_margin="5dp"
         android:background="@drawable/button_selector"
         android:lines="2"
-        android:text="Partiel"
+        android:text="@string/part_time"
         android:textColor="#ffffff" />
 
     <LinearLayout
@@ -40,7 +39,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_selector"
             android:lines="2"
-            android:text="Start"
+            android:text="@string/start_chrono"
             android:textColor="#ffffff" />
 
         <Button
@@ -51,7 +50,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_selector"
             android:lines="2"
-            android:text="Stop"
+            android:text="@string/stop_chrono"
             android:textColor="#ffffff" />
     </LinearLayout>
 

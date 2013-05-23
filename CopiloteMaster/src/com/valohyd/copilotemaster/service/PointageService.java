@@ -12,7 +12,6 @@ import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.valohyd.copilotemaster.MainActivity;
 import com.valohyd.copilotemaster.R;
@@ -52,7 +51,7 @@ public class PointageService extends Service {
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 		notif = new NotificationCompat.Builder(PointageService.this);
-		notif.setContentTitle("Pointage").setLargeIcon(BitmapFactory.decodeResource(getResources(),
+		notif.setContentTitle(getString(R.string.pointage_title_notif)).setLargeIcon(BitmapFactory.decodeResource(getResources(),
                 R.drawable.ic_launcher))
 				.setContentIntent(pIntent).build();
 		return mBinder;
@@ -83,7 +82,7 @@ public class PointageService extends Service {
 		// stop the other timer
 		stopCountDownTimer();
 		stopPastTimer();
-		notif.setContentTitle("Pointage");
+		notif.setContentTitle(getString(R.string.pointage_title_notif));
 
 		// start the new
 		remainTimer = new CountDownTimer(millisInFuture, countDownInterval) {
@@ -141,7 +140,7 @@ public class PointageService extends Service {
 
 	public void startPastTimer(long millisSecondes) {
 		notif = new NotificationCompat.Builder(PointageService.this);
-		notif.setContentTitle("Pointage en retard !").setContentIntent(pIntent).build();
+		notif.setContentTitle(getString(R.string.late_pointage_title)).setContentIntent(pIntent).build();
 		// démarrer le timer au temps passé à 0
 		if (millisSecondes < 0) {
 			seconds = -millisSecondes / 1000;
