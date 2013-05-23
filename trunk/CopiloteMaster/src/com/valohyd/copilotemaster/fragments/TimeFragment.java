@@ -56,7 +56,7 @@ public class TimeFragment extends SherlockFragment {
 				Activity.MODE_PRIVATE);
 		edit = sharedPrefs.edit();
 
-		home_url = sharedPrefs.getString("home_url", "http://www.ffsa.org"); // Chargement
+		home_url = sharedPrefs.getString("home_url", getString(R.string.url_ffsa)); // Chargement
 																				// de
 																				// la
 																				// page
@@ -87,8 +87,8 @@ public class TimeFragment extends SherlockFragment {
 							&& hr.getType() == HitTestResult.SRC_ANCHOR_TYPE) {
 						AlertDialog.Builder builder = new AlertDialog.Builder(
 								getActivity());
-						builder.setTitle("Changer page d'accueil");
-						builder.setMessage("Voulez-vous remplacer la page d'accueil par : "
+						builder.setTitle(R.string.change_home_title);
+						builder.setMessage(R.string.message_homepage
 								+ hr.getExtra() + " ?");
 						builder.setPositiveButton(android.R.string.ok,
 								new OnClickListener() {
@@ -112,8 +112,6 @@ public class TimeFragment extends SherlockFragment {
 				}
 			});
 			// paramétrer la page
-//			web.getSettings().setJavaScriptEnabled(true);
-//			web.getSettings().setPluginState(PluginState.ON);
 			web.getSettings().setBuiltInZoomControls(true);
 			web.getSettings().setSupportZoom(true);
 			web.getSettings().setRenderPriority(RenderPriority.HIGH);
@@ -157,7 +155,6 @@ public class TimeFragment extends SherlockFragment {
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			web.bringToFront();
-			// web.jumpDrawablesToCurrentState();
 			super.onPageFinished(view, url);
 		}
 

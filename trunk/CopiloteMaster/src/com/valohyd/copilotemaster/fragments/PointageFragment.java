@@ -240,8 +240,8 @@ public class PointageFragment extends SherlockFragment {
 			public boolean onMenuItemClick(MenuItem item) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
-				builder.setTitle("Arrêt du pointage");
-				builder.setMessage("Etes-vous sur de vouloir arrêter le pointage ?");
+				builder.setTitle(R.string.stop_pointage);
+				builder.setMessage(R.string.confirm_stop_pointage);
 				builder.setPositiveButton(android.R.string.yes,
 						new DialogInterface.OnClickListener() {
 
@@ -256,11 +256,11 @@ public class PointageFragment extends SherlockFragment {
 										.setBackgroundDrawable(getResources()
 												.getDrawable(
 														R.drawable.vignette_bg));
-								finishTime.setText("NC");
-								impartiTime.setText("NC");
+								finishTime.setText(R.string.unknown);
+								impartiTime.setText(R.string.unknown);
 								impartiTimeButton.setEnabled(false);
-								pointageTime.setText("NC");
-								remainingTime.setText("NC");
+								pointageTime.setText(R.string.unknown);
+								remainingTime.setText(R.string.unknown);
 								signRemainingTime.setText("");
 								remainingTime.setVisibility(View.VISIBLE);
 								if (servicePointage != null) {
@@ -328,7 +328,6 @@ public class PointageFragment extends SherlockFragment {
 		// si le service est null, attendre un peu et retester (temps de
 		// connexion au service)
 		if (servicePointage == null) {
-			Log.d("SERVICE", "KO");
 			remainingTime.postDelayed(new Runnable() {
 
 				@Override
@@ -406,12 +405,14 @@ public class PointageFragment extends SherlockFragment {
 	 * Chargement des préférences
 	 */
 	private void loadPreferences() {
-		String pointage = sharedPrefs.getString(TAG_PREF_POINTAGE, "NC");
-		String imparti = sharedPrefs.getString(TAG_PREF_IMPARTI, "NC");
+		String pointage = sharedPrefs.getString(TAG_PREF_POINTAGE,
+				getSherlockActivity().getString(R.string.unknown));
+		String imparti = sharedPrefs.getString(TAG_PREF_IMPARTI,
+				getSherlockActivity().getString(R.string.unknown));
 		pointageTime.setText(pointage);
 		impartiTime.setText(imparti);
 
-		if (!pointage.equals("NC")) {
+		if (!pointage.equals(R.string.unknown)) {
 			try {
 				pointageDate = new SimpleDateFormat("HH:mm").parse(pointage);
 				Date d = new Date();
@@ -426,12 +427,11 @@ public class PointageFragment extends SherlockFragment {
 			}
 		}
 
-		if (!imparti.equals("NC")) {
+		if (!imparti.equals(R.string.unknown)) {
 			try {
 				impartiDate = new SimpleDateFormat("HH:mm").parse(imparti);
 				setRemainingTime();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

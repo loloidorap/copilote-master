@@ -42,14 +42,14 @@
                     android:id="@+id/speedTextMap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="NC"
+                    android:text="@string/unknown"
                     android:textSize="28sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
-                    android:text="km/h "
+                    android:text="@string/unit_kmh"
                     android:textSize="25sp" />
             </LinearLayout>
 
@@ -61,21 +61,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Précision : "
+                    android:text="@string/accuracy"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/accuracyTextMap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="NC"
+                    android:text="@string/unknown"
                     android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
-                    android:text="m "
+                    android:text="m"
                     android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>

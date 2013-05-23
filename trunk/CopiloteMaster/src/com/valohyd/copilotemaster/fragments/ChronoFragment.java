@@ -30,7 +30,6 @@ public class ChronoFragment extends SherlockFragment {
 	private ListView partielList; // Liste des temps partiels
 	private long timeWhenStopped = 0; // Stocke un temps pour le resume du
 										// chrono
-	private boolean firstTime = true; // Au start du chrono
 
 	ArrayList<String> partielValues = new ArrayList<String>(); // Les partiels
 	ArrayAdapter<String> listAdapter;
@@ -56,6 +55,7 @@ public class ChronoFragment extends SherlockFragment {
 
 		startButton = (Button) mainView.findViewById(R.id.startChronoButton);
 		stopButton = (Button) mainView.findViewById(R.id.stopChronoButton);
+		stopButton.setEnabled(false);
 
 		startButton.setOnClickListener(new OnClickListener() {
 
@@ -63,21 +63,19 @@ public class ChronoFragment extends SherlockFragment {
 			public void onClick(View v) {
 				partielButton.setEnabled(true); // activation des partiels
 				// Si on doit reprendre le chrono
-				if (startButton.getText().equals("Resume")) {
+				if (startButton.getText().equals(getActivity().getString(R.string.resume_chrono))) {
 					chrono.setBase(SystemClock.elapsedRealtime()
 							+ timeWhenStopped); // On reprend ou on s'etait
 												// arrêté
-				}
-				// Si on declenche pour la premiere fois le chrono
-				if (firstTime) {
-					chrono.setBase(SystemClock.elapsedRealtime()); // On remet à
-																	// 0
+				} else {
+					// RAZ pour un nouveau chrono
+					chrono.setBase(SystemClock.elapsedRealtime());
 				}
 				chrono.start();
 				startButton.setEnabled(false); // On ne peux plus rappuyer sur
 												// start
-				stopButton.setText("Stop");
-				firstTime = false;
+				stopButton.setText(R.string.stop_chrono);
+				stopButton.setEnabled(true);
 			}
 		});
 		stopButton.setOnClickListener(new OnClickListener() {
@@ -86,11 +84,12 @@ public class ChronoFragment extends SherlockFragment {
 			public void onClick(View v) {
 				partielButton.setEnabled(false); // desactivation des partiels
 				// Reset du chrono
-				if (stopButton.getText().equals("Reset")) {
+				
+				if (stopButton.getText().equals(getActivity().getString(R.string.reset_chrono))) {
 					chrono.stop(); // On stop le chrono
 					chrono.setBase(SystemClock.elapsedRealtime()); // On RAZ le
 																	// chrono
-					startButton.setText("Start"); // On remet start
+					startButton.setText(R.string.start_chrono); // On remet start
 					startButton.setEnabled(true); // On reactive le bouton start
 					partielValues.clear(); // On vide la liste des partiels
 					listAdapter.notifyDataSetChanged(); // On notifie le
@@ -104,8 +103,8 @@ public class ChronoFragment extends SherlockFragment {
 																// temps
 					chrono.stop(); // On stoppe le chrono
 					startButton.setEnabled(true);
-					startButton.setText("Resume");
-					stopButton.setText("Reset");
+					startButton.setText(R.string.resume_chrono);
+					stopButton.setText(R.string.reset_chrono);
 				}
 			}
 		});

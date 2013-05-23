@@ -2,7 +2,6 @@ package com.valohyd.copilotemaster.fragments;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +9,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
@@ -18,7 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +49,7 @@ import com.valohyd.copilotemaster.sqlite.ContactsBDD;
 public class NavigationFragment extends SupportMapFragment implements
 		OnMyLocationChangeListener {
 
+	private static final String SEPARATEUR = "\n\t";
 	// CONSTANTES VITESSE
 	public static final int INDEX_KM = 0;
 	public static final int INDEX_MILES = 0;
@@ -71,8 +69,6 @@ public class NavigationFragment extends SupportMapFragment implements
 	ContactsBDD bdd;
 
 	// TAGS
-	public static final String TAG_PREF_CONTACT = "contacts",
-			TAG_NAME_PREF = "pref_file";
 
 	LinearLayout layoutButtons; // Layout par dessus la map
 
@@ -84,8 +80,9 @@ public class NavigationFragment extends SupportMapFragment implements
 															// contacts
 															// selectionnés
 
-	String[] poi_types = { "Parc fermé", "Parc Assistance", "Départ ES",
-			"Arrivée ES", "Divers" }; // Types des POI
+	String[] poi_types;// Types
+	// des
+	// POI
 
 	int[] poi_icons = { R.drawable.parc_ferme_icon, R.drawable.assistance_icon,
 			R.drawable.start_icon, R.drawable.end_icon, R.drawable.poi_icon }; // Icones
@@ -120,6 +117,13 @@ public class NavigationFragment extends SupportMapFragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.navigation_layout, container,
 				false);
+		
+		//POI
+		poi_types = new String[]{ getActivity().getString(R.string.poi_parc_ferme),
+				getActivity().getString(R.string.poi_parc_assistance),
+				getActivity().getString(R.string.poi_depart_es),
+				getActivity().getString(R.string.poi_arrivee_es),
+				getActivity().getString(R.string.poi_divers) }; 
 
 		// BDD
 		bdd = new ContactsBDD(getActivity());
@@ -164,13 +168,13 @@ public class NavigationFragment extends SupportMapFragment implements
 			public void onClick(View v) {
 				initContacts(); // Initialisation des contacts
 				if (contacts.isEmpty()) {
-					Toast.makeText(getActivity(), "Aucun contacts rapides !",
+					Toast.makeText(getActivity(), R.string.aucun_contacts,
 							Toast.LENGTH_SHORT).show();
 
 				} else {
 					// CONSTRUCTION DIALOG
 					contact_dialog = new AlertDialog.Builder(getActivity());
-					contact_dialog.setTitle("Choisissez des contacts");
+					contact_dialog.setTitle(R.string.titre_choix_contact);
 					contact_dialog.setMultiChoiceItems(
 							// Selection multiple
 							contacts.toArray(new CharSequence[contacts.size()]),
@@ -191,7 +195,7 @@ public class NavigationFragment extends SupportMapFragment implements
 
 					// PARTAGE DU RADAR
 
-					contact_dialog.setPositiveButton("Partager le radar !",
+					contact_dialog.setPositiveButton(R.string.share_radar,
 							new OnClickListener() {
 
 								@Override
@@ -200,8 +204,8 @@ public class NavigationFragment extends SupportMapFragment implements
 									// CONSTRUCTION DU DIALOG
 									AlertDialog.Builder builder = new AlertDialog.Builder(
 											getActivity());
-									builder.setTitle("Envoi de sms");
-									builder.setMessage("Envoi du radar au numéros suivants : "
+									builder.setTitle(R.string.envoi_sms_title);
+									builder.setMessage(getActivity().getString(R.string.confirmation_envoi_sms)
 											+ selected_contacts + " ?");
 									builder.setPositiveButton(
 											android.R.string.ok,
@@ -213,11 +217,11 @@ public class NavigationFragment extends SupportMapFragment implements
 														int which) {
 													for (String nb : selected_contacts) {
 														sendSms(nb
-																.split("\n\t")[1],
-																"radar sur la liaison !"); // On
-																							// envoi
-																							// le
-																							// sms
+																.split(SEPARATEUR)[1],
+																getActivity().getString(R.string.message_sms)); // On
+														// envoi
+														// le
+														// sms
 													}
 													selected_contacts = new ArrayList<String>(); // on
 																									// vide
@@ -261,7 +265,7 @@ public class NavigationFragment extends SupportMapFragment implements
 			public void onMapLongClick(final LatLng position) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
-				builder.setTitle("Choisissez un type de POI");
+				builder.setTitle(R.string.poi_title);
 				builder.setItems(poi_types, new OnClickListener() {
 
 					@Override
@@ -291,7 +295,7 @@ public class NavigationFragment extends SupportMapFragment implements
 				builder.setTitle(marker.getTitle());
 				builder.setCancelable(true);
 				builder.setNeutralButton(android.R.string.cancel, null);
-				builder.setNegativeButton("Effacer ce POI",
+				builder.setNegativeButton(R.string.erase_poi,
 						new OnClickListener() {
 
 							@Override
@@ -300,7 +304,7 @@ public class NavigationFragment extends SupportMapFragment implements
 								marker.remove(); // Suppression du marker
 							}
 						});
-				builder.setPositiveButton("Naviguer vers ce point",
+				builder.setPositiveButton(R.string.navigate_to,
 						new OnClickListener() {
 
 							@Override
@@ -331,7 +335,9 @@ public class NavigationFragment extends SupportMapFragment implements
 		ArrayList<Contact> contact_temp = bdd.getAllContacts();
 		contacts = new ArrayList<String>();
 		for (Contact c : contact_temp) {
-			contacts.add(c.getName() + "\n\t" + c.getNumber());
+			contacts.add(c.getName()
+					+ SEPARATEUR
+					+ c.getNumber());
 		}
 		selected_contacts = new ArrayList<String>();// on vide la selection
 		bdd.close();
@@ -342,10 +348,10 @@ public class NavigationFragment extends SupportMapFragment implements
 		try {
 			SmsManager smsManager = SmsManager.getDefault();
 			smsManager.sendTextMessage(number, null, message, null, null);
-			Toast.makeText(getActivity(), "SMS envoyé au " + number + " !",
+			Toast.makeText(getActivity(), R.string.send_to + number + " !",
 					Toast.LENGTH_LONG).show();
 		} catch (Exception e) {
-			Toast.makeText(getActivity(), "SMS non envoyé !", Toast.LENGTH_LONG)
+			Toast.makeText(getActivity(), R.string.sms_error, Toast.LENGTH_LONG)
 					.show();
 			e.printStackTrace();
 		}
@@ -392,17 +398,14 @@ public class NavigationFragment extends SupportMapFragment implements
 			switch (event) {
 
 			case GpsStatus.GPS_EVENT_FIRST_FIX:
-				Log.d("GPS", "FISRTFIX");
 				gpsButton.setImageDrawable(getActivity().getResources()
 						.getDrawable(R.drawable.gps_on));
 				break;
 			case GpsStatus.GPS_EVENT_STARTED:
-				Log.d("GPS", "STARTED");
 				gpsButton.setImageDrawable(getActivity().getResources()
 						.getDrawable(R.drawable.gps_started));
 				break;
 			case GpsStatus.GPS_EVENT_STOPPED:
-				Log.d("GPS", "STOPPED");
 				gpsButton.setImageDrawable(getActivity().getResources()
 						.getDrawable(R.drawable.gps_off));
 				break;

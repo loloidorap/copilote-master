@@ -32,7 +32,7 @@
                 android:background="@drawable/vignette_bg"
                 android:gravity="center"
                 android:textSize="20sp"
-                android:text="Développeurs :"
+                android:text="@string/developpers"
                 android:textColor="@color/black" />
 
             <TextView
@@ -57,7 +57,7 @@
                 android:background="@drawable/vignette_bg"
                 android:gravity="center"
                 android:textSize="20sp"
-                android:text="Autre application :"
+                android:text="@string/other_app"
                 android:textColor="@color/black" />
 
             <TextView
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:gravity="center"
-                android:text="NextSeries : Restez informé sur vos séries TV favorites et ne ratez aucun épisode !"
+                android:text="@string/ns_resume"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 

@@ -36,7 +36,7 @@
                     android:background="@drawable/vignette_bg"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="Heure de pointage"
+                    android:text="@string/pointage_time"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -53,7 +53,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:gravity="center"
-                        android:text="NC"
+                        android:text="@string/unknown"
                         android:textSize="25sp" />
 
                     <Button
@@ -61,10 +61,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:lines="2"
                         android:background="@drawable/button_selector"
                         android:gravity="center"
-                        android:text="Définir heure"
+                        android:lines="2"
+                        android:text="@string/set_hour"
                         android:textColor="#ffffff"
                         android:textSize="17sp" />
                 </LinearLayout>
@@ -84,7 +84,7 @@
                     android:background="@drawable/vignette_bg"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="Temps imparti"
+                    android:text="@string/imparti_time"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -101,7 +101,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:gravity="center"
-                        android:text="NC"
+                        android:text="@string/unknown"
                         android:textSize="25sp" />
 
                     <Button
@@ -112,10 +112,9 @@
                         android:background="@drawable/button_selector"
                         android:gravity="center"
                         android:lines="2"
-                        android:text="Définir temps imparti"
+                        android:text="@string/set_imparti_time"
                         android:textColor="#ffffff"
                         android:textSize="17sp" />
-
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -145,7 +144,7 @@
                 android:background="@drawable/vignette_bg"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="Heure d&apos;arrivée"
+                android:text="@string/finish_hour"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -162,7 +161,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="NC"
+                    android:text="@string/unknown"
                     android:textSize="30sp" />
             </LinearLayout>
         </LinearLayout>
@@ -182,7 +181,7 @@
                 android:background="@drawable/vignette_bg"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="Temps restants"
+                android:text="@string/remaining_time"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -209,7 +208,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="NC"
+                    android:text="@string/unknown"
                     android:textSize="30sp" />
 
                 <com.valohyd.copilotemaster.utils.Chronometer
