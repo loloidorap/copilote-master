@@ -1,7 +1,6 @@
 package com.valohyd.copilotemaster.fragments;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
@@ -42,7 +41,7 @@ public class TimeFragment extends SherlockFragment {
 	private boolean dejaCharge = false; // Etat de la page
 
 	private String home_url; // Page d'accueil
-	
+
 	private ProgressBar progress;
 
 	// PREFERENCES
@@ -54,8 +53,8 @@ public class TimeFragment extends SherlockFragment {
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.web_layout, container, false);
-		
-		progress = (ProgressBar)mainView.findViewById(R.id.progressWeb);
+
+		progress = (ProgressBar) mainView.findViewById(R.id.progressWeb);
 
 		// PREFERENCES
 		sharedPrefs = PreferenceManager
@@ -122,7 +121,7 @@ public class TimeFragment extends SherlockFragment {
 
 			// autoriser la navigation dans les pages
 			web.setWebViewClient(new MyWebViewClient());
-			web.setWebChromeClient(new WebChromeClient());
+			web.setWebChromeClient(new MyWebChromeClient());
 			web.setOnKeyListener(new View.OnKeyListener() {
 
 				@Override
@@ -172,6 +171,14 @@ public class TimeFragment extends SherlockFragment {
 			return super.shouldOverrideUrlLoading(view, url);
 		}
 
+	}
+
+	private class MyWebChromeClient extends WebChromeClient {
+		@Override
+		public void onProgressChanged(WebView view, int newProgress) {
+			progress.setProgress(newProgress);
+			super.onProgressChanged(view, newProgress);
+		}
 	}
 
 	@Override

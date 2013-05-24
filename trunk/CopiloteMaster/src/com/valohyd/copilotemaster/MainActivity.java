@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -293,6 +294,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 			d.setContentView(R.layout.about_layout);
 			View v = LayoutInflater.from(this).inflate(R.layout.about_layout,
 					null);
+			TextView version = (TextView) v.findViewById(R.id.version);
+			String vers = "";
+			try {
+				vers = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			} catch (NameNotFoundException e) {
+				e.printStackTrace();
+			}
+			version.setText(vers);
 			Button contact = (Button) v.findViewById(R.id.contact_mail_button);
 			contact.setOnClickListener(new OnClickListener() {
 
