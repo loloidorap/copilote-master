@@ -5,8 +5,6 @@ package com.valohyd.copilotemaster.utils;
  */
 
 import java.text.DecimalFormat;
-import java.util.Formatter;
-import java.util.Locale;
 
 import android.content.Context;
 import android.os.Handler;
@@ -16,7 +14,6 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 public class Chronometer extends TextView {
-	private static final String TAG = "Chronometer";
 
 	/**
 	 * A callback that notifies when the chronometer has incremented on its own.
@@ -34,14 +31,9 @@ public class Chronometer extends TextView {
 	private boolean mVisible;
 	private boolean mStarted;
 	private boolean mRunning;
-	private boolean mLogged;
 	private String mFormat;
-	private Formatter mFormatter;
-	private Locale mFormatterLocale;
-	private Object[] mFormatterArgs = new Object[1];
 	private StringBuilder mFormatBuilder;
 	private OnChronometerTickListener mOnChronometerTickListener;
-	private StringBuilder mRecycle = new StringBuilder(8);
 
 	private static final int TICK_WHAT = 2;
 
