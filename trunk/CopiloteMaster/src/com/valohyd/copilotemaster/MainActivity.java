@@ -1,14 +1,17 @@
 package com.valohyd.copilotemaster;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,10 +49,18 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private ServiceConnection mConnection;
 	private boolean isServiceBounded = false;
 
+	// PREFS
+	boolean useNotif = true;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(MainActivity.this);
+
+		useNotif = prefs.getBoolean("prefUseNotif", true);
 
 		// For each of the sections in the app, add a tab to the action bar.
 		createTabs(Configuration.ORIENTATION_PORTRAIT);
@@ -58,6 +69,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (!useNotif) {
+			((NotificationManager) getSystemService(NOTIFICATION_SERVICE))
+					.cancel(0);
+		}
 		// BIND SERVICE
 		mConnection = new ServiceConnection() {
 
@@ -257,6 +272,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			Intent i = new Intent(this, UserSettingActivity.class);
+			startActivity(i);
+			break;
 		case R.id.close_app:
 			if (servicePointage != null && mConnection != null
 					&& isServiceBounded) {

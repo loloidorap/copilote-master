@@ -7,10 +7,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 import com.valohyd.copilotemaster.MainActivity;
@@ -38,6 +40,7 @@ public class PointageService extends Service {
 
 	private long seconds;
 	private Timer timer; // timer for the past time
+	private boolean useNotif;
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -46,14 +49,22 @@ public class PointageService extends Service {
 
 	@Override
 	public IBinder onBind(Intent arg0) {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
+		useNotif = prefs.getBoolean("prefUseNotif", true);
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		intent = new Intent(this, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-		notif = new NotificationCompat.Builder(PointageService.this);
-		notif.setContentTitle(getString(R.string.pointage_title_notif)).setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                R.drawable.ic_launcher))
-				.setContentIntent(pIntent).build();
+		if (useNotif) {
+			notif = new NotificationCompat.Builder(PointageService.this);
+			notif.setContentTitle(getString(R.string.pointage_title_notif))
+					.setLargeIcon(
+							BitmapFactory.decodeResource(getResources(),
+									R.drawable.ic_launcher))
+					.setContentIntent(pIntent).build();
+		}
 		return mBinder;
 	}
 
@@ -82,7 +93,9 @@ public class PointageService extends Service {
 		// stop the other timer
 		stopCountDownTimer();
 		stopPastTimer();
-		notif.setContentTitle(getString(R.string.pointage_title_notif));
+		if (useNotif) {
+			notif.setContentTitle(getString(R.string.pointage_title_notif));
+		}
 
 		// start the new
 		remainTimer = new CountDownTimer(millisInFuture, countDownInterval) {
@@ -109,13 +122,15 @@ public class PointageService extends Service {
 					hours = "0" + hrs;
 				}
 
-				// notification : temps restant et icone normale
-				notif.setSmallIcon(R.drawable.ic_launcher);
-				notif.setProgress((int) millisUntilFinished,
-						(int) (millisInFuture - millisUntilFinished), false);
-				notif.setContentText("temps : -" + hours + ":" + minutes + ":"
-						+ secondes);
-				notificationManager.notify(0, notif.build());
+				if (useNotif) {
+					// notification : temps restant et icone normale
+					notif.setSmallIcon(R.drawable.ic_launcher);
+					notif.setProgress((int) millisUntilFinished,
+							(int) (millisInFuture - millisUntilFinished), false);
+					notif.setContentText("temps : -" + hours + ":" + minutes
+							+ ":" + secondes);
+					notificationManager.notify(0, notif.build());
+				}
 			}
 
 			@Override
@@ -139,8 +154,11 @@ public class PointageService extends Service {
 	}
 
 	public void startPastTimer(long millisSecondes) {
-		notif = new NotificationCompat.Builder(PointageService.this);
-		notif.setContentTitle(getString(R.string.late_pointage_title)).setContentIntent(pIntent).build();
+		if (useNotif) {
+			notif = new NotificationCompat.Builder(PointageService.this);
+			notif.setContentTitle(getString(R.string.late_pointage_title))
+					.setContentIntent(pIntent).build();
+		}
 		// démarrer le timer au temps passé à 0
 		if (millisSecondes < 0) {
 			seconds = -millisSecondes / 1000;
@@ -176,11 +194,14 @@ public class PointageService extends Service {
 				if (hrs < 10) {
 					hours = "0" + hrs;
 				}
-				// notification : temps dépassé et panneau attention
-				notif.setSmallIcon(android.R.drawable.stat_notify_error);
-				notif.setContentText("ATTENTION ! Temps : +" + hours + ":"
-						+ minutes + ":" + secondes);
-				notificationManager.notify(0, notif.build());
+
+				if (useNotif) {
+					// notification : temps dépassé et panneau attention
+					notif.setSmallIcon(android.R.drawable.stat_notify_error);
+					notif.setContentText("ATTENTION ! Temps : +" + hours + ":"
+							+ minutes + ":" + secondes);
+					notificationManager.notify(0, notif.build());
+				}
 			}
 		}, 1000, 1000);
 	}

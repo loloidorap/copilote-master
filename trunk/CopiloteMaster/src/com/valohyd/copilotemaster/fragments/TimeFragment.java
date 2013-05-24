@@ -1,13 +1,14 @@
 package com.valohyd.copilotemaster.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.valohyd.copilotemaster.R;
@@ -40,6 +42,8 @@ public class TimeFragment extends SherlockFragment {
 	private boolean dejaCharge = false; // Etat de la page
 
 	private String home_url; // Page d'accueil
+	
+	private ProgressBar progress;
 
 	// PREFERENCES
 	SharedPreferences sharedPrefs;
@@ -50,21 +54,17 @@ public class TimeFragment extends SherlockFragment {
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.web_layout, container, false);
+		
+		progress = (ProgressBar)mainView.findViewById(R.id.progressWeb);
 
 		// PREFERENCES
-		sharedPrefs = getActivity().getSharedPreferences("blop",
-				Activity.MODE_PRIVATE);
+		sharedPrefs = PreferenceManager
+				.getDefaultSharedPreferences(getActivity());
 		edit = sharedPrefs.edit();
 
-		home_url = sharedPrefs.getString("home_url", getString(R.string.url_ffsa)); // Chargement
-																				// de
-																				// la
-																				// page
-																				// d'accueil
-																				// au
-																				// travers
-																				// des
-																				// preferences
+		home_url = sharedPrefs.getString("prefHomepage",
+				getString(R.string.url_ffsa)); // Page d'accueil
+
 		// récupérer la web view
 		web = (WebView) mainView.findViewById(R.id.webView);
 
@@ -154,13 +154,17 @@ public class TimeFragment extends SherlockFragment {
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
-			web.bringToFront();
 			super.onPageFinished(view, url);
+			progress.setVisibility(View.GONE);
+			web.setVisibility(View.VISIBLE);
+			web.bringToFront();
 		}
 
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
+			progress.setVisibility(View.VISIBLE);
+			web.setVisibility(View.GONE);
 		}
 
 		@Override
@@ -170,11 +174,24 @@ public class TimeFragment extends SherlockFragment {
 
 	}
 
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		if (!hidden) {
+			String new_home = sharedPrefs.getString("prefHomepage",
+					getString(R.string.url_ffsa));
+			if (!home_url.equals(new_home)) {
+				home_url = new_home;
+				web.loadUrl(home_url); // Page d'accueil
+			}
+		}
+		super.onHiddenChanged(hidden);
+	}
+
 	/**
 	 * Sauvegarde des préférences
 	 */
 	private void savePreferences() {
-		edit.putString("home_url", home_url);
+		edit.putString("prefHomepage", home_url);
 		edit.commit();
 	}
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/pointage_time" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="prefUseNotif"
+            android:summary="Activer/Désactiver les notifications de pointage"
+            android:title="Notifications" >
+        </CheckBoxPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/times_title" >
+        <EditTextPreference
+            android:key="prefHomepage"
+            android:summary="Permet de changer le page d&apos;accueil de l&apos;onglet des temps"
+            android:defaultValue="@string/url_ffsa"
+            android:title="Changer page d&apos;accueil" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

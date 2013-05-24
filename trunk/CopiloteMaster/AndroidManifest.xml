@@ -39,14 +39,16 @@
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.valohyd.copilotemaster.UserSettingActivity" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCxIPZClcl5x_bd-qoFbJZxetudwx5P1P8" />
+            android:value="AIzaSyDC7s5_GvXlONupGZ2jfKyOVcYGpvzk9b4" />
+        <!-- Release : AIzaSyDC7s5_GvXlONupGZ2jfKyOVcYGpvzk9b4 -->
+        <!-- Test : AIzaSyCxIPZClcl5x_bd-qoFbJZxetudwx5P1P8 -->
 
         <service
             android:name="com.valohyd.copilotemaster.service.PointageService"
