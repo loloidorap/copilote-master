@@ -69,5 +69,6 @@
     <string name="notifications">Notifications</string>
     <string name="homepage_settings">Permet de changer le page d\'accueil de l\'onglet des temps</string>
     <string name="homepage_titre_settings">Changer page d\'accueil</string>
+    <string name="quit_message">Appuyer une deuxième fois pour quitter</string>
 
 </resources>

@@ -348,8 +348,6 @@ public class NavigationFragment extends SupportMapFragment implements
 		try {
 			SmsManager smsManager = SmsManager.getDefault();
 			smsManager.sendTextMessage(number, null, message, null, null);
-			Toast.makeText(getActivity(), R.string.send_to + number + " !",
-					Toast.LENGTH_LONG).show();
 		} catch (Exception e) {
 			Toast.makeText(getActivity(), R.string.sms_error, Toast.LENGTH_LONG)
 					.show();
