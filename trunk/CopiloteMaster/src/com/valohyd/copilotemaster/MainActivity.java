@@ -11,6 +11,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -53,15 +55,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	// PREFS
 	boolean useNotif = true;
 
+	private boolean doubleback = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(MainActivity.this);
-
-		useNotif = prefs.getBoolean("prefUseNotif", true);
 
 		// For each of the sections in the app, add a tab to the action bar.
 		createTabs(Configuration.ORIENTATION_PORTRAIT);
@@ -70,6 +69,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(MainActivity.this);
+
+		useNotif = prefs.getBoolean("prefUseNotif", true);
+
 		if (!useNotif) {
 			((NotificationManager) getSystemService(NOTIFICATION_SERVICE))
 					.cancel(0);
@@ -84,6 +88,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 						.getService();
 				// donner un hook de du fragment
 				servicePointage.setHook(pointageFragment);
+
+				servicePointage.setUseNotif(useNotif);
 
 				pointageFragment.setService(servicePointage, mConnection);
 
@@ -120,6 +126,26 @@ public class MainActivity extends SherlockFragmentActivity implements
 	 */
 	public PointageService getService() {
 		return servicePointage;
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (doubleback)
+			super.onBackPressed();
+		else {
+			doubleback = true;
+			Toast.makeText(this, R.string.quit_message, Toast.LENGTH_SHORT)
+					.show();
+		}
+		//On repasse a false au bout de deux secondes et demi
+		new Handler().postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				doubleback = false;
+			}
+		}, 2500);
+
 	}
 
 	/**
@@ -286,6 +312,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				servicePointage.stopSelf();
 				servicePointage = null;
 			}
+			doubleback = true;
 			onBackPressed();
 			break;
 		case R.id.about:
