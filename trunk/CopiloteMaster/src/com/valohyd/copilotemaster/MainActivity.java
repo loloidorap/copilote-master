@@ -10,6 +10,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -268,6 +272,27 @@ public class MainActivity extends SherlockFragmentActivity implements
 			Dialog d = new Dialog(this);
 			d.setTitle(getString(R.string.menu_about));
 			d.setContentView(R.layout.about_layout);
+			View v = LayoutInflater.from(this).inflate(R.layout.about_layout,
+					null);
+			Button contact = (Button) v.findViewById(R.id.contact_mail_button);
+			contact.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					String emailAddress = getString(R.string.contact_mail);
+					String emailSubject = "Contact Android "
+							+ getString(R.string.app_name);
+
+					String emailAddressList[] = { emailAddress };
+
+					Intent intent = new Intent(Intent.ACTION_SEND);
+					intent.setType("plain/text");
+					intent.putExtra(Intent.EXTRA_EMAIL, emailAddressList);
+					intent.putExtra(Intent.EXTRA_SUBJECT, emailSubject);
+					startActivity(intent);
+				}
+			});
+			d.setContentView(v);
 			d.show();
 			break;
 		}

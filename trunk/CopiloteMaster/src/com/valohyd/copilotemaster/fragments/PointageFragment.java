@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -34,7 +35,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.service.PointageService;
-import com.valohyd.copilotemaster.utils.Chronometer;
 
 /**
  * Classe representant le fragment de pointage
@@ -59,9 +59,10 @@ public class PointageFragment extends SherlockFragment {
 
 	private Chronometer elapsedTime; // Temps écoulés hors temps
 
-	private Date pointageDate, impartiDate, finalDate; // Heure de pointage,
-														// temps imparti et
-														// heure d'arrivée
+	private Date pointageDate, impartiDate, finalDate, now; // Heure de
+															// pointage,
+															// temps imparti et
+															// heure d'arrivée
 
 	private SimpleDateFormat minuteFormat = new SimpleDateFormat("HH:mm"); // Formatteur
 																			// de
@@ -103,6 +104,8 @@ public class PointageFragment extends SherlockFragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.pointage_layout, container, false);
 
+		now = new Date();
+
 		// PREFERENCES
 		sharedPrefs = getActivity().getSharedPreferences(TAG_PREF_FILE,
 				Activity.MODE_PRIVATE);
@@ -134,7 +137,53 @@ public class PointageFragment extends SherlockFragment {
 
 			@Override
 			public void onClick(View v) {
+				now = new Date();
+				dialogPointage = new TimePickerDialog(getActivity(),
+						new OnTimeSetListener() {
+
+							@Override
+							public void onTimeSet(TimePicker view,
+									int hourOfDay, int minute) {
+
+								// Construction de la date
+								Date d = new Date(); // ATTENTION on part de la
+														// date
+														// actuelle pour avoir
+														// deja
+														// l'année le mois et le
+														// jour de
+														// selectionné
+								d.setHours(hourOfDay);
+								d.setMinutes(minute);
+								d.setSeconds(0);
+								pointageDate = d; // Heure de pointage créée
+								String newString = new SimpleDateFormat("HH:mm")
+										.format(pointageDate);
+								pointageTime.setText(newString); // On affiche
+																	// le retour
+																	// pour
+																	// l'utilisateur
+								if (impartiDate != null)
+									setRemainingTime(); // On affiche le temps
+														// restant
+														// si le temps imparti
+														// est deja
+														// rempli
+								else
+									impartiTimeButton.setEnabled(true); // Sinon
+																		// on
+																		// active
+																		// la
+																		// suite
+
+								savePreferences(); // On sauvegarde les
+													// preferences pour
+													// un retour rapide
+
+							}
+						}, now.getHours(), now.getMinutes(), true);
 				dialogPointage.show();
+
 			}
 		});
 		impartiTimeButton.setOnClickListener(new OnClickListener() {
@@ -146,43 +195,7 @@ public class PointageFragment extends SherlockFragment {
 		});
 
 		// TIMEPICKER DIALOGS
-		Date now = new Date();
-		// POINTAGE
-		dialogPointage = new TimePickerDialog(getActivity(),
-				new OnTimeSetListener() {
 
-					@Override
-					public void onTimeSet(TimePicker view, int hourOfDay,
-							int minute) {
-
-						// Construction de la date
-						Date d = new Date(); // ATTENTION on part de la date
-												// actuelle pour avoir deja
-												// l'année le mois et le jour de
-												// selectionné
-						d.setHours(hourOfDay);
-						d.setMinutes(minute);
-						d.setSeconds(0);
-						pointageDate = d; // Heure de pointage créée
-						String newString = new SimpleDateFormat("HH:mm")
-								.format(pointageDate);
-						pointageTime.setText(newString); // On affiche le retour
-															// pour
-															// l'utilisateur
-						if (impartiDate != null)
-							setRemainingTime(); // On affiche le temps restant
-												// si le temps imparti est deja
-												// rempli
-						else
-							impartiTimeButton.setEnabled(true); // Sinon on
-																// active la
-																// suite
-
-						savePreferences(); // On sauvegarde les preferences pour
-											// un retour rapide
-
-					}
-				}, now.getHours(), now.getMinutes(), true);
 		// TEMPS IMPARTI
 		dialogImparti = new TimePickerDialog(getActivity(),
 				new OnTimeSetListener() {

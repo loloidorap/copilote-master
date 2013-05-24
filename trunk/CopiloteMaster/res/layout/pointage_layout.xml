@@ -211,7 +211,7 @@
                     android:text="@string/unknown"
                     android:textSize="30sp" />
 
-                <com.valohyd.copilotemaster.utils.Chronometer
+                <Chronometer
                     android:id="@+id/chronometerElapsed"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
