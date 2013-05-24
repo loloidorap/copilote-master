@@ -2,6 +2,9 @@ package com.valohyd.copilotemaster.fragments;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -34,11 +37,22 @@ public class ChronoFragment extends SherlockFragment {
 	ArrayList<String> partielValues = new ArrayList<String>(); // Les partiels
 	ArrayAdapter<String> listAdapter;
 
+	// PREFERENCES
+	SharedPreferences sharedPrefs;
+	Editor edit;
+	private final static String TAG_PREF_CHRONO = "chrono",
+			TAG_PREF_FILE = "pref_file";
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.chrono_layout, container, false);
+
+		// PREFERENCES
+		sharedPrefs = getActivity().getSharedPreferences(TAG_PREF_FILE,
+				Activity.MODE_PRIVATE);
+		edit = sharedPrefs.edit();
 
 		// CHRONOMETER
 		chrono = (Chronometer) mainView.findViewById(R.id.chrono);
@@ -63,13 +77,15 @@ public class ChronoFragment extends SherlockFragment {
 			public void onClick(View v) {
 				partielButton.setEnabled(true); // activation des partiels
 				// Si on doit reprendre le chrono
-				if (startButton.getText().equals(getActivity().getString(R.string.resume_chrono))) {
+				if (startButton.getText().equals(
+						getActivity().getString(R.string.resume_chrono))) {
 					chrono.setBase(SystemClock.elapsedRealtime()
 							+ timeWhenStopped); // On reprend ou on s'etait
 												// arrêté
 				} else {
 					// RAZ pour un nouveau chrono
 					chrono.setBase(SystemClock.elapsedRealtime());
+					savePreferences();
 				}
 				chrono.start();
 				startButton.setEnabled(false); // On ne peux plus rappuyer sur
@@ -83,13 +99,17 @@ public class ChronoFragment extends SherlockFragment {
 			@Override
 			public void onClick(View v) {
 				partielButton.setEnabled(false); // desactivation des partiels
+				edit.remove(TAG_PREF_CHRONO);
+				edit.commit();
 				// Reset du chrono
-				
-				if (stopButton.getText().equals(getActivity().getString(R.string.reset_chrono))) {
+
+				if (stopButton.getText().equals(
+						getActivity().getString(R.string.reset_chrono))) {
 					chrono.stop(); // On stop le chrono
 					chrono.setBase(SystemClock.elapsedRealtime()); // On RAZ le
 																	// chrono
-					startButton.setText(R.string.start_chrono); // On remet start
+					startButton.setText(R.string.start_chrono); // On remet
+																// start
 					startButton.setEnabled(true); // On reactive le bouton start
 					partielValues.clear(); // On vide la liste des partiels
 					listAdapter.notifyDataSetChanged(); // On notifie le
@@ -125,6 +145,33 @@ public class ChronoFragment extends SherlockFragment {
 																		// element
 			}
 		});
+
+		loadPreferences();
 		return mainView;
+	}
+
+	/**
+	 * Chargement des préférences
+	 */
+	private void loadPreferences() {
+		Long baseChrono = sharedPrefs.getLong(TAG_PREF_CHRONO, -1);
+
+		if (baseChrono != -1) {
+			chrono.setBase(baseChrono);
+			chrono.start();
+			startButton.setEnabled(false); // On ne peux plus rappuyer sur
+			// start
+			stopButton.setText(R.string.stop_chrono);
+			stopButton.setEnabled(true);
+		}
+
+	}
+
+	/**
+	 * Sauvegarde des préférences
+	 */
+	private void savePreferences() {
+		edit.putLong(TAG_PREF_CHRONO, SystemClock.elapsedRealtime());
+		edit.commit();
 	}
 }
