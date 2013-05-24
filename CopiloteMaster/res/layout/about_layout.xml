@@ -31,9 +31,35 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/vignette_bg"
                 android:gravity="center"
-                android:textSize="20sp"
+                android:text="Version"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="v"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/vignette_bg"
+                android:gravity="center"
                 android:text="@string/developpers"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -56,9 +82,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/vignette_bg"
                 android:gravity="center"
-                android:textSize="20sp"
                 android:text="@string/contact"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/contact_mail_button"
