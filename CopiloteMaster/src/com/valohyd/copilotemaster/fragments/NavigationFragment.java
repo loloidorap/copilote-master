@@ -117,13 +117,14 @@ public class NavigationFragment extends SupportMapFragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.navigation_layout, container,
 				false);
-		
-		//POI
-		poi_types = new String[]{ getActivity().getString(R.string.poi_parc_ferme),
+
+		// POI
+		poi_types = new String[] {
+				getActivity().getString(R.string.poi_parc_ferme),
 				getActivity().getString(R.string.poi_parc_assistance),
 				getActivity().getString(R.string.poi_depart_es),
 				getActivity().getString(R.string.poi_arrivee_es),
-				getActivity().getString(R.string.poi_divers) }; 
+				getActivity().getString(R.string.poi_divers) };
 
 		// BDD
 		bdd = new ContactsBDD(getActivity());
@@ -205,7 +206,8 @@ public class NavigationFragment extends SupportMapFragment implements
 									AlertDialog.Builder builder = new AlertDialog.Builder(
 											getActivity());
 									builder.setTitle(R.string.envoi_sms_title);
-									builder.setMessage(getActivity().getString(R.string.confirmation_envoi_sms)
+									builder.setMessage(getActivity().getString(
+											R.string.confirmation_envoi_sms)
 											+ selected_contacts + " ?");
 									builder.setPositiveButton(
 											android.R.string.ok,
@@ -218,7 +220,9 @@ public class NavigationFragment extends SupportMapFragment implements
 													for (String nb : selected_contacts) {
 														sendSms(nb
 																.split(SEPARATEUR)[1],
-																getActivity().getString(R.string.message_sms)); // On
+																getActivity()
+																		.getString(
+																				R.string.message_sms)); // On
 														// envoi
 														// le
 														// sms
@@ -335,9 +339,7 @@ public class NavigationFragment extends SupportMapFragment implements
 		ArrayList<Contact> contact_temp = bdd.getAllContacts();
 		contacts = new ArrayList<String>();
 		for (Contact c : contact_temp) {
-			contacts.add(c.getName()
-					+ SEPARATEUR
-					+ c.getNumber());
+			contacts.add(c.getName() + SEPARATEUR + c.getNumber());
 		}
 		selected_contacts = new ArrayList<String>();// on vide la selection
 		bdd.close();
@@ -393,20 +395,23 @@ public class NavigationFragment extends SupportMapFragment implements
 
 	private class MyGPSListener implements GpsStatus.Listener {
 		public void onGpsStatusChanged(int event) {
-			switch (event) {
+			if (gpsButton != null && getActivity() != null
+					&& getActivity().getResources() != null) {
+				switch (event) {
 
-			case GpsStatus.GPS_EVENT_FIRST_FIX:
-				gpsButton.setImageDrawable(getActivity().getResources()
-						.getDrawable(R.drawable.gps_on));
-				break;
-			case GpsStatus.GPS_EVENT_STARTED:
-				gpsButton.setImageDrawable(getActivity().getResources()
-						.getDrawable(R.drawable.gps_started));
-				break;
-			case GpsStatus.GPS_EVENT_STOPPED:
-				gpsButton.setImageDrawable(getActivity().getResources()
-						.getDrawable(R.drawable.gps_off));
-				break;
+				case GpsStatus.GPS_EVENT_FIRST_FIX:
+					gpsButton.setImageDrawable(getActivity().getResources()
+							.getDrawable(R.drawable.gps_on));
+					break;
+				case GpsStatus.GPS_EVENT_STARTED:
+					gpsButton.setImageDrawable(getActivity().getResources()
+							.getDrawable(R.drawable.gps_started));
+					break;
+				case GpsStatus.GPS_EVENT_STOPPED:
+					gpsButton.setImageDrawable(getActivity().getResources()
+							.getDrawable(R.drawable.gps_off));
+					break;
+				}
 			}
 		}
 	}

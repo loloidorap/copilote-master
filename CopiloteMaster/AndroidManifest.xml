@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.valohyd.copilotemaster"
-    android:versionCode="1"
-    android:versionName="0.6" >
+    android:versionCode="2"
+    android:versionName="0.7" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -47,8 +47,8 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBRQoYHnf_5qO4ISi6GdltyeQYOciOmy9w" />
-        <!-- Release : AIzaSyBRQoYHnf_5qO4ISi6GdltyeQYOciOmy9w -->
+            android:value="AIzaSyA6kv4mxBRqeasvYQ3XE9_xogHIDHVNHu4" />
+        <!-- Release : AIzaSyA6kv4mxBRqeasvYQ3XE9_xogHIDHVNHu4 -->
         <!-- Test : AIzaSyCxIPZClcl5x_bd-qoFbJZxetudwx5P1P8 -->
 
         <service
