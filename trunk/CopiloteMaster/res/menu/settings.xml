@@ -20,6 +20,13 @@
         android:title="@string/menu_stop_pointage"
         android:visible="false"/>
     <item
+        android:id="@+id/refresh_web"
+        android:icon="@android:drawable/stat_notify_sync"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/menu_refresh_web"
+        android:visible="false"/>
+    <item
         android:id="@+id/about"
         android:icon="@android:drawable/ic_dialog_info"
         android:orderInCategory="100"

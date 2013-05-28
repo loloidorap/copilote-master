@@ -137,7 +137,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			Toast.makeText(this, R.string.quit_message, Toast.LENGTH_SHORT)
 					.show();
 		}
-		//On repasse a false au bout de deux secondes et demi
+		// On repasse a false au bout de deux secondes et demi
 		new Handler().postDelayed(new Runnable() {
 
 			@Override

@@ -14,6 +14,7 @@
     <string name="menu_settings">Paramètres</string>
     <string name="close_app">Quitter l\'application</string>
     <string name="menu_stop_pointage">Reinitialiser le pointage</string>
+    <string name="menu_refresh_web">Rafraichir la page</string>
     <string name="menu_about">A propos</string>
 
     <!-- Messages -->

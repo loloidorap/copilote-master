@@ -22,6 +22,10 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.valohyd.copilotemaster.R;
 
 /**
@@ -138,6 +142,8 @@ public class TimeFragment extends SherlockFragment {
 			});
 			dejaCharge = true;
 		}
+		//POUR L'ICONE DU MENU !
+		setHasOptionsMenu(true);
 		return mainView;
 	}
 
@@ -183,6 +189,7 @@ public class TimeFragment extends SherlockFragment {
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {
+		getActivity().supportInvalidateOptionsMenu();
 		if (!hidden) {
 			String new_home = sharedPrefs.getString("prefHomepage",
 					getString(R.string.url_ffsa));
@@ -201,4 +208,21 @@ public class TimeFragment extends SherlockFragment {
 		edit.putString("prefHomepage", home_url);
 		edit.commit();
 	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		super.onPrepareOptionsMenu(menu);
+		MenuItem item = menu.findItem(R.id.refresh_web);
+		item.setVisible(true);
+		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				web.reload();
+				return false;
+			}
+		});
+	}
+
 }
