@@ -142,7 +142,7 @@ public class TimeFragment extends SherlockFragment {
 			});
 			dejaCharge = true;
 		}
-		//POUR L'ICONE DU MENU !
+		// POUR L'ICONE DU MENU !
 		setHasOptionsMenu(true);
 		return mainView;
 	}
@@ -210,9 +210,8 @@ public class TimeFragment extends SherlockFragment {
 	}
 
 	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		super.onPrepareOptionsMenu(menu);
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
 		MenuItem item = menu.findItem(R.id.refresh_web);
 		item.setVisible(true);
 		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {

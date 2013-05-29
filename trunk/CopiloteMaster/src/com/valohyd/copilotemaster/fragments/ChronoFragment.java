@@ -159,6 +159,7 @@ public class ChronoFragment extends SherlockFragment {
 		if (baseChrono != -1) {
 			chrono.setBase(baseChrono);
 			chrono.start();
+			partielButton.setEnabled(true);
 			startButton.setEnabled(false); // On ne peux plus rappuyer sur
 			// start
 			stopButton.setText(R.string.stop_chrono);
