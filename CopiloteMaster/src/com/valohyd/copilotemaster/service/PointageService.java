@@ -120,8 +120,11 @@ public class PointageService extends Service {
 				}
 
 				if (useNotif) {
-					// notification : temps restant et icone normale
-					notif.setSmallIcon(R.drawable.ic_launcher);
+					if (millisUntilFinished < 60000) {
+						notif.setSmallIcon(android.R.drawable.presence_away);
+					} else {
+						notif.setSmallIcon(android.R.drawable.presence_online);
+					}
 					notif.setProgress((int) millisUntilFinished,
 							(int) (millisInFuture - millisUntilFinished), false);
 					notif.setContentText("temps : -" + hours + ":" + minutes
@@ -154,7 +157,9 @@ public class PointageService extends Service {
 
 		notif = new NotificationCompat.Builder(PointageService.this);
 		notif.setContentTitle(getString(R.string.late_pointage_title))
-				.setContentIntent(pIntent).build();
+				.setContentIntent(pIntent).setLargeIcon(
+						BitmapFactory.decodeResource(getResources(),
+								R.drawable.ic_launcher)).build();
 
 		// démarrer le timer au temps passé à 0
 		if (millisSecondes < 0) {
