@@ -11,9 +11,9 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/times_title" >
         <EditTextPreference
+            android:defaultValue="@string/url_ffsa"
             android:key="prefHomepage"
             android:summary="@string/homepage_settings"
-            android:defaultValue="@string/url_ffsa"
             android:title="@string/homepage_titre_settings" />
     </PreferenceCategory>
 
