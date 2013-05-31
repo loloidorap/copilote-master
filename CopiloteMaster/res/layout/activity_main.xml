@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true" >
 
-    <DigitalClock
-        android:id="@+id/digitalClock1"
+    <com.valohyd.copilotemaster.utils.MyDigitalClock
+        android:id="@+id/digitalClock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -41,7 +41,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/digitalClock1"
+        android:layout_above="@id/digitalClock"
         android:layout_alignParentTop="true"
         tools:context=".MainActivity"
         tools:ignore="MergeRootFrame" />

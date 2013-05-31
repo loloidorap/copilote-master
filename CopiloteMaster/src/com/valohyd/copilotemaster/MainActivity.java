@@ -1,9 +1,13 @@
 package com.valohyd.copilotemaster;
 
+import java.util.Date;
+
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -19,7 +23,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.TimePicker.OnTimeChangedListener;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -35,6 +44,7 @@ import com.valohyd.copilotemaster.fragments.NavigationFragment;
 import com.valohyd.copilotemaster.fragments.PointageFragment;
 import com.valohyd.copilotemaster.fragments.TimeFragment;
 import com.valohyd.copilotemaster.service.PointageService;
+import com.valohyd.copilotemaster.utils.MyDigitalClock;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		TabListener {
@@ -52,6 +62,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private ServiceConnection mConnection;
 	private boolean isServiceBounded = false;
 
+	// Views
+	private MyDigitalClock digitalClock;
+	private TimePicker timePicker;
+	private CheckBox isCheckSystemTime;
+
 	// PREFS
 	boolean useNotif = true;
 
@@ -61,6 +76,60 @@ public class MainActivity extends SherlockFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		digitalClock = (MyDigitalClock) findViewById(R.id.digitalClock);
+
+		digitalClock.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				final Date now = new Date();
+				final Date newDate = new Date();
+
+				AlertDialog.Builder d = new AlertDialog.Builder(
+						MainActivity.this);
+				d.setTitle("Changer l'heure du rallye");
+				View change_view = LayoutInflater.from(MainActivity.this)
+						.inflate(R.layout.change_time_layout, null);
+
+				timePicker = (TimePicker) change_view
+						.findViewById(R.id.timePicker);
+				timePicker.setIs24HourView(true);
+				timePicker.setCurrentHour(now.getHours());
+				timePicker.setCurrentMinute(now.getMinutes());
+
+				isCheckSystemTime = (CheckBox) change_view
+						.findViewById(R.id.checkboxSysTime);
+
+				timePicker
+						.setOnTimeChangedListener(new OnTimeChangedListener() {
+
+							@Override
+							public void onTimeChanged(TimePicker view,
+									int hourOfDay, int minute) {
+								// Construction de la date
+								newDate.setHours(hourOfDay);
+								newDate.setMinutes(minute);
+								newDate.setSeconds(0);
+							}
+						});
+				d.setPositiveButton(getString(android.R.string.ok),
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (!isCheckSystemTime.isChecked())
+									digitalClock.setTime(newDate.getTime());
+								else
+									digitalClock.setIsSystemTime(true);
+							}
+						});
+				d.setNeutralButton(getString(android.R.string.cancel), null);
+				d.setView(change_view);
+				d.show();
+			}
+		});
 
 		// For each of the sections in the app, add a tab to the action bar.
 		createTabs(Configuration.ORIENTATION_PORTRAIT);
@@ -299,6 +368,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
+		case R.id.help:
+			Dialog help_dialog = new Dialog(this);
+			help_dialog.setTitle(getString(R.string.menu_help));
+			help_dialog.show();
+			break;
 		case R.id.menu_settings:
 			Intent i = new Intent(this, UserSettingActivity.class);
 			startActivity(i);

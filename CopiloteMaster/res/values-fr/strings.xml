@@ -16,6 +16,7 @@
     <string name="menu_stop_pointage">Reinitialiser le pointage</string>
     <string name="menu_refresh_web">Rafraichir la page</string>
     <string name="menu_about">A propos</string>
+    <string name="menu_help">Aide</string>
 
     <!-- Messages -->
     <string name="gps_off">GPS désactivé. Voulez-vous l\'activer ?</string>
