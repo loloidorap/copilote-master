@@ -38,7 +38,9 @@ import com.google.android.maps.GeoPoint;
 import com.valohyd.copilotemaster.MainActivity;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.models.Contact;
+import com.valohyd.copilotemaster.models.POI;
 import com.valohyd.copilotemaster.sqlite.ContactsBDD;
+import com.valohyd.copilotemaster.sqlite.PoisBDD;
 
 /**
  * Classe representant le fragment de navigation
@@ -67,6 +69,7 @@ public class NavigationFragment extends SupportMapFragment implements
 
 	// BDD
 	ContactsBDD bdd;
+	PoisBDD pois_bdd;
 
 	// TAGS
 
@@ -79,6 +82,8 @@ public class NavigationFragment extends SupportMapFragment implements
 	private ArrayList<String> contacts, selected_contacts; // Contacts et
 															// contacts
 															// selectionnés
+
+	private ArrayList<POI> list_pois; // Liste des POIs
 
 	String[] poi_types;// Types
 	// des
@@ -104,10 +109,6 @@ public class NavigationFragment extends SupportMapFragment implements
 	 */
 	GeoPoint myLocation;
 
-	private ArrayList<Marker> listOfPoints = new ArrayList<Marker>(); // Liste
-																		// des
-																		// POIs
-
 	private TextView speedText, accuracyText; // Texte Vitesse et précision
 	private double speed, accuracy; // vitesse,precision
 
@@ -128,6 +129,7 @@ public class NavigationFragment extends SupportMapFragment implements
 
 		// BDD
 		bdd = new ContactsBDD(getActivity());
+		pois_bdd = new PoisBDD(getActivity());
 
 		selected_contacts = new ArrayList<String>();
 
@@ -275,13 +277,15 @@ public class NavigationFragment extends SupportMapFragment implements
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// Construction du POI
-						Marker m = map.addMarker(new MarkerOptions()
+						map.addMarker(new MarkerOptions()
 								.position(position)
 								.title(poi_types[which])
 								.icon(BitmapDescriptorFactory
 										.fromResource(poi_icons[which])));
-						listOfPoints.add(m); // Ajout du POI
+						POI p = new POI(which, position);
+						savePOI(p);
 					}
+
 				});
 				builder.show();
 				builder.setCancelable(true);
@@ -305,7 +309,7 @@ public class NavigationFragment extends SupportMapFragment implements
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								marker.remove(); // Suppression du marker
+								deletePOI(marker);
 							}
 						});
 				builder.setPositiveButton(R.string.navigate_to,
@@ -328,11 +332,15 @@ public class NavigationFragment extends SupportMapFragment implements
 				return false;
 			}
 		});
+
+		// Initialisation des POIS
+		initPOIs();
+
 		// récupérer la map
 		return mainView;
 	}
 
-	// Initialisation des contacts via les preferences
+	// Initialisation des contacts via sqlite
 	private void initContacts() {
 		bdd.open();
 
@@ -343,6 +351,46 @@ public class NavigationFragment extends SupportMapFragment implements
 		}
 		selected_contacts = new ArrayList<String>();// on vide la selection
 		bdd.close();
+	}
+
+	// Initialisation des contacts via sqlite
+	private void initPOIs() {
+		pois_bdd.open();
+
+		list_pois = pois_bdd.getAllPOIs();
+
+		for (POI p : list_pois) {
+			map.addMarker(new MarkerOptions()
+					.position(p.getLocation())
+					.title(poi_types[p.getType()])
+					.icon(BitmapDescriptorFactory.fromResource(poi_icons[p
+							.getType()])));
+		}
+
+		pois_bdd.close();
+	}
+
+	// Sauvegarde d'un POI dans la bdd
+	private void savePOI(POI p) {
+		pois_bdd.open();
+
+		pois_bdd.insertPOI(p);
+
+		pois_bdd.close();
+	}
+
+	// Suppression d'un POI
+	private void deletePOI(Marker marker) {
+		pois_bdd.open();
+
+		int res = pois_bdd.removePOIWithLocation(marker.getPosition());
+
+		// Si tout se passe bien navette
+		if (res > 0) {
+			marker.remove(); // Suppression du marker
+		}
+
+		pois_bdd.close();
 	}
 
 	// Envoi d'un sms

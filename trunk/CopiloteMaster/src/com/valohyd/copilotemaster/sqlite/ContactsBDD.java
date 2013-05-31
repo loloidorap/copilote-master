@@ -24,11 +24,11 @@ public class ContactsBDD {
 
 	private SQLiteDatabase bdd;
 
-	private MaBaseSQLite maBaseSQLite;
+	private ContactsSQLite maBaseSQLite;
 
 	public ContactsBDD(Context context) {
 		// On créer la BDD et sa table
-		maBaseSQLite = new MaBaseSQLite(context, NOM_BDD, null, VERSION_BDD);
+		maBaseSQLite = new ContactsSQLite(context, NOM_BDD, null, VERSION_BDD);
 	}
 
 	public void open() {
