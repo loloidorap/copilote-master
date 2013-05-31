@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class MaBaseSQLite extends SQLiteOpenHelper {
+public class ContactsSQLite extends SQLiteOpenHelper {
 
 	private static final String TABLE_CONTACTS = "table_contacts";
 	private static final String COL_ID = "ID";
@@ -16,7 +16,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 			+ " (" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_NAME
 			+ " TEXT NOT NULL, " + COL_PHONE + " TEXT NOT NULL);";
 
-	public MaBaseSQLite(Context context, String name, CursorFactory factory,
+	public ContactsSQLite(Context context, String name, CursorFactory factory,
 			int version) {
 		super(context, name, factory, version);
 	}
