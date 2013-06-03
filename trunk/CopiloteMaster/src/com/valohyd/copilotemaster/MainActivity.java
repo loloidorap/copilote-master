@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.TimePicker.OnTimeChangedListener;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -160,6 +161,32 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		// For each of the sections in the app, add a tab to the action bar.
 		createTabs(Configuration.ORIENTATION_PORTRAIT);
+		
+		// check if the app has already been opened
+        if(!sharedPrefs.getBoolean("opened", false)){
+            // open the dialo of the first use
+            final Dialog d = new Dialog(this);
+            d.setTitle(getString(R.string.help_first_user_title));
+            d.setContentView(R.layout.help_first_use);
+            d.show();
+            
+            // set the onclick du bouton
+            Button b = (Button) d.findViewById(R.id.help_button);
+            final ViewFlipper viewFlipper = (ViewFlipper) d.findViewById(R.id.viewFlipper1);
+            if(b != null && viewFlipper != null){
+                b.setOnClickListener(new OnClickListener() {
+                    
+                    @Override
+                    public void onClick(View v) {
+                        viewFlipper.showNext();
+                    }
+                });
+            }
+            
+            // remember that the app has been opened
+            edit.putBoolean("opened", true);
+            // TODO edit.commit();
+        }
 	}
 
 	@Override

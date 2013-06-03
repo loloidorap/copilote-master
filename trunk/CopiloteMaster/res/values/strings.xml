@@ -74,4 +74,9 @@
     <string name="homepage_titre_settings">Change homepage</string>
     <string name="quit_message">Pressed back again to exit</string>
 
+    <!-- help -->
+    <string name="help_first_user_title">Comment utiliser l\'application ?</string>
+    <string name="help_first_user_par1">Bienvenue sur l\'application Copilote Master.\nCette application permet de bla bla bla bla bla bla bla bla bla bla \nbla bla bla\n\tbla bla bla</string>
+    <string name="next">Suivant</string>
+
 </resources>
