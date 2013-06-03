@@ -34,7 +34,7 @@
         android:title="@string/menu_about"/>
         <item
         android:id="@+id/help"
-        android:icon="@android:drawable/ic_menu_help"
+        android:icon="@drawable/ic_menu_help"
         android:orderInCategory="100"
         android:showAsAction="always"
         android:title="@string/menu_about"/>
