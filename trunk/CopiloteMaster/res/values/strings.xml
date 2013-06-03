@@ -8,6 +8,7 @@
     <string name="contacts_title">Quick contacts</string>
     <string name="chrono_title">Timer</string>
     <string name="navigation_title">Map</string>
+    <string name="meteo_title">Weather</string>
     <string name="horaire_title">Checkpoint</string>
 
     <!-- Menu -->

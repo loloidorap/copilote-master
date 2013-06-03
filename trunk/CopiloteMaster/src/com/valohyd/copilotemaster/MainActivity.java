@@ -24,8 +24,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.TimePicker.OnTimeChangedListener;
@@ -40,6 +38,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.valohyd.copilotemaster.fragments.ChronoFragment;
 import com.valohyd.copilotemaster.fragments.ContactFragment;
+import com.valohyd.copilotemaster.fragments.MeteoFragment;
 import com.valohyd.copilotemaster.fragments.NavigationFragment;
 import com.valohyd.copilotemaster.fragments.PointageFragment;
 import com.valohyd.copilotemaster.fragments.TimeFragment;
@@ -55,6 +54,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	TimeFragment timeFragment;
 	NavigationFragment mapFragment;
 	ContactFragment contactFragment;
+	MeteoFragment meteoFragment;
 
 	// SERVICES
 	private PointageService servicePointage;
@@ -223,6 +223,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private void createTabs(int orientation) {
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+		// TAB POINTAGE
 		TextView tv = new TextView(this);
 		tv.setTextColor(Color.WHITE);
 		tv.setTextSize(12);
@@ -238,6 +239,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
+		// TAB NAV
 		tv = new TextView(this);
 		tv.setTextColor(Color.WHITE);
 		tv.setTextSize(12);
@@ -253,6 +255,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
+		// TAB CHRONO
 		tv = new TextView(this);
 		tv.setTextColor(Color.WHITE);
 		tv.setTextSize(12);
@@ -268,6 +271,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
+		// TAB FFSA
 		tv = new TextView(this);
 		tv.setTextColor(Color.WHITE);
 		tv.setTextSize(12);
@@ -283,6 +287,23 @@ public class MainActivity extends SherlockFragmentActivity implements
 		tab.setTabListener(this);
 		getSupportActionBar().addTab(tab);
 
+		// TAB METEO
+		tv = new TextView(this);
+		tv.setTextColor(Color.WHITE);
+		tv.setTextSize(12);
+		tv.setText(R.string.meteo_title);
+		if (orientation == Configuration.ORIENTATION_PORTRAIT)
+			tv.setCompoundDrawablesWithIntrinsicBounds(0,
+					R.drawable.ic_menu_weather, 0, 0);
+		else {
+			tv.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.ic_menu_weather, 0, 0, 0);
+		}
+		tab = getSupportActionBar().newTab().setCustomView(tv);
+		tab.setTabListener(this);
+		getSupportActionBar().addTab(tab);
+
+		// TAB CONTACTS
 		tv = new TextView(this);
 		tv.setTextColor(Color.WHITE);
 		tv.setTextSize(12);
@@ -336,12 +357,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 			ft.show(this.timeFragment);
 		}
-		if (tab.getPosition() == 4) {
+		if (tab.getPosition() == 5) {
 			if (this.contactFragment == null) {
 				this.contactFragment = new ContactFragment();
 				ft.add(R.id.container, this.contactFragment, null);
 			}
 			ft.show(this.contactFragment);
+		}
+		if (tab.getPosition() == 4) {
+			if (this.meteoFragment == null) {
+				this.meteoFragment = new MeteoFragment();
+				ft.add(R.id.container, this.meteoFragment, null);
+			}
+			ft.show(this.meteoFragment);
 		}
 	}
 
@@ -359,8 +387,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (tab.getPosition() == 3) {
 			ft.hide(this.timeFragment);
 		}
-		if (tab.getPosition() == 4) {
+		if (tab.getPosition() == 5) {
 			ft.hide(this.contactFragment);
+		}
+		if (tab.getPosition() == 4) {
+			ft.hide(this.meteoFragment);
 		}
 	}
 

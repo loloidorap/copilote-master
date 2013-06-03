@@ -260,81 +260,83 @@ public class NavigationFragment extends SupportMapFragment implements
 
 		layoutButtons.bringToFront(); // Pour voir le layout par dessus la map
 
-		// GEOLOCALISATION API V2
-		map.setMyLocationEnabled(true);
-		map.setOnMyLocationChangeListener(this);
-		map.setTrafficEnabled(true);
-		// Ajout d'un POI au longClick
-		map.setOnMapLongClickListener(new OnMapLongClickListener() {
+		if (map != null) {
+			// GEOLOCALISATION API V2
+			map.setMyLocationEnabled(true);
+			map.setOnMyLocationChangeListener(this);
+			map.setTrafficEnabled(true);
+			// Ajout d'un POI au longClick
+			map.setOnMapLongClickListener(new OnMapLongClickListener() {
 
-			@Override
-			public void onMapLongClick(final LatLng position) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						getActivity());
-				builder.setTitle(R.string.poi_title);
-				builder.setItems(poi_types, new OnClickListener() {
+				@Override
+				public void onMapLongClick(final LatLng position) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getActivity());
+					builder.setTitle(R.string.poi_title);
+					builder.setItems(poi_types, new OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// Construction du POI
-						map.addMarker(new MarkerOptions()
-								.position(position)
-								.title(poi_types[which])
-								.icon(BitmapDescriptorFactory
-										.fromResource(poi_icons[which])));
-						POI p = new POI(which, position);
-						savePOI(p);
-					}
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// Construction du POI
+							map.addMarker(new MarkerOptions()
+									.position(position)
+									.title(poi_types[which])
+									.icon(BitmapDescriptorFactory
+											.fromResource(poi_icons[which])));
+							POI p = new POI(which, position);
+							savePOI(p);
+						}
 
-				});
-				builder.show();
-				builder.setCancelable(true);
-				builder.setNeutralButton(android.R.string.cancel, null);
+					});
+					builder.show();
+					builder.setCancelable(true);
+					builder.setNeutralButton(android.R.string.cancel, null);
 
-			}
-		});
-		// Action au clic sur le POI
-		map.setOnMarkerClickListener(new OnMarkerClickListener() {
+				}
+			});
+			// Action au clic sur le POI
+			map.setOnMarkerClickListener(new OnMarkerClickListener() {
 
-			@Override
-			public boolean onMarkerClick(final Marker marker) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						getActivity());
-				builder.setTitle(marker.getTitle());
-				builder.setCancelable(true);
-				builder.setNeutralButton(android.R.string.cancel, null);
-				builder.setNegativeButton(R.string.erase_poi,
-						new OnClickListener() {
+				@Override
+				public boolean onMarkerClick(final Marker marker) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getActivity());
+					builder.setTitle(marker.getTitle());
+					builder.setCancelable(true);
+					builder.setNeutralButton(android.R.string.cancel, null);
+					builder.setNegativeButton(R.string.erase_poi,
+							new OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								deletePOI(marker);
-							}
-						});
-				builder.setPositiveButton(R.string.navigate_to,
-						new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									deletePOI(marker);
+								}
+							});
+					builder.setPositiveButton(R.string.navigate_to,
+							new OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								Intent intent = new Intent(
-										android.content.Intent.ACTION_VIEW,
-										Uri.parse("google.navigation:q="
-												+ marker.getPosition().latitude
-												+ ","
-												+ marker.getPosition().longitude));
-								startActivity(intent);
-							}
-						});
-				builder.show();
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Intent intent = new Intent(
+											android.content.Intent.ACTION_VIEW,
+											Uri.parse("google.navigation:q="
+													+ marker.getPosition().latitude
+													+ ","
+													+ marker.getPosition().longitude));
+									startActivity(intent);
+								}
+							});
+					builder.show();
 
-				return false;
-			}
-		});
+					return false;
+				}
+			});
 
-		// Initialisation des POIS
-		initPOIs();
+			// Initialisation des POIS
+			initPOIs();
+		}
 
 		// récupérer la map
 		return mainView;

@@ -8,6 +8,7 @@
     <string name="navigation_title">Navigation</string>
     <string name="chrono_title">Chronomètre</string>
     <string name="times_title">Temps des spéciales</string>
+    <string name="meteo_title">Météo</string>
     <string name="contacts_title">Contacts rapides</string>
 
     <!-- Menu -->
