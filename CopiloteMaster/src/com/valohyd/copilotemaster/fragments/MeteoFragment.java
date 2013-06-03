@@ -1,7 +1,9 @@
 package com.valohyd.copilotemaster.fragments;
 
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -28,6 +30,8 @@ public class MeteoFragment extends SherlockFragment {
 
 	private View mainView;
 
+	private boolean javascriptInterfaceBroken = false;;
+
 	private WebView web; // WebView
 
 	private Bundle etatSauvegarde; // Sauvegarde de la vue
@@ -49,6 +53,18 @@ public class MeteoFragment extends SherlockFragment {
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		mainView = inflater.inflate(R.layout.meteo_layout, container, false);
+
+		// Determine if JavaScript interface is broken.
+		// For now, until we have further clarification from the Android team,
+		// use version number.
+		try {
+			if ("2.3".equals(Build.VERSION.RELEASE)) {
+				javascriptInterfaceBroken = true;
+			}
+		} catch (Exception e) {
+			// Ignore, and assume user javascript interface is working
+			// correctly.
+		}
 
 		progress = (ProgressBar) mainView.findViewById(R.id.progressWeb);
 
@@ -96,6 +112,12 @@ public class MeteoFragment extends SherlockFragment {
 
 			dejaCharge = true;
 		}
+		
+		// Add javascript interface only if it's not broken
+		if (!javascriptInterfaceBroken) {
+			web.addJavascriptInterface(this, "jshandler");
+		}
+		
 		// POUR L'ICONE DU MENU !
 		setHasOptionsMenu(true);
 		return mainView;
@@ -114,6 +136,15 @@ public class MeteoFragment extends SherlockFragment {
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
+			// If running on 2.3, send javascript to the WebView to handle the
+			// function(s)
+			// we used to use in the Javascript-to-Java bridge.
+			if (javascriptInterfaceBroken) {
+				String handleGingerbreadStupidity = "javascript:function openQuestion(id) { window.location='http://jshandler:openQuestion:'+id; }; "
+						+ "javascript: function handler() { this.openQuestion=openQuestion; }; "
+						+ "javascript: var jshandler = new handler();";
+				view.loadUrl(handleGingerbreadStupidity);
+			}
 			web.loadUrl("javascript:(function() { "
 					+ "document.getElementById('sfcnt').style.display = 'none'; "
 					+ "})()");
