@@ -78,6 +78,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 			TAG_PREF_HOUR = "offset_time";
 
 	private boolean doubleback = false;
+	
+	private Date newDate = null; //Nouvelle date saisie
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +101,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				final Date now = new Date();
-				final Date newDate = new Date();
 
 				AlertDialog.Builder d = new AlertDialog.Builder(
 						MainActivity.this);
@@ -123,6 +124,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 							public void onTimeChanged(TimePicker view,
 									int hourOfDay, int minute) {
 								// Construction de la date
+								newDate = new Date();
 								newDate.setHours(hourOfDay);
 								newDate.setMinutes(minute);
 								newDate.setSeconds(0);
@@ -134,7 +136,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								if (!isCheckSystemTime.isChecked()) {
+
+								if (!isCheckSystemTime.isChecked()
+										&& newDate == null) {
+									now.setSeconds(0);
+									digitalClock.setTime(now.getTime());
+									savePreferences(now.getTime());
+								} else if (!isCheckSystemTime.isChecked()
+										&& newDate != null) {
 									digitalClock.setTime(newDate.getTime());
 									savePreferences(newDate.getTime());
 								} else {

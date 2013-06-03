@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.DialogInterface;
@@ -294,6 +295,18 @@ public class PointageFragment extends SherlockFragment {
 						});
 				builder.setNegativeButton(android.R.string.no, null);
 				builder.show();
+				return false;
+			}
+		});
+		item = menu.findItem(R.id.help);
+		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				Dialog help_dialog = new Dialog(getActivity());
+				help_dialog.setTitle(getString(R.string.menu_help));
+				help_dialog.setContentView(R.layout.help_pointage_layout);
+				help_dialog.show();
 				return false;
 			}
 		});
