@@ -417,11 +417,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case R.id.help:
-			Dialog help_dialog = new Dialog(this);
-			help_dialog.setTitle(getString(R.string.menu_help));
-			help_dialog.show();
-			break;
 		case R.id.menu_settings:
 			Intent i = new Intent(this, UserSettingActivity.class);
 			startActivity(i);
