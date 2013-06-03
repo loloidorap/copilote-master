@@ -21,7 +21,7 @@
         android:visible="false"/>
     <item
         android:id="@+id/refresh_web"
-        android:icon="@android:drawable/stat_notify_sync"
+        android:icon="@drawable/ic_menu_refresh"
         android:orderInCategory="100"
         android:showAsAction="always"
         android:title="@string/menu_refresh_web"
