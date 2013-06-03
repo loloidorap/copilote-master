@@ -2,6 +2,7 @@ package com.valohyd.copilotemaster;
 
 import java.util.Date;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.NotificationManager;
@@ -11,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -68,7 +70,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private CheckBox isCheckSystemTime;
 
 	// PREFS
+	private long offset = 0;
 	boolean useNotif = true;
+	SharedPreferences sharedPrefs;
+	Editor edit;
+	private final String TAG_PREF_FILE = "pref_file",
+			TAG_PREF_HOUR = "offset_time";
 
 	private boolean doubleback = false;
 
@@ -77,7 +84,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// PREFS
+		sharedPrefs = getSharedPreferences(TAG_PREF_FILE, Activity.MODE_PRIVATE);
+		edit = sharedPrefs.edit();
+
+		loadPreferences();
+
 		digitalClock = (MyDigitalClock) findViewById(R.id.digitalClock);
+
+		digitalClock.setTime((new Date().getTime()) - offset);
 
 		digitalClock.setOnClickListener(new OnClickListener() {
 
@@ -119,10 +134,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								if (!isCheckSystemTime.isChecked())
+								if (!isCheckSystemTime.isChecked()) {
 									digitalClock.setTime(newDate.getTime());
-								else
+									savePreferences(newDate.getTime());
+								} else {
 									digitalClock.setIsSystemTime(true);
+									savePreferences(new Date().getTime());
+								}
 							}
 						});
 				d.setNeutralButton(getString(android.R.string.cancel), null);
@@ -471,6 +489,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 		super.onConfigurationChanged(newConfig);
 		getSupportActionBar().removeAllTabs();
 		createTabs(newConfig.orientation);
+	}
+
+	/**
+	 * Sauvegarde des préférences
+	 */
+	private void savePreferences(long newTime) {
+		edit.putLong(TAG_PREF_HOUR, (new Date().getTime()) - newTime);
+		edit.commit();
+	}
+
+	/**
+	 * Chargement des préférences
+	 */
+	private void loadPreferences() {
+		offset = sharedPrefs.getLong(TAG_PREF_HOUR, 0);
 	}
 
 }
