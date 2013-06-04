@@ -3,6 +3,7 @@ package com.valohyd.copilotemaster.fragments;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -17,6 +18,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.SmsManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -337,9 +342,20 @@ public class NavigationFragment extends SupportMapFragment implements
 			// Initialisation des POIS
 			initPOIs();
 		}
+		
+		setHasOptionsMenu(true);
 
 		// récupérer la map
 		return mainView;
+	}
+	
+	/**
+	 * permet de dire de redessiner le menu
+	 */
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		getActivity().supportInvalidateOptionsMenu();
 	}
 
 	// Initialisation des contacts via sqlite
@@ -464,6 +480,24 @@ public class NavigationFragment extends SupportMapFragment implements
 				}
 			}
 		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		MenuItem item = menu.findItem(R.id.help);
+		item.setVisible(true);
+		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				Dialog help_dialog = new Dialog(getActivity());
+				help_dialog.setTitle(getString(R.string.menu_help));
+				help_dialog.setContentView(R.layout.help_navigation_layout);
+				help_dialog.show();
+				return false;
+			}
+		});
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 }

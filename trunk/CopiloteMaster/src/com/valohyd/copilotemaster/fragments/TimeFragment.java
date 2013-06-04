@@ -1,6 +1,7 @@
 package com.valohyd.copilotemaster.fragments;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
@@ -91,7 +92,8 @@ public class TimeFragment extends SherlockFragment {
 						AlertDialog.Builder builder = new AlertDialog.Builder(
 								getActivity());
 						builder.setTitle(R.string.change_home_title);
-						builder.setMessage(R.string.message_homepage
+						builder.setMessage(getActivity().getString(
+								R.string.message_homepage)
 								+ hr.getExtra() + " ?");
 						builder.setPositiveButton(android.R.string.ok,
 								new OnClickListener() {
@@ -219,6 +221,19 @@ public class TimeFragment extends SherlockFragment {
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 				web.reload();
+				return false;
+			}
+		});
+		item = menu.findItem(R.id.help);
+		item.setVisible(true);
+		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				Dialog help_dialog = new Dialog(getActivity());
+				help_dialog.setTitle(getString(R.string.menu_help));
+				help_dialog.setContentView(R.layout.help_web_layout);
+				help_dialog.show();
 				return false;
 			}
 		});
