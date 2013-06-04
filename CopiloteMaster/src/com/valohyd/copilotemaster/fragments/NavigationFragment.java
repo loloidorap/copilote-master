@@ -378,7 +378,7 @@ public class NavigationFragment extends SupportMapFragment implements
 		list_pois = pois_bdd.getAllPOIs();
 
 		for (POI p : list_pois) {
-			map.addMarker(new MarkerOptions()
+			map.addMarker(new MarkerOptions()// TODO nullpointer
 					.position(p.getLocation())
 					.title(poi_types[p.getType()])
 					.icon(BitmapDescriptorFactory.fromResource(poi_icons[p
