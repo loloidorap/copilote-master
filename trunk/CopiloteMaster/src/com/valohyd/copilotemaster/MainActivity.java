@@ -24,6 +24,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -168,6 +169,11 @@ public class MainActivity extends SherlockFragmentActivity implements
             final Dialog d = new Dialog(this);
             d.setTitle(getString(R.string.help_first_user_title));
             d.setContentView(R.layout.help_first_use);
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(d.getWindow().getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+            d.getWindow().setAttributes(lp);
             d.show();
             
             // set the onclick du bouton (show the next help)
@@ -200,8 +206,8 @@ public class MainActivity extends SherlockFragmentActivity implements
             }
             
             // remember that the app has been opened
-            edit.putBoolean("opened", true);
-            // TODO edit.commit();
+            //TODO edit.putBoolean("opened", true);
+            //edit.commit();
         }
 	}
 
