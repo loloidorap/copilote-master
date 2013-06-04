@@ -170,15 +170,31 @@ public class MainActivity extends SherlockFragmentActivity implements
             d.setContentView(R.layout.help_first_use);
             d.show();
             
-            // set the onclick du bouton
-            Button b = (Button) d.findViewById(R.id.help_button);
+            // set the onclick du bouton (show the next help)
+            final Button b = (Button) d.findViewById(R.id.help_button);
             final ViewFlipper viewFlipper = (ViewFlipper) d.findViewById(R.id.viewFlipper1);
             if(b != null && viewFlipper != null){
                 b.setOnClickListener(new OnClickListener() {
                     
                     @Override
                     public void onClick(View v) {
+                        // aller à la prochaine help
                         viewFlipper.showNext();
+                        
+                        // si c''est la dernière vue : changer le texte du bouton et fermer au on click
+                        int displayedChild = viewFlipper.getDisplayedChild();
+                        int childCount = viewFlipper.getChildCount();
+                        if (displayedChild == childCount - 1) {
+                            // changer le texte du bouton
+                            b.setText(getString(R.string.close));
+                            b.setOnClickListener(new OnClickListener() {
+                                
+                                @Override
+                                public void onClick(View v) {
+                                    d.dismiss();
+                                }
+                            });
+                        }
                     }
                 });
             }
