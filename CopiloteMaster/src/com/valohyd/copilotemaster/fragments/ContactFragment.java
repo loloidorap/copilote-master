@@ -96,6 +96,15 @@ public class ContactFragment extends SherlockFragment {
 	}
 
 	/**
+	 * permet de dire de redessiner le menu
+	 */
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		getActivity().supportInvalidateOptionsMenu();
+	}
+
+	/**
 	 * Initialise la liste des contacts avec les preferences
 	 */
 	private void initContacts() {

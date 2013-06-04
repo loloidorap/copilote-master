@@ -299,6 +299,7 @@ public class PointageFragment extends SherlockFragment {
 			}
 		});
 		item = menu.findItem(R.id.help);
+		item.setVisible(true);
 		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 			@Override

@@ -145,7 +145,7 @@ public class ChronoFragment extends SherlockFragment {
 																		// element
 			}
 		});
-
+		setHasOptionsMenu(true);
 		loadPreferences();
 		return mainView;
 	}
@@ -165,7 +165,15 @@ public class ChronoFragment extends SherlockFragment {
 			stopButton.setText(R.string.stop_chrono);
 			stopButton.setEnabled(true);
 		}
+	}
 
+	/**
+	 * permet de dire de redessiner le menu
+	 */
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		getActivity().supportInvalidateOptionsMenu();
 	}
 
 	/**
