@@ -564,7 +564,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				
 				@Override
 				public boolean onMenuItemClick(MenuItem item) {
-					Dialog help_dialog = new Dialog(MainActivity.this);
+					Dialog help_dialog = new Dialog(MainActivity.this,android.R.style.Theme_Translucent_NoTitleBar);
 					help_dialog.setTitle(getString(R.string.menu_help));
 					help_dialog.setContentView(R.layout.help_navigation_layout);
 					help_dialog.show();
