@@ -30,9 +30,22 @@
         <item name="actionModeBackground">@drawable/cab_background_top_copilotemaster</item>
         <item name="actionModeSplitBackground">@drawable/cab_background_bottom_copilotemaster</item>
         <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Copilotemaster</item>
-
+        <item name="android:alertDialogStyle">@style/CustomDialogTheme</item>
         <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.Copilotemaster.Widget</item>
+    </style>
+
+    <style name="CustomDialogTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:bottomBright">@color/white</item>
+        <item name="android:bottomDark">@color/white</item>
+        <item name="android:bottomMedium">@color/white</item>
+        <item name="android:centerBright">@color/white</item>
+        <item name="android:centerDark">@color/white</item>
+        <item name="android:centerMedium">@color/white</item>
+        <item name="android:fullBright">@color/dark_blue_copilotmaster</item>
+        <item name="android:fullDark">@color/white</item>
+        <item name="android:topBright">@color/white</item>
+        <item name="android:topDark">@color/dark_blue_copilotmaster</item>
     </style>
 
     <style name="ActionBar.Solid.Copilotemaster" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">

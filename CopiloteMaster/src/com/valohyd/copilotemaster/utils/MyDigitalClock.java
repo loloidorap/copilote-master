@@ -21,29 +21,23 @@ import java.util.Calendar;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
-import android.widget.TextClock;
 import android.widget.TextView;
 
 /**
  * Like AnalogClock, but digital. Shows seconds.
  * 
- * @deprecated It is recommended you use {@link TextClock} instead.
  */
-@Deprecated
 public class MyDigitalClock extends TextView {
-	// FIXME: implement separate views for hours/minutes/seconds, so
-	// proportional fonts don't shake rendering
 
 	Calendar mCalendar;
 	private final static String m12 = "h:mm:ss aa";
 	private final static String m24 = "k:mm:ss";
-	@SuppressWarnings("FieldCanBeLocal")
+
 	// We must keep a reference to this observer
 	private FormatChangeObserver mFormatChangeObserver;
 

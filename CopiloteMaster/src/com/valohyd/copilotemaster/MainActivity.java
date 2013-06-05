@@ -40,6 +40,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.valohyd.copilotemaster.fragments.ChronoFragment;
 import com.valohyd.copilotemaster.fragments.ContactFragment;
 import com.valohyd.copilotemaster.fragments.MeteoFragment;
@@ -47,6 +48,7 @@ import com.valohyd.copilotemaster.fragments.NavigationFragment;
 import com.valohyd.copilotemaster.fragments.PointageFragment;
 import com.valohyd.copilotemaster.fragments.TimeFragment;
 import com.valohyd.copilotemaster.service.PointageService;
+import com.valohyd.copilotemaster.utils.AnalyticsManager;
 import com.valohyd.copilotemaster.utils.MyDigitalClock;
 
 public class MainActivity extends SherlockFragmentActivity implements
@@ -80,8 +82,26 @@ public class MainActivity extends SherlockFragmentActivity implements
 			TAG_PREF_HOUR = "offset_time";
 
 	private boolean doubleback = false;
+
+	private Date newDate = null; // Nouvelle date saisie
 	
-	private Date newDate = null; //Nouvelle date saisie
+	/**
+	 * Lancement du Tracker Google Analytics
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		AnalyticsManager.start(this);
+	}
+
+	/**
+	 * Fermeture du Tracker Google Analytics
+	 */
+	@Override
+	public void onStop() {
+		super.onStop();
+		AnalyticsManager.stop(this);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +123,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				final Date now = new Date();
+				newDate = null;
 
 				AlertDialog.Builder d = new AlertDialog.Builder(
 						MainActivity.this);
@@ -162,53 +183,55 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		// For each of the sections in the app, add a tab to the action bar.
 		createTabs(Configuration.ORIENTATION_PORTRAIT);
-		
+
 		// check if the app has already been opened
-        if(!sharedPrefs.getBoolean("opened", false)){
-            // open the dialo of the first use
-            final Dialog d = new Dialog(this);
-            d.setTitle(getString(R.string.help_first_user_title));
-            d.setContentView(R.layout.help_first_use);
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.copyFrom(d.getWindow().getAttributes());
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-            d.getWindow().setAttributes(lp);
-            d.show();
-            
-            // set the onclick du bouton (show the next help)
-            final Button b = (Button) d.findViewById(R.id.help_button);
-            final ViewFlipper viewFlipper = (ViewFlipper) d.findViewById(R.id.viewFlipper1);
-            if(b != null && viewFlipper != null){
-                b.setOnClickListener(new OnClickListener() {
-                    
-                    @Override
-                    public void onClick(View v) {
-                        // aller à la prochaine help
-                        viewFlipper.showNext();
-                        
-                        // si c''est la dernière vue : changer le texte du bouton et fermer au on click
-                        int displayedChild = viewFlipper.getDisplayedChild();
-                        int childCount = viewFlipper.getChildCount();
-                        if (displayedChild == childCount - 1) {
-                            // changer le texte du bouton
-                            b.setText(getString(R.string.close));
-                            b.setOnClickListener(new OnClickListener() {
-                                
-                                @Override
-                                public void onClick(View v) {
-                                    d.dismiss();
-                                }
-                            });
-                        }
-                    }
-                });
-            }
-            
-            // remember that the app has been opened
-            //TODO edit.putBoolean("opened", true);
-            //edit.commit();
-        }
+		if (true){//!sharedPrefs.getBoolean("opened", false)) {
+			// open the dialo of the first use
+			final Dialog d = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
+			d.setTitle(getString(R.string.help_first_user_title));
+			d.setContentView(R.layout.help_first_use);
+			WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+			lp.copyFrom(d.getWindow().getAttributes());
+			lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+			lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+			d.getWindow().setAttributes(lp);
+			d.show();
+
+			// set the onclick du bouton (show the next help)
+			final Button b = (Button) d.findViewById(R.id.help_button);
+			final ViewFlipper viewFlipper = (ViewFlipper) d
+					.findViewById(R.id.viewFlipper1);
+			if (b != null && viewFlipper != null) {
+				b.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// aller à la prochaine help
+						viewFlipper.showNext();
+
+						// si c''est la dernière vue : changer le texte du
+						// bouton et fermer au on click
+						int displayedChild = viewFlipper.getDisplayedChild();
+						int childCount = viewFlipper.getChildCount();
+						if (displayedChild == childCount - 1) {
+							// changer le texte du bouton
+							b.setText(getString(R.string.close));
+							b.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									d.dismiss();
+								}
+							});
+						}
+					}
+				});
+			}
+
+			// remember that the app has been opened
+			// TODO edit.putBoolean("opened", true);
+			// edit.commit();
+		}
 	}
 
 	@Override
@@ -492,7 +515,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			onBackPressed();
 			break;
 		case R.id.about:
-			Dialog d = new Dialog(this);
+			Dialog d = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
 			d.setTitle(getString(R.string.menu_about));
 			d.setContentView(R.layout.about_layout);
 			View v = LayoutInflater.from(this).inflate(R.layout.about_layout,
@@ -534,6 +557,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.settings, menu);
+		if (mapFragment != null && mapFragment.isVisible()) {
+			MenuItem item = menu.findItem(R.id.help);
+			item.setVisible(true);
+			item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+				
+				@Override
+				public boolean onMenuItemClick(MenuItem item) {
+					Dialog help_dialog = new Dialog(MainActivity.this);
+					help_dialog.setTitle(getString(R.string.menu_help));
+					help_dialog.setContentView(R.layout.help_navigation_layout);
+					help_dialog.show();
+					return false;
+				}
+			});
+		}
 		return super.onCreateOptionsMenu(menu);
 	}
 

@@ -36,6 +36,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.service.PointageService;
+import com.valohyd.copilotemaster.utils.AnalyticsManager;
 
 /**
  * Classe representant le fragment de pointage
@@ -103,6 +104,11 @@ public class PointageFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
+		
+		AnalyticsManager.trackScreen(getActivity(),
+				AnalyticsManager.KEY_PAGE_HOME);
+		AnalyticsManager.dispatch();
+		
 		mainView = inflater.inflate(R.layout.pointage_layout, container, false);
 
 		now = new Date();
@@ -183,6 +189,7 @@ public class PointageFragment extends SherlockFragment {
 
 							}
 						}, now.getHours(), now.getMinutes(), true);
+				dialogPointage.setTitle(R.string.pointage_time);
 				dialogPointage.show();
 
 			}
@@ -222,6 +229,7 @@ public class PointageFragment extends SherlockFragment {
 
 					}
 				}, 0, 0, true);
+		dialogImparti.setTitle(R.string.imparti_time);
 
 		// CHRONOMETER
 		elapsedTime = (Chronometer) mainView
@@ -304,7 +312,7 @@ public class PointageFragment extends SherlockFragment {
 
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				Dialog help_dialog = new Dialog(getActivity());
+				Dialog help_dialog = new Dialog(getActivity(),android.R.style.Theme_Translucent_NoTitleBar);
 				help_dialog.setTitle(getString(R.string.menu_help));
 				help_dialog.setContentView(R.layout.help_pointage_layout);
 				help_dialog.show();

@@ -46,6 +46,7 @@ import com.valohyd.copilotemaster.models.Contact;
 import com.valohyd.copilotemaster.models.POI;
 import com.valohyd.copilotemaster.sqlite.ContactsBDD;
 import com.valohyd.copilotemaster.sqlite.PoisBDD;
+import com.valohyd.copilotemaster.utils.AnalyticsManager;
 
 /**
  * Classe representant le fragment de navigation
@@ -121,6 +122,11 @@ public class NavigationFragment extends SupportMapFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
+		
+		AnalyticsManager.trackScreen(getActivity(),
+				AnalyticsManager.KEY_PAGE_MAP);
+		AnalyticsManager.dispatch();
+		
 		mainView = inflater.inflate(R.layout.navigation_layout, container,
 				false);
 
@@ -490,7 +496,7 @@ public class NavigationFragment extends SupportMapFragment implements
 
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				Dialog help_dialog = new Dialog(getActivity());
+				Dialog help_dialog = new Dialog(getActivity(),android.R.style.Theme_Translucent_NoTitleBar);
 				help_dialog.setTitle(getString(R.string.menu_help));
 				help_dialog.setContentView(R.layout.help_navigation_layout);
 				help_dialog.show();

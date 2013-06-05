@@ -21,6 +21,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.models.Contact;
 import com.valohyd.copilotemaster.sqlite.ContactsBDD;
+import com.valohyd.copilotemaster.utils.AnalyticsManager;
 import com.valohyd.copilotemaster.utils.MultiSelectionAdapter;
 
 /**
@@ -49,6 +50,11 @@ public class ContactFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
+		
+		AnalyticsManager.trackScreen(getActivity(),
+				AnalyticsManager.KEY_PAGE_CONTACTS);
+		AnalyticsManager.dispatch();
+		
 		mainView = inflater.inflate(R.layout.contact_layout, container, false);
 
 		// BDD
