@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:padding="0dp">
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="0dp" >
 
     <ViewFlipper
         android:id="@+id/viewFlipper1"
@@ -25,10 +26,21 @@
 
                 <TextView
                     android:id="@+id/help_first_use_first_par"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="@string/help_first_user_par1"
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/help_first_use_first_par1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="@string/help_first_user_par1" />
+                    android:text="@string/help_first_user_par1_1"
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -49,7 +61,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="@string/help_first_user_tab_horaire" />
+                        android:text="@string/help_first_user_tab_horaire"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -69,7 +82,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="@string/help_first_user_tab_navigation" />
+                        android:text="@string/help_first_user_tab_navigation"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -89,7 +103,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="@string/help_first_user_tab_chrono" />
+                        android:text="@string/help_first_user_tab_chrono"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -109,7 +124,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="@string/help_first_user_tab_temps" />
+                        android:text="@string/help_first_user_tab_temps"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -129,7 +145,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="@string/help_first_user_tab_meteo" />
+                        android:text="@string/help_first_user_tab_meteo"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -149,7 +166,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="@string/help_first_user_tab_contacts" />
+                        android:text="@string/help_first_user_tab_contacts"
+                        android:textColor="@color/black" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
@@ -170,6 +188,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="@string/help_first_tab_name"
+                    android:textColor="@color/black"
                     android:textSize="25sp" />
 
                 <TextView
@@ -177,7 +196,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="@string/help_first_tab_content" />
+                    android:text="@string/help_first_tab_content"
+                    android:textColor="@color/black" />
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -204,6 +224,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="@string/help_second_tab_name"
+                    android:textColor="@color/black"
                     android:textSize="25sp" />
 
                 <TextView
@@ -211,7 +232,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="@string/help_second_tab_content" />
+                    android:text="@string/help_second_tab_content"
+                    android:textColor="@color/black" />
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -239,6 +261,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="@string/help_third_tab_name"
+                    android:textColor="@color/black"
                     android:textSize="25sp" />
 
                 <TextView
@@ -246,7 +269,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="@string/help_third_tab_content" />
+                    android:text="@string/help_third_tab_content"
+                    android:textColor="@color/black" />
 
                 <ImageView
                     android:id="@+id/imageView4"
@@ -274,6 +298,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="@string/help_fourth_tab_name"
+                    android:textColor="@color/black"
                     android:textSize="25sp" />
 
                 <TextView
@@ -281,7 +306,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="@string/help_fourth_tab_content" />
+                    android:text="@string/help_fourth_tab_content"
+                    android:textColor="@color/black" />
 
                 <ImageView
                     android:id="@+id/imageView5"
@@ -309,6 +335,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="@string/help_fifth_tab_name"
+                    android:textColor="@color/black"
                     android:textSize="25sp" />
 
                 <TextView
@@ -316,7 +343,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="@string/help_fifth_tab_content" />
+                    android:text="@string/help_fifth_tab_content"
+                    android:textColor="@color/black" />
 
                 <ImageView
                     android:id="@+id/imageView6"
@@ -343,6 +371,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="@string/help_sixth_tab_name"
+                    android:textColor="@color/black"
                     android:textSize="25sp" />
 
                 <TextView
@@ -350,7 +379,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="@string/help_sixth_tab_content" />
+                    android:text="@string/help_sixth_tab_content"
+                    android:textColor="@color/black" />
 
                 <ImageView
                     android:id="@+id/imageView7"

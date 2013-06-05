@@ -28,6 +28,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.valohyd.copilotemaster.R;
+import com.valohyd.copilotemaster.utils.AnalyticsManager;
 
 /**
  * Classe representant le fragment de la vue des temps
@@ -57,6 +58,11 @@ public class TimeFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
+		
+		AnalyticsManager.trackScreen(getActivity(),
+				AnalyticsManager.KEY_PAGE_FFSA);
+		AnalyticsManager.dispatch();
+		
 		mainView = inflater.inflate(R.layout.web_layout, container, false);
 
 		progress = (ProgressBar) mainView.findViewById(R.id.progressWeb);
@@ -230,7 +236,7 @@ public class TimeFragment extends SherlockFragment {
 
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				Dialog help_dialog = new Dialog(getActivity());
+				Dialog help_dialog = new Dialog(getActivity(),android.R.style.Theme_Translucent_NoTitleBar);
 				help_dialog.setTitle(getString(R.string.menu_help));
 				help_dialog.setContentView(R.layout.help_web_layout);
 				help_dialog.show();

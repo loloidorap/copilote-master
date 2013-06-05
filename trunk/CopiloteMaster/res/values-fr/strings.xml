@@ -77,7 +77,8 @@
     <!-- help -->
     <string name="help_first_user_title">Comment utiliser l\'application ?</string>
     
-    <string name="help_first_user_par1">Bienvenue sur l\'application Copilote Master.\nCette application est composée de 6 onglets : </string>  
+    <string name="help_first_user_par1">Bienvenue sur\nCopilote Master !</string>  
+    <string name="help_first_user_par1_1">Cette application est composée de 6 onglets : </string>
     <string name="help_first_user_tab_horaire">Calcul horaire : pour vérifier vos calculs de temps</string>
     <string name="help_first_user_tab_navigation">Navigation : pour vous repérer sur une carte, connaître votre vitesse sur la liaison, partager un radar avec des contacts prédéfinis</string>
     <string name="help_first_user_tab_chrono">Chronomètre : chronométrer votre spéciale</string>
@@ -105,4 +106,20 @@
     
     <string name="next">Suivant</string>
     <string name="close">Fermer</string>
+    
+    <string name="help_map_1">Cliquez sur ce bouton pour centrer la carte sur votre position</string>
+    <string name="help_map_2">Ici vous retrouvez votre vitesse réelle et la précision actuelle du GPS</string>
+    <string name="help_map_3">Cliquez longtemps sur la carte à un endroit précis vous permet de rajouter des Points d\'Intérêts comme par exemple le départ d\'une ES ou encore le parc d\'assistance</string>
+    <string name="help_map_4">Ce bouton vous permet de partager un radar sur la liaison avec vos amis</string>
+    <string name="help_map_5">Cliquez sur ce bouton pour pouvoir activer/désactiver le GPS dans les paramètres du téléphone</string>
+    <string name="help_pointage_1">Renseignez ici l\'heure réelle de pointage</string>
+    <string name="help_pointage_2">Renseignez ici le temps imparti pour aller jusqu\'au prochain CH</string>
+    <string name="help_pointage_3">L\'heure d\'arrivée est automatiquement calculée en fonction des précèdents champs</string>
+    <string name="help_pointage_4">Le temps restant est automatiquement calculé et mis à jour en fonction de l\'heure actuelle et de l\'heure d\'arrivée</string>
+    <string name="help_pointage_5">Cliquez sur l\'heure pour pouvoir configurer l\'heure du rallye</string>
+    <string name="help_weather_1">Renseignez ici la ville dont vous souhaitez connaître la météo</string>
+    <string name="help_weather_2">Ce curseur vous permet de séléctionner l\'heure à laquelle vous souhaitez connaître la météo</string>
+    <string name="help_weather_3">Vous pouvez aussi cliquer sur un jour particulier pour connaitre la météo de ce jour</string>
+    <string name="help_web_1">En cliquant sur un lien vous pouvez changer la page d\'accueil des temps pour avoir directement le rallye que vous voulez</string>
+  
 </resources>
