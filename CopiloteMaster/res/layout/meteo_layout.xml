@@ -37,7 +37,7 @@
             android:layout_toLeftOf="@id/search_meteo"
             android:layout_toRightOf="@id/poweredGoogle"
             android:background="@color/white"
-            android:hint="Ville"
+            android:hint="@string/hint_meteo"
             android:imeOptions="actionDone"
             android:inputType="textCapSentences|textAutoCorrect" />
     </RelativeLayout>

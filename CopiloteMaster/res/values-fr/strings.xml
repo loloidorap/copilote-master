@@ -106,6 +106,7 @@
     
     <string name="next">Suivant</string>
     <string name="close">Fermer</string>
+    <string name="previous">Précédent</string>
     
     <string name="help_map_1">Cliquez sur ce bouton pour centrer la carte sur votre position</string>
     <string name="help_map_2">Ici vous retrouvez votre vitesse réelle et la précision actuelle du GPS</string>
@@ -121,5 +122,6 @@
     <string name="help_weather_2">Ce curseur vous permet de séléctionner l\'heure à laquelle vous souhaitez connaître la météo</string>
     <string name="help_weather_3">Vous pouvez aussi cliquer sur un jour particulier pour connaitre la météo de ce jour</string>
     <string name="help_web_1">En cliquant sur un lien vous pouvez changer la page d\'accueil des temps pour avoir directement le rallye que vous voulez</string>
+    <string name="hint_meteo">Ville</string>
   
 </resources>
