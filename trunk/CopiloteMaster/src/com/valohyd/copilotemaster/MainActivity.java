@@ -54,6 +54,8 @@ import com.valohyd.copilotemaster.utils.MyDigitalClock;
 public class MainActivity extends SherlockFragmentActivity implements
 		TabListener {
 
+	public static boolean mMapIsTouched = false;
+
 	// FRAGMENTS
 	PointageFragment pointageFragment;
 	ChronoFragment chronoFragment;
@@ -84,7 +86,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private boolean doubleback = false;
 
 	private Date newDate = null; // Nouvelle date saisie
-	
+
 	/**
 	 * Lancement du Tracker Google Analytics
 	 */
@@ -185,9 +187,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		createTabs(Configuration.ORIENTATION_PORTRAIT);
 
 		// check if the app has already been opened
-		if (true){//!sharedPrefs.getBoolean("opened", false)) {
+		if (true) {// !sharedPrefs.getBoolean("opened", false)) {
 			// open the dialo of the first use
-			final Dialog d = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
+			final Dialog d = new Dialog(this,
+					android.R.style.Theme_Translucent_NoTitleBar);
 			d.setTitle(getString(R.string.help_first_user_title));
 			d.setContentView(R.layout.help_first_use);
 			WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -198,25 +201,41 @@ public class MainActivity extends SherlockFragmentActivity implements
 			d.show();
 
 			// set the onclick du bouton (show the next help)
-			final Button b = (Button) d.findViewById(R.id.help_button);
+			final Button b1 = (Button) d.findViewById(R.id.help_button_1);
+			final Button b2 = (Button) d.findViewById(R.id.help_button_2);
 			final ViewFlipper viewFlipper = (ViewFlipper) d
 					.findViewById(R.id.viewFlipper1);
-			if (b != null && viewFlipper != null) {
-				b.setOnClickListener(new OnClickListener() {
+			if (b1 != null && b2!=null && viewFlipper != null) {
+				b1.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// aller à l'aide d'avant
+						viewFlipper.showPrevious();
+
+						// si c''est la première vue : cacher le bouton
+						int displayedChild = viewFlipper.getDisplayedChild();
+						int childCount = viewFlipper.getChildCount();
+						if (displayedChild == 0) {
+							b1.setVisibility(View.INVISIBLE);
+						}
+					}
+				});
+				b2.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
 						// aller à la prochaine help
 						viewFlipper.showNext();
-
+						b1.setVisibility(View.VISIBLE);
 						// si c''est la dernière vue : changer le texte du
 						// bouton et fermer au on click
 						int displayedChild = viewFlipper.getDisplayedChild();
 						int childCount = viewFlipper.getChildCount();
 						if (displayedChild == childCount - 1) {
 							// changer le texte du bouton
-							b.setText(getString(R.string.close));
-							b.setOnClickListener(new OnClickListener() {
+							b2.setText(getString(R.string.close));
+							b2.setOnClickListener(new OnClickListener() {
 
 								@Override
 								public void onClick(View v) {
@@ -515,7 +534,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 			onBackPressed();
 			break;
 		case R.id.about:
-			Dialog d = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
+			Dialog d = new Dialog(this,
+					android.R.style.Theme_Translucent_NoTitleBar);
 			d.setTitle(getString(R.string.menu_about));
 			d.setContentView(R.layout.about_layout);
 			View v = LayoutInflater.from(this).inflate(R.layout.about_layout,
@@ -561,10 +581,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 			MenuItem item = menu.findItem(R.id.help);
 			item.setVisible(true);
 			item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-				
+
 				@Override
 				public boolean onMenuItemClick(MenuItem item) {
-					Dialog help_dialog = new Dialog(MainActivity.this,android.R.style.Theme_Translucent_NoTitleBar);
+					Dialog help_dialog = new Dialog(MainActivity.this,
+							android.R.style.Theme_Translucent_NoTitleBar);
 					help_dialog.setTitle(getString(R.string.menu_help));
 					help_dialog.setContentView(R.layout.help_navigation_layout);
 					help_dialog.show();

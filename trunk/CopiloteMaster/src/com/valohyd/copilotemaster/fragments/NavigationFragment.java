@@ -47,6 +47,7 @@ import com.valohyd.copilotemaster.models.POI;
 import com.valohyd.copilotemaster.sqlite.ContactsBDD;
 import com.valohyd.copilotemaster.sqlite.PoisBDD;
 import com.valohyd.copilotemaster.utils.AnalyticsManager;
+import com.valohyd.copilotemaster.utils.MySupportMapFragment;
 
 /**
  * Classe representant le fragment de navigation
@@ -54,7 +55,7 @@ import com.valohyd.copilotemaster.utils.AnalyticsManager;
  * @author parodi
  * 
  */
-public class NavigationFragment extends SupportMapFragment implements
+public class NavigationFragment extends MySupportMapFragment implements
 		OnMyLocationChangeListener {
 
 	private static final String SEPARATEUR = "\n\t";
@@ -122,11 +123,11 @@ public class NavigationFragment extends SupportMapFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		
+
 		AnalyticsManager.trackScreen(getActivity(),
 				AnalyticsManager.KEY_PAGE_MAP);
 		AnalyticsManager.dispatch();
-		
+
 		mainView = inflater.inflate(R.layout.navigation_layout, container,
 				false);
 
@@ -348,13 +349,13 @@ public class NavigationFragment extends SupportMapFragment implements
 			// Initialisation des POIS
 			initPOIs();
 		}
-		
+
 		setHasOptionsMenu(true);
 
 		// récupérer la map
 		return mainView;
 	}
-	
+
 	/**
 	 * permet de dire de redessiner le menu
 	 */
@@ -384,7 +385,8 @@ public class NavigationFragment extends SupportMapFragment implements
 		list_pois = pois_bdd.getAllPOIs();
 
 		for (POI p : list_pois) {
-			map.addMarker(new MarkerOptions()// TODO nullpointer
+			map.addMarker(new MarkerOptions()
+					// TODO nullpointer
 					.position(p.getLocation())
 					.title(poi_types[p.getType()])
 					.icon(BitmapDescriptorFactory.fromResource(poi_icons[p
@@ -442,8 +444,10 @@ public class NavigationFragment extends SupportMapFragment implements
 		// Position
 		LatLng latLng = new LatLng(latitude, longitude);
 
-		// Centrage sur la position
-		map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+		//FIX pour eviter de recentrer la map si on ne bouge pas
+		if (!MainActivity.mMapIsTouched && speed > 5)
+			// Centrage sur la position
+			map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
 		// Zoom sur la position
 		if (firstFix)
@@ -496,7 +500,8 @@ public class NavigationFragment extends SupportMapFragment implements
 
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				Dialog help_dialog = new Dialog(getActivity(),android.R.style.Theme_Translucent_NoTitleBar);
+				Dialog help_dialog = new Dialog(getActivity(),
+						android.R.style.Theme_Translucent_NoTitleBar);
 				help_dialog.setTitle(getString(R.string.menu_help));
 				help_dialog.setContentView(R.layout.help_navigation_layout);
 				help_dialog.show();
