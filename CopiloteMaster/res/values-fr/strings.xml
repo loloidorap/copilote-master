@@ -71,43 +71,36 @@
     <string name="settings_notifs">Activer/Désactiver les notifications de pointage</string>
     <string name="notifications">Notifications</string>
     <string name="homepage_settings">Permet de changer le page d\'accueil de l\'onglet des temps</string>
+    <string name="first_help_pref">Cliquez pour afficher l\'aide au 1er démarrage</string>
     <string name="homepage_titre_settings">Changer page d\'accueil</string>
+    <string name="first_help_pref_title">Aide au 1er démarrage</string>
     <string name="quit_message">Appuyer une deuxième fois pour quitter</string>
-
+    
     <!-- help -->
     <string name="help_first_user_title">Comment utiliser l\'application ?</string>
-    
-    <string name="help_first_user_par1">Bienvenue sur\nCopilote Master !</string>  
+    <string name="help_first_user_par1">Bienvenue sur\nCopilote Master !</string>
     <string name="help_first_user_par1_1">Cette application est composée de 6 onglets : </string>
     <string name="help_first_user_tab_horaire">Calcul horaire : pour vérifier vos calculs de temps</string>
     <string name="help_first_user_tab_navigation">Navigation : pour vous repérer sur une carte, connaître votre vitesse sur la liaison, partager un radar avec des contacts prédéfinis</string>
     <string name="help_first_user_tab_chrono">Chronomètre : chronométrer votre spéciale</string>
-    <string name="help_first_user_tab_temps">Temps des spéciales : regarder les temps officiels via le site de la FFSA</string> 
-    <string name="help_first_user_tab_meteo">Météo : accéder à la météo du lieu où vous vous trouvez, ou tout autre lieu</string> 
+    <string name="help_first_user_tab_temps">Temps des spéciales : regarder les temps officiels via le site de la FFSA</string>
+    <string name="help_first_user_tab_meteo">Météo : accéder à la météo du lieu où vous vous trouvez, ou tout autre lieu</string>
     <string name="help_first_user_tab_contacts">Contacts rapides : appeler ou envoyer des SMS à des contacts rapides (assistance, autres concurrents, ...)</string>
-    
     <string name="help_first_tab_name">Onglet calcul horaire</string>
     <string name="help_first_tab_content">Cet onglet vous permet de calculer l\'heure de pointage. Vous pouvez fermer l\'application, une notification restera pour vous indiquer le temps restant</string>
-    
     <string name="help_second_tab_name">Onglet navigation</string>
     <string name="help_second_tab_content">Cet onglet vous permet d\'ouvrir une carte et d\'afficher votre position et votre vitesse. Sur cette carte, vous pouvez aussi ajouter des POI (point of interest, ce qui correspond à des endroits importants) et lancer la navigation vers ces derniers (à l\'aide de Google Navigation).</string>
-    
     <string name="help_third_tab_name">Onglet chronomètre</string>
     <string name="help_third_tab_content">Cet onglet vous donne accès à un chronomètre classique (pause, partiels, stop, ...).</string>
-    
     <string name="help_fourth_tab_name">Onglet temps des spéciales</string>
     <string name="help_fourth_tab_content">Cet onglet vous permet d\'accéder au site web de la FFSA pour afficher les temps officiels.</string>
-    
     <string name="help_fifth_tab_name">Onglet météo</string>
     <string name="help_fifth_tab_content">Cet onglet vous permet d\'afficher la météo du lieu de votre choix.</string>
-    
     <string name="help_sixth_tab_name">Onglet contacts rapides</string>
     <string name="help_sixth_tab_content">Cet onglet vous permet d\'ajouter et d\'accéder à vos contacts rapides (SMS, appels).</string>
-    
     <string name="next">Suivant</string>
     <string name="close">Fermer</string>
     <string name="previous">Précédent</string>
-    
     <string name="help_map_1">Cliquez sur ce bouton pour centrer la carte sur votre position</string>
     <string name="help_map_2">Ici vous retrouvez votre vitesse réelle et la précision actuelle du GPS</string>
     <string name="help_map_3">Cliquez longtemps sur la carte à un endroit précis vous permet de rajouter des Points d\'Intérêts comme par exemple le départ d\'une ES ou encore le parc d\'assistance</string>
@@ -123,5 +116,5 @@
     <string name="help_weather_3">Vous pouvez aussi cliquer sur un jour particulier pour connaitre la météo de ce jour</string>
     <string name="help_web_1">En cliquant sur un lien vous pouvez changer la page d\'accueil des temps pour avoir directement le rallye que vous voulez</string>
     <string name="hint_meteo">Ville</string>
-  
+
 </resources>

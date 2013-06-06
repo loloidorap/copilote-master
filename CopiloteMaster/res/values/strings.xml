@@ -71,7 +71,9 @@
     <string name="settings_notifs">Enable/Disable checkpoint notifications</string>
     <string name="notifications">Notifications</string>
     <string name="homepage_settings">Allow you to change the homepage for the timetable view</string>
+    <string name="first_help_pref">Click here to display first help</string>
     <string name="homepage_titre_settings">Change homepage</string>
+    <string name="first_help_pref_title">First help</string>
     <string name="quit_message">Pressed back again to exit</string>
     
     <string name="hint_meteo">City</string>

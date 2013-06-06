@@ -17,7 +17,6 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.valohyd.copilotemaster.R;
-import com.valohyd.copilotemaster.utils.AnalyticsManager;
 import com.valohyd.copilotemaster.utils.Chronometer;
 
 /**
@@ -48,11 +47,7 @@ public class ChronoFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		
-		AnalyticsManager.trackScreen(getActivity(),
-				AnalyticsManager.KEY_PAGE_CHRONO);
-		AnalyticsManager.dispatch();
-		
+
 		mainView = inflater.inflate(R.layout.chrono_layout, container, false);
 
 		// PREFERENCES
