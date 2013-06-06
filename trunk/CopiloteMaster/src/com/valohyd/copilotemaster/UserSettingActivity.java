@@ -13,80 +13,75 @@ import android.widget.ViewFlipper;
 
 public class UserSettingActivity extends PreferenceActivity {
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		addPreferencesFromResource(R.xml.settings);
+        addPreferencesFromResource(R.xml.settings);
 
-		Preference firstHelp = getPreferenceScreen().findPreference(
-				"prefFirstHelp");
-		firstHelp.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+        Preference firstHelp = getPreferenceScreen().findPreference("prefFirstHelp");
+        firstHelp.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				final Dialog d = new Dialog(UserSettingActivity.this,
-						android.R.style.Theme_Translucent_NoTitleBar);
-				d.setTitle(getString(R.string.help_first_user_title));
-				d.setContentView(R.layout.help_first_use);
-				WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-				lp.copyFrom(d.getWindow().getAttributes());
-				lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-				lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-				d.getWindow().setAttributes(lp);
-				d.show();
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                final Dialog d = new Dialog(UserSettingActivity.this, android.R.style.Theme_Translucent_NoTitleBar);
+                d.setTitle(getString(R.string.help_first_user_title));
+                d.setContentView(R.layout.help_first_use);
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(d.getWindow().getAttributes());
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                d.getWindow().setAttributes(lp);
+                d.show();
 
-				// set the onclick du bouton (show the next help)
-				final Button b1 = (Button) d.findViewById(R.id.help_button_1);
-				final Button b2 = (Button) d.findViewById(R.id.help_button_2);
-				final ViewFlipper viewFlipper = (ViewFlipper) d
-						.findViewById(R.id.viewFlipper1);
-				if (b1 != null && b2 != null && viewFlipper != null) {
-					b1.setOnClickListener(new OnClickListener() {
+                // set the onclick du bouton (show the next help)
+                final Button b1 = (Button) d.findViewById(R.id.help_button_1);
+                final Button b2 = (Button) d.findViewById(R.id.help_button_2);
+                final ViewFlipper viewFlipper = (ViewFlipper) d.findViewById(R.id.viewFlipper1);
+                if (b1 != null && b2 != null && viewFlipper != null) {
+                    b1.setOnClickListener(new OnClickListener() {
 
-						@Override
-						public void onClick(View v) {
-							// aller à l'aide d'avant
-							viewFlipper.showPrevious();
+                        @Override
+                        public void onClick(View v) {
+                            // aller à l'aide d'avant
+                            viewFlipper.showPrevious();
 
-							// si c''est la première vue : cacher le bouton
-							int displayedChild = viewFlipper
-									.getDisplayedChild();
-							int childCount = viewFlipper.getChildCount();
-							if (displayedChild == 0) {
-								b1.setVisibility(View.INVISIBLE);
-							}
-						}
-					});
-					b2.setOnClickListener(new OnClickListener() {
+                            // si c''est la première vue : cacher le bouton
+                            int displayedChild = viewFlipper.getDisplayedChild();
+                            int childCount = viewFlipper.getChildCount();
+                            b2.setText(getString(R.string.next));
+                            if (displayedChild == 0) {
+                                b1.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    });
+                    b2.setOnClickListener(new OnClickListener() {
 
-						@Override
-						public void onClick(View v) {
-							// aller à la prochaine help
-							viewFlipper.showNext();
-							b1.setVisibility(View.VISIBLE);
-							// si c''est la dernière vue : changer le texte du
-							// bouton et fermer au on click
-							int displayedChild = viewFlipper
-									.getDisplayedChild();
-							int childCount = viewFlipper.getChildCount();
-							if (displayedChild == childCount - 1) {
-								// changer le texte du bouton
-								b2.setText(getString(R.string.close));
-								b2.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // si on est à la dernière page, fermer
+                            int displayedChild = viewFlipper.getDisplayedChild();
+                            int childCount = viewFlipper.getChildCount();
+                            if (displayedChild == childCount - 1) {
+                                // fermer
+                                d.dismiss();
+                            } else {
+                                // aller à la prochaine help
+                                viewFlipper.showNext();
+                                b1.setVisibility(View.VISIBLE);
+                                // si c''est la dernière vue : changer le texte du
+                                // bouton
+                                if (displayedChild == childCount - 2) {
+                                    // changer le texte du bouton
+                                    b2.setText(getString(R.string.close));
+                                }
+                            }
+                        }
+                    });
+                }
+                return false;
+            }
+        });
 
-									@Override
-									public void onClick(View v) {
-										d.dismiss();
-									}
-								});
-							}
-						}
-					});
-				}
-				return false;
-			}
-		});
-
-	}
+    }
 }
