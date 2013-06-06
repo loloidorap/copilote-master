@@ -46,7 +46,6 @@ import com.valohyd.copilotemaster.models.Contact;
 import com.valohyd.copilotemaster.models.POI;
 import com.valohyd.copilotemaster.sqlite.ContactsBDD;
 import com.valohyd.copilotemaster.sqlite.PoisBDD;
-import com.valohyd.copilotemaster.utils.AnalyticsManager;
 import com.valohyd.copilotemaster.utils.MySupportMapFragment;
 
 /**
@@ -72,7 +71,7 @@ public class NavigationFragment extends MySupportMapFragment implements
 	private LocationManager mlocManager;
 	private MyGPSListener mGpsListener;
 
-	private boolean firstFix = true;
+	private boolean firstFix = true, firstTime = true;
 
 	// BDD
 	ContactsBDD bdd;
@@ -123,10 +122,6 @@ public class NavigationFragment extends MySupportMapFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-
-		AnalyticsManager.trackScreen(getActivity(),
-				AnalyticsManager.KEY_PAGE_MAP);
-		AnalyticsManager.dispatch();
 
 		mainView = inflater.inflate(R.layout.navigation_layout, container,
 				false);
@@ -386,7 +381,6 @@ public class NavigationFragment extends MySupportMapFragment implements
 
 		for (POI p : list_pois) {
 			map.addMarker(new MarkerOptions()
-					// TODO nullpointer
 					.position(p.getLocation())
 					.title(poi_types[p.getType()])
 					.icon(BitmapDescriptorFactory.fromResource(poi_icons[p
@@ -444,10 +438,12 @@ public class NavigationFragment extends MySupportMapFragment implements
 		// Position
 		LatLng latLng = new LatLng(latitude, longitude);
 
-		//FIX pour eviter de recentrer la map si on ne bouge pas
-		if (!MainActivity.mMapIsTouched && speed > 5)
+		// FIX pour eviter de recentrer la map si on ne bouge pas
+		if (!MainActivity.mMapIsTouched && speed > 5 || firstTime) {
 			// Centrage sur la position
 			map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+			firstTime = false;
+		}
 
 		// Zoom sur la position
 		if (firstFix)

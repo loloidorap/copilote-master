@@ -33,7 +33,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.valohyd.copilotemaster.R;
-import com.valohyd.copilotemaster.utils.AnalyticsManager;
 
 public class MeteoFragment extends SherlockFragment {
 
@@ -59,10 +58,6 @@ public class MeteoFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		
-		AnalyticsManager.trackScreen(getActivity(),
-				AnalyticsManager.KEY_PAGE_METEO);
-		AnalyticsManager.dispatch();
 
 		new LoadWeatherAsynctask().execute();
 		mainView = inflater.inflate(R.layout.meteo_layout, container, false);
@@ -135,7 +130,7 @@ public class MeteoFragment extends SherlockFragment {
 
 		super.onPause();
 	}
-	
+
 	/**
 	 * permet de dire de redessiner le menu
 	 */
@@ -216,7 +211,8 @@ public class MeteoFragment extends SherlockFragment {
 
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				Dialog help_dialog = new Dialog(getActivity(),android.R.style.Theme_Translucent_NoTitleBar);
+				Dialog help_dialog = new Dialog(getActivity(),
+						android.R.style.Theme_Translucent_NoTitleBar);
 				help_dialog.setTitle(getString(R.string.menu_help));
 				help_dialog.setContentView(R.layout.help_weather_layout);
 				help_dialog.show();

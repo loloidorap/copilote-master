@@ -187,8 +187,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		createTabs(Configuration.ORIENTATION_PORTRAIT);
 
 		// check if the app has already been opened
-		if (true) {// !sharedPrefs.getBoolean("opened", false)) {
-			// open the dialo of the first use
+		if (!sharedPrefs.getBoolean("opened", false)) {
+			// open the dialog of the first use
 			final Dialog d = new Dialog(this,
 					android.R.style.Theme_Translucent_NoTitleBar);
 			d.setTitle(getString(R.string.help_first_user_title));
@@ -205,7 +205,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			final Button b2 = (Button) d.findViewById(R.id.help_button_2);
 			final ViewFlipper viewFlipper = (ViewFlipper) d
 					.findViewById(R.id.viewFlipper1);
-			if (b1 != null && b2!=null && viewFlipper != null) {
+			if (b1 != null && b2 != null && viewFlipper != null) {
 				b1.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -248,8 +248,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 
 			// remember that the app has been opened
-			// TODO edit.putBoolean("opened", true);
-			// edit.commit();
+			edit.putBoolean("opened", true);
+			edit.commit();
 		}
 	}
 
@@ -453,6 +453,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 				ft.add(R.id.container, this.pointageFragment);
 			}
 			ft.show(this.pointageFragment);
+			AnalyticsManager.trackScreen(MainActivity.this,
+					AnalyticsManager.KEY_PAGE_HOME);
+			AnalyticsManager.dispatch();
 		}
 		if (tab.getPosition() == 1) {
 			if (this.mapFragment == null) {
@@ -460,6 +463,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 				ft.add(R.id.container, this.mapFragment, null);
 			}
 			ft.show(this.mapFragment);
+			AnalyticsManager.trackScreen(MainActivity.this,
+					AnalyticsManager.KEY_PAGE_MAP);
+			AnalyticsManager.dispatch();
 		}
 		if (tab.getPosition() == 2) {
 			if (this.chronoFragment == null) {
@@ -467,6 +473,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 				ft.add(R.id.container, this.chronoFragment, null);
 			}
 			ft.show(this.chronoFragment);
+			AnalyticsManager.trackScreen(MainActivity.this,
+					AnalyticsManager.KEY_PAGE_CHRONO);
+			AnalyticsManager.dispatch();
 		}
 		if (tab.getPosition() == 3) {
 			if (this.timeFragment == null) {
@@ -474,13 +483,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 				ft.add(R.id.container, this.timeFragment, null);
 			}
 			ft.show(this.timeFragment);
-		}
-		if (tab.getPosition() == 5) {
-			if (this.contactFragment == null) {
-				this.contactFragment = new ContactFragment();
-				ft.add(R.id.container, this.contactFragment, null);
-			}
-			ft.show(this.contactFragment);
+			AnalyticsManager.trackScreen(MainActivity.this,
+					AnalyticsManager.KEY_PAGE_FFSA);
+			AnalyticsManager.dispatch();
 		}
 		if (tab.getPosition() == 4) {
 			if (this.meteoFragment == null) {
@@ -488,7 +493,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 				ft.add(R.id.container, this.meteoFragment, null);
 			}
 			ft.show(this.meteoFragment);
+			AnalyticsManager.trackScreen(MainActivity.this,
+					AnalyticsManager.KEY_PAGE_METEO);
+			AnalyticsManager.dispatch();
 		}
+		if (tab.getPosition() == 5) {
+			if (this.contactFragment == null) {
+				this.contactFragment = new ContactFragment();
+				ft.add(R.id.container, this.contactFragment, null);
+			}
+			ft.show(this.contactFragment);
+			AnalyticsManager.trackScreen(MainActivity.this,
+					AnalyticsManager.KEY_PAGE_CONTACTS);
+			AnalyticsManager.dispatch();
+		}
+
 	}
 
 	@Override
@@ -505,12 +524,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (tab.getPosition() == 3) {
 			ft.hide(this.timeFragment);
 		}
-		if (tab.getPosition() == 5) {
-			ft.hide(this.contactFragment);
-		}
 		if (tab.getPosition() == 4) {
 			ft.hide(this.meteoFragment);
 		}
+		if (tab.getPosition() == 5) {
+			ft.hide(this.contactFragment);
+		}
+
 	}
 
 	@Override

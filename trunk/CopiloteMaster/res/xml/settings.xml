@@ -16,5 +16,11 @@
             android:summary="@string/homepage_settings"
             android:title="@string/homepage_titre_settings" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/menu_help" >
+        <Preference
+            android:key="prefFirstHelp"
+            android:summary="@string/first_help_pref"
+            android:title="@string/first_help_pref_title" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
