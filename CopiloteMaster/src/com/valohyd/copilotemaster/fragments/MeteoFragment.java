@@ -52,6 +52,8 @@ public class MeteoFragment extends SherlockFragment {
 
 	private String home_url = "http://www.google.fr/search?q=Meteo";
 
+	private static final String URL_IDS = "http://www.valohyd.com/copilotemaster/weather_ids.txt";
+
 	private ArrayList<String> ids_blocks; // ID des Block a cacher
 
 	@Override
@@ -91,13 +93,8 @@ public class MeteoFragment extends SherlockFragment {
 
 		if (web != null) {
 			if (!dejaCharge) {
-				if (hasHoneycombMR1())
-					// charger la page
-					web.loadUrl(home_url);
-				else {
-					progress.setVisibility(View.GONE);
-					web.setVisibility(View.INVISIBLE);
-				}
+				progress.setVisibility(View.GONE);
+				web.setVisibility(View.INVISIBLE);
 			} else if (etatSauvegarde != null) {
 				web.restoreState(etatSauvegarde);
 			}
@@ -142,12 +139,17 @@ public class MeteoFragment extends SherlockFragment {
 
 	// Recherche
 	private void performSearch() {
-		if (searchText.getText().length() != 0)
-			web.loadUrl(home_url + "+" + searchText.getText().toString());
+		if (searchText.getText().length() != 0) {
+			if (ids_blocks == null)
+				new LoadWeatherAsynctask().execute();
+			else
+				web.loadUrl(home_url + "+" + searchText.getText().toString());
+		}
 		// close keyboard
 		((InputMethodManager) getActivity().getSystemService(
 				Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
 				searchText.getWindowToken(), 0);
+
 	}
 
 	private class MyWebViewClient extends WebViewClient {
@@ -231,8 +233,7 @@ public class MeteoFragment extends SherlockFragment {
 		@Override
 		protected Void doInBackground(Void... params) {
 			try {
-				URL ids_url = new URL(
-						"http://valohyd.com/copilotemaster/weather_ids.txt");
+				URL ids_url = new URL(URL_IDS);
 				Scanner s = new Scanner(ids_url.openStream());
 				while (s.hasNextLine()) {
 					ids_blocks = new ArrayList<String>(Arrays.asList(s
