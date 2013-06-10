@@ -61,7 +61,6 @@ public class MeteoFragment extends SherlockFragment {
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		new LoadWeatherAsynctask().execute();
 		mainView = inflater.inflate(R.layout.meteo_layout, container, false);
 
 		progress = (ProgressBar) mainView.findViewById(R.id.progressWeb);
@@ -244,6 +243,12 @@ public class MeteoFragment extends SherlockFragment {
 				ex.printStackTrace(); // for now, simply output it.
 			}
 			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			web.loadUrl(home_url + "+" + searchText.getText().toString());
 		}
 
 	}

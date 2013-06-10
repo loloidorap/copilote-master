@@ -22,6 +22,7 @@
             android:background="@drawable/button_selector"
             android:lines="2"
             android:padding="5dp"
+            android:visibility="gone"
             android:text="@string/delete_contacts"
             android:textColor="#ffffff" />
 
@@ -35,6 +36,19 @@
             android:lines="2"
             android:padding="5dp"
             android:text="@string/add_contact"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/smsGroupButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_selector"
+            android:lines="2"
+            android:padding="5dp"
+            android:visibility="gone"
+            android:text="Envoi SMS groupé"
             android:textColor="#ffffff" />
     </LinearLayout>
 
