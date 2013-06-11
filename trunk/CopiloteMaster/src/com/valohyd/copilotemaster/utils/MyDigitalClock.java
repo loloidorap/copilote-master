@@ -17,6 +17,7 @@
 package com.valohyd.copilotemaster.utils;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import android.content.Context;
 import android.database.ContentObserver;
@@ -34,7 +35,7 @@ import android.widget.TextView;
  */
 public class MyDigitalClock extends TextView {
 
-	Calendar mCalendar;
+	static Calendar mCalendar;
 	private final static String m12 = "h:mm:ss aa";
 	private final static String m24 = "k:mm:ss";
 
@@ -89,6 +90,10 @@ public class MyDigitalClock extends TextView {
 				Settings.System.CONTENT_URI, true, mFormatChangeObserver);
 
 		setFormat();
+	}
+
+	public Date getTime() {
+		return mCalendar.getTime();
 	}
 
 	@Override
