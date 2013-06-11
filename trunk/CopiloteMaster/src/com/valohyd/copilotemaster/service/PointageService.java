@@ -226,6 +226,7 @@ public class PointageService extends Service {
 		stopForeground(true);
 		stopCountDownTimer();
 		stopPastTimer();
+		notificationManager.cancel(NOTIFICATION_ID);
 	}
 
 	/**
