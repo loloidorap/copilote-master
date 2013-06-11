@@ -34,6 +34,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.valohyd.copilotemaster.MainActivity;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.service.PointageService;
 
@@ -166,7 +167,7 @@ public class PointageFragment extends SherlockFragment {
 																	// pour
 																	// l'utilisateur
 								if (impartiDate != null)
-									setRemainingTime(); // On affiche le temps
+									setRemainingTime(MainActivity.getRallyeDate()); // On affiche le temps
 														// restant
 														// si le temps imparti
 														// est deja
@@ -216,7 +217,7 @@ public class PointageFragment extends SherlockFragment {
 							String newString = new SimpleDateFormat("HH:mm")
 									.format(impartiDate);
 							impartiTime.setText(newString);
-							setRemainingTime(); // On affiche le temps restant
+							setRemainingTime(MainActivity.getRallyeDate()); // On affiche le temps restant
 							savePreferences(); // On sauvegarde
 						} catch (ParseException e) {
 							e.printStackTrace();
@@ -330,7 +331,7 @@ public class PointageFragment extends SherlockFragment {
 	 * Affiche le temps restant en se basant sur l'heure de pointage et le temps
 	 * imparti accordé
 	 */
-	protected void setRemainingTime() {
+	public void setRemainingTime(Date heureDuRallye) {
 		// CONSTRUCTION DE L'HEURE D'ARRIVEE
 		Calendar c = new GregorianCalendar();
 		c.setTime(new Date(pointageDate.getTime()));
@@ -343,7 +344,7 @@ public class PointageFragment extends SherlockFragment {
 
 		// Calcul des temps
 		final long futurems = finalDate.getTime();
-		long nowms = new Date().getTime();
+		long nowms = heureDuRallye.getTime();
 		final long remaining = futurems - nowms;
 
 		// stopper le timer
@@ -460,7 +461,7 @@ public class PointageFragment extends SherlockFragment {
 		if (!imparti.equals(R.string.unknown)) {
 			try {
 				impartiDate = new SimpleDateFormat("HH:mm").parse(imparti);
-				setRemainingTime();
+				setRemainingTime(MainActivity.getRallyeDate());
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
