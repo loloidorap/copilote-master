@@ -143,7 +143,7 @@ public class PointageService extends Service {
 					}
 					notifBuilder
 							.setProgress(
-									(int) millisUntilFinished,
+									(int) millisInFuture,
 									(int) (millisInFuture - millisUntilFinished),
 									false);
 					notifBuilder.setContentText("temps : -" + hours + ":"
@@ -214,6 +214,8 @@ public class PointageService extends Service {
 
 				if (useNotif) {
 					// notification : temps dépassé et panneau attention
+				    // enlever la progress bar
+				    notifBuilder.setProgress(0, 0, false);
 					notifBuilder
 							.setSmallIcon(android.R.drawable.stat_notify_error);
 					notifBuilder.setContentText("ATTENTION ! Temps : +" + hours
@@ -221,6 +223,9 @@ public class PointageService extends Service {
 					notificationManager.notify(NOTIFICATION_ID,
 							notifBuilder.build());
 				}
+				if (hook != null) {
+                    hook.displayElapsedTime(hours + ":" + minutes + ":" + secondes);
+                }
 			}
 		}, 1000, 1000);
 	}

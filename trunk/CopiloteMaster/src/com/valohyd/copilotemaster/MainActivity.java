@@ -314,15 +314,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
-//	@Override
-//	protected void onPause() {
-//		super.onPause();
-//		if (servicePointage != null && mConnection != null && isServiceBounded) {
-//			unbindService(mConnection);
-//			servicePointage.setHook(null);
-//			isServiceBounded = false;
-//		}
-//	}
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (servicePointage != null && mConnection != null && isServiceBounded) {
+			unbindService(mConnection);
+			servicePointage.setHook(null);
+			isServiceBounded = false;
+		}
+	}
 
 	@Override
 	public void onBackPressed() {
