@@ -9,12 +9,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.valohyd.copilotemaster.MainActivity;
 import com.valohyd.copilotemaster.R;
@@ -70,7 +70,9 @@ public class PointageService extends Service {
 		pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
 		notifBuilder = new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_launcher)
+				.setLargeIcon(
+						BitmapFactory.decodeResource(getResources(),
+								R.drawable.ic_launcher))
 				.setContentTitle(getString(R.string.pointage_title_notif))
 				.setContentText(getString(R.string.back_to_app))
 				.setOngoing(true).setContentIntent(pIntent);
@@ -226,7 +228,7 @@ public class PointageService extends Service {
 					hook.displayElapsedTime(hours + ":" + minutes + ":"
 							+ secondes);
 
-				} 
+				}
 			}
 		}, 1000, 1000);
 	}
