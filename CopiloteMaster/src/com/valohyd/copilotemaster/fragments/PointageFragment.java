@@ -250,7 +250,7 @@ public class PointageFragment extends SherlockFragment {
 
 	@Override
 	public void onResume() {
-		setRemainingTime(MainActivity.getRallyeDate());
+		loadPreferences();
 		super.onResume();
 	}
 
