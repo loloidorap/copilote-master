@@ -426,17 +426,30 @@ public class PointageFragment extends SherlockFragment {
 	public void onFinish(long remaining) {
 		remainingTime.setVisibility(View.GONE); // On cache le timer
 		// On RAZ le chrono
-		if (remaining > 0)
+		/*if (remaining > 0)
 			elapsedTime.setBase(SystemClock.elapsedRealtime());
 		else
-			elapsedTime.setBase(SystemClock.elapsedRealtime() + remaining);
+			elapsedTime.setBase(SystemClock.elapsedRealtime() + remaining);*/
 		elapsedTime.setVisibility(View.VISIBLE); // On affiche le chrono
 		signRemainingTime.setText("+");
 		signRemainingTime.setBackgroundColor(getResources().getColor(
 				R.color.holo_red_light));
 		signRemainingTime.setTextColor(getResources().getColor(R.color.white));
-		elapsedTime.start(); // On declenche le chrono du temps
+		//elapsedTime.start(); // On declenche le chrono du temps
 								// supplémentaire
+	}
+	
+	/**
+	 * appelée par le service
+	 * @param toDisplay
+	 */
+	public void displayElapsedTime(final String toDisplay){
+	    getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                elapsedTime.setText(toDisplay);
+            }
+        });
 	}
 
 	/**
