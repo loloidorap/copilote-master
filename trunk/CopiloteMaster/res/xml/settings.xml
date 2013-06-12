@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/pointage_time" >
+   <!--  <PreferenceCategory android:title="@string/pointage_time" >
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="prefUseNotif"
             android:summary="@string/settings_notifs"
             android:title="@string/notifications" >
         </CheckBoxPreference>
-    </PreferenceCategory>
+    </PreferenceCategory> -->
     <PreferenceCategory android:title="@string/times_title" >
         <EditTextPreference
             android:defaultValue="@string/url_ffsa"
