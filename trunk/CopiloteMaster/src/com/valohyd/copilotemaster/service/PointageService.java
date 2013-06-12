@@ -14,6 +14,7 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.valohyd.copilotemaster.MainActivity;
 import com.valohyd.copilotemaster.R;
@@ -53,6 +54,7 @@ public class PointageService extends Service {
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
 				"PointageService");
+		wakelock.acquire();
 		return START_NOT_STICKY;
 	}
 
@@ -70,8 +72,8 @@ public class PointageService extends Service {
 		notifBuilder = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle(getString(R.string.pointage_title_notif))
-				.setContentText(getString(R.string.back_to_app)).setOngoing(true)
-				.setContentIntent(pIntent);
+				.setContentText(getString(R.string.back_to_app))
+				.setOngoing(true).setContentIntent(pIntent);
 
 		notif = notifBuilder.build();
 
@@ -103,8 +105,6 @@ public class PointageService extends Service {
 		// stop the other timer
 		stopCountDownTimer();
 		stopPastTimer();
-
-		wakelock.acquire();
 
 		notifBuilder.setContentTitle(getString(R.string.pointage_title_notif));
 
@@ -157,7 +157,7 @@ public class PointageService extends Service {
 			@Override
 			public void onFinish() {
 				if (hook != null) {
-					hook.onFinish(millisInFuture);
+					hook.onFinish();
 				}
 				// start the past timer
 				startPastTimer(millisInFuture);
@@ -194,7 +194,6 @@ public class PointageService extends Service {
 			@Override
 			public void run() {
 				seconds++;
-
 				// Decoupage du temps écoulé pour l'affichage
 				long sec = seconds % 60;
 				String secondes = "" + sec;
@@ -214,8 +213,8 @@ public class PointageService extends Service {
 
 				if (useNotif) {
 					// notification : temps dépassé et panneau attention
-				    // enlever la progress bar
-				    notifBuilder.setProgress(0, 0, false);
+					// enlever la progress bar
+					notifBuilder.setProgress(0, 0, false);
 					notifBuilder
 							.setSmallIcon(android.R.drawable.stat_notify_error);
 					notifBuilder.setContentText("ATTENTION ! Temps : +" + hours
@@ -224,8 +223,10 @@ public class PointageService extends Service {
 							notifBuilder.build());
 				}
 				if (hook != null) {
-                    hook.displayElapsedTime(hours + ":" + minutes + ":" + secondes);
-                }
+					hook.displayElapsedTime(hours + ":" + minutes + ":"
+							+ secondes);
+
+				} 
 			}
 		}, 1000, 1000);
 	}

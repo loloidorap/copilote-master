@@ -167,11 +167,13 @@ public class PointageFragment extends SherlockFragment {
 																	// pour
 																	// l'utilisateur
 								if (impartiDate != null)
-									setRemainingTime(MainActivity.getRallyeDate()); // On affiche le temps
-														// restant
-														// si le temps imparti
-														// est deja
-														// rempli
+									setRemainingTime(MainActivity
+											.getRallyeDate()); // On affiche le
+																// temps
+								// restant
+								// si le temps imparti
+								// est deja
+								// rempli
 								else
 									impartiTimeButton.setEnabled(true); // Sinon
 																		// on
@@ -217,7 +219,11 @@ public class PointageFragment extends SherlockFragment {
 							String newString = new SimpleDateFormat("HH:mm")
 									.format(impartiDate);
 							impartiTime.setText(newString);
-							setRemainingTime(MainActivity.getRallyeDate()); // On affiche le temps restant
+							setRemainingTime(MainActivity.getRallyeDate()); // On
+																			// affiche
+																			// le
+																			// temps
+																			// restant
 							savePreferences(); // On sauvegarde
 						} catch (ParseException e) {
 							e.printStackTrace();
@@ -241,10 +247,10 @@ public class PointageFragment extends SherlockFragment {
 
 		return mainView;
 	}
-	
+
 	@Override
 	public void onResume() {
-		loadPreferences();
+		setRemainingTime(MainActivity.getRallyeDate());
 		super.onResume();
 	}
 
@@ -423,33 +429,36 @@ public class PointageFragment extends SherlockFragment {
 	/**
 	 * Lors de la fin du temps imparti du remainTimer
 	 */
-	public void onFinish(long remaining) {
+	public void onFinish() {
 		remainingTime.setVisibility(View.GONE); // On cache le timer
 		// On RAZ le chrono
-		/*if (remaining > 0)
-			elapsedTime.setBase(SystemClock.elapsedRealtime());
-		else
-			elapsedTime.setBase(SystemClock.elapsedRealtime() + remaining);*/
+		/*
+		 * if (remaining > 0)
+		 * elapsedTime.setBase(SystemClock.elapsedRealtime()); else
+		 * elapsedTime.setBase(SystemClock.elapsedRealtime() + remaining);
+		 */
 		elapsedTime.setVisibility(View.VISIBLE); // On affiche le chrono
 		signRemainingTime.setText("+");
 		signRemainingTime.setBackgroundColor(getResources().getColor(
 				R.color.holo_red_light));
 		signRemainingTime.setTextColor(getResources().getColor(R.color.white));
-		//elapsedTime.start(); // On declenche le chrono du temps
-								// supplémentaire
+		// elapsedTime.start(); // On declenche le chrono du temps
+		// supplémentaire
 	}
-	
+
 	/**
 	 * appelée par le service
+	 * 
 	 * @param toDisplay
 	 */
-	public void displayElapsedTime(final String toDisplay){
-	    getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                elapsedTime.setText(toDisplay);
-            }
-        });
+	public void displayElapsedTime(final String toDisplay) {
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				onFinish();
+				elapsedTime.setText(toDisplay);
+			}
+		});
 	}
 
 	/**
