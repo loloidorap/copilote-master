@@ -241,6 +241,12 @@ public class PointageFragment extends SherlockFragment {
 
 		return mainView;
 	}
+	
+	@Override
+	public void onResume() {
+		loadPreferences();
+		super.onResume();
+	}
 
 	public void setService(PointageService service,
 			ServiceConnection mConnection) {

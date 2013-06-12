@@ -7,10 +7,12 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
 import com.valohyd.copilotemaster.MainActivity;
@@ -28,6 +30,10 @@ public class PointageService extends Service {
 	private CountDownTimer remainTimer; // Temps restants dans le temps imparti
 	private PointageFragment hook; // hook pour intéragir avec le fragment
 
+	// WAKE LOCK
+	PowerManager pm;
+	PowerManager.WakeLock wakelock;
+
 	// notification manager
 	private static final int NOTIFICATION_ID = 42;
 	private NotificationManager notificationManager;
@@ -44,6 +50,9 @@ public class PointageService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+				"PointageService");
 		return START_NOT_STICKY;
 	}
 
@@ -61,7 +70,7 @@ public class PointageService extends Service {
 		notifBuilder = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle(getString(R.string.pointage_title_notif))
-				.setContentText(getString(R.string.part_time)).setOngoing(true)
+				.setContentText(getString(R.string.back_to_app)).setOngoing(true)
 				.setContentIntent(pIntent);
 
 		notif = notifBuilder.build();
@@ -95,6 +104,8 @@ public class PointageService extends Service {
 		stopCountDownTimer();
 		stopPastTimer();
 
+		wakelock.acquire();
+
 		notifBuilder.setContentTitle(getString(R.string.pointage_title_notif));
 
 		// start the new
@@ -123,7 +134,7 @@ public class PointageService extends Service {
 				}
 
 				if (useNotif) {
-					if (millisUntilFinished < 60000) {
+					if (millisUntilFinished < 600000) {
 						notifBuilder
 								.setSmallIcon(android.R.drawable.presence_away);
 					} else {
@@ -227,6 +238,8 @@ public class PointageService extends Service {
 		stopCountDownTimer();
 		stopPastTimer();
 		notificationManager.cancel(NOTIFICATION_ID);
+		if (wakelock.isHeld())
+			wakelock.release();
 	}
 
 	/**

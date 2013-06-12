@@ -57,6 +57,7 @@
     <string name="contact">Contact :</string>
     <string name="contact_mail">contact@valohyd.com</string>
     <string name="part_time">Split</string>
+    <string name="back_to_app">Click to get back to the application</string>
     <string name="delete_contacts">Delete selected</string>
     <string name="add_contact">Add contact</string>
     <string name="no_contacts">No quick contacts !</string>
