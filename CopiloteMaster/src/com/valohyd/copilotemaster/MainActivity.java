@@ -308,6 +308,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		Intent i = new Intent(MainActivity.this, PointageService.class);
 		startService(i);
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
+		AnalyticsManager.trackScreen(MainActivity.this,
+				this.getClass().getName());
+		AnalyticsManager.dispatch();
 
 	}
 
