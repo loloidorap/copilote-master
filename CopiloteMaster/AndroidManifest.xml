@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
@@ -47,7 +48,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyA6kv4mxBRqeasvYQ3XE9_xogHIDHVNHu4" />
+            android:value="AIzaSyCxIPZClcl5x_bd-qoFbJZxetudwx5P1P8" />
         <!-- Release : AIzaSyA6kv4mxBRqeasvYQ3XE9_xogHIDHVNHu4 -->
         <!-- Test : AIzaSyCxIPZClcl5x_bd-qoFbJZxetudwx5P1P8 -->
 

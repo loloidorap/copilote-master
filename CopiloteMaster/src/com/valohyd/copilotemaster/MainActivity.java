@@ -184,10 +184,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 									savePreferences(newDate.getTime());
 								} else {
 									digitalClock.setIsSystemTime(true);
-									pointageFragment.setRemainingTime(new Date());
+									pointageFragment
+											.setRemainingTime(new Date());
 									savePreferences(new Date().getTime());
 								}
-								
+
 							}
 						});
 				d.setNeutralButton(getString(android.R.string.cancel), null);
@@ -301,31 +302,24 @@ public class MainActivity extends SherlockFragmentActivity implements
 				isServiceBounded = false;
 			}
 		};
-
+		// /!\ les deux lignes ici sont nécessaires : on veut que le service
+		// continue de tourner jusqu'à qu'on appelle stopService => donc on doit
+		// faire un startService et on veux être bindé au service, donc bind
 		Intent i = new Intent(MainActivity.this, PointageService.class);
 		startService(i);
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		if (servicePointage != null && mConnection != null && isServiceBounded) {
-			unbindService(mConnection);
-			servicePointage.setHook(null);
-			isServiceBounded = false;
-		}
-	}
-
-	/**
-	 * Renvoi la connexion au service
-	 * 
-	 * @return connexion
-	 */
-	public PointageService getService() {
-		return servicePointage;
-	}
+//	@Override
+//	protected void onPause() {
+//		super.onPause();
+//		if (servicePointage != null && mConnection != null && isServiceBounded) {
+//			unbindService(mConnection);
+//			servicePointage.setHook(null);
+//			isServiceBounded = false;
+//		}
+//	}
 
 	@Override
 	public void onBackPressed() {
