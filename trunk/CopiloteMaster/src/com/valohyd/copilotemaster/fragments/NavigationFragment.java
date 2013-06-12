@@ -326,13 +326,23 @@ public class NavigationFragment extends MySupportMapFragment implements
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which) {
-									Intent intent = new Intent(
-											android.content.Intent.ACTION_VIEW,
-											Uri.parse("google.navigation:q="
-													+ marker.getPosition().latitude
-													+ ","
-													+ marker.getPosition().longitude));
-									startActivity(intent);
+									try {
+										Intent intent = new Intent(
+												android.content.Intent.ACTION_VIEW,
+												Uri.parse("google.navigation:q="
+														+ marker.getPosition().latitude
+														+ ","
+														+ marker.getPosition().longitude));
+										startActivity(intent);
+									} catch (Exception e) {
+										AlertDialog.Builder d = new AlertDialog.Builder(
+												getActivity());
+										d.setMessage("Application Google Navigation introuvable !");
+										d.setPositiveButton(
+												getString(android.R.string.ok),
+												null);
+										d.show();
+									}
 								}
 							});
 					builder.show();
