@@ -337,9 +337,9 @@ public class NavigationFragment extends MySupportMapFragment implements
 									} catch (Exception e) {
 										AlertDialog.Builder d = new AlertDialog.Builder(
 												getActivity());
-										d.setMessage("Application Google Navigation introuvable !");
+										d.setMessage(R.string.message_google_maps_introuvable);
 										d.setPositiveButton(
-												getString(android.R.string.ok),
+												getString(R.string.close),
 												null);
 										d.show();
 									}

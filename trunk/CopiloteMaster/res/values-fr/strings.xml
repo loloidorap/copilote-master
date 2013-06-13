@@ -117,5 +117,6 @@
     <string name="help_weather_3">Vous pouvez aussi cliquer sur un jour particulier pour connaitre la météo de ce jour</string>
     <string name="help_web_1">En cliquant sur un lien vous pouvez changer la page d\'accueil des temps pour avoir directement le rallye que vous voulez</string>
     <string name="hint_meteo">Ville</string>
+    <string name="message_google_maps_introuvable">Application Google Maps introuvable ! Veuillez la télécharger sur le Google Play pour pouvoir utiliser la navigation.</string>
 
 </resources>

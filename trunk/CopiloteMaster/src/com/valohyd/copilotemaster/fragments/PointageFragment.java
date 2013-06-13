@@ -17,7 +17,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -270,6 +269,7 @@ public class PointageFragment extends SherlockFragment {
 			public boolean onMenuItemClick(MenuItem item) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
+
 				builder.setTitle(R.string.stop_pointage);
 				builder.setMessage(R.string.confirm_stop_pointage);
 				builder.setPositiveButton(android.R.string.yes,
@@ -344,45 +344,48 @@ public class PointageFragment extends SherlockFragment {
 	 * imparti accordé
 	 */
 	public void setRemainingTime(Date heureDuRallye) {
-		// CONSTRUCTION DE L'HEURE D'ARRIVEE
-		Calendar c = new GregorianCalendar();
-		c.setTime(new Date(pointageDate.getTime()));
-		c.add(Calendar.HOUR, impartiDate.getHours());
-		c.add(Calendar.MINUTE, impartiDate.getMinutes());
-		finalDate = c.getTime();
+		if (pointageDate != null && impartiDate != null) {
+			// CONSTRUCTION DE L'HEURE D'ARRIVEE
+			Calendar c = new GregorianCalendar();
+			c.setTime(new Date(pointageDate.getTime()));
+			c.add(Calendar.HOUR, impartiDate.getHours());
+			c.add(Calendar.MINUTE, impartiDate.getMinutes());
+			finalDate = c.getTime();
 
-		// Affichage de l'heure d'arrivée
-		finishTime.setText(minuteFormat.format(finalDate));
+			// Affichage de l'heure d'arrivée
+			finishTime.setText(minuteFormat.format(finalDate));
 
-		// Calcul des temps
-		final long futurems = finalDate.getTime();
-		long nowms = heureDuRallye.getTime();
-		final long remaining = futurems - nowms;
+			// Calcul des temps
+			final long futurems = finalDate.getTime();
+			long nowms = heureDuRallye.getTime();
+			final long remaining = futurems - nowms;
 
-		// stopper le timer
-		if (servicePointage != null) {
-			servicePointage.stopCountDownTimer();
-		}
-		// Si le temps etait dépassé on cache le chrono
-		if (elapsedTime.getVisibility() == View.VISIBLE) {
-			elapsedTime.setVisibility(View.GONE);
-		}
+			// stopper le timer
+			if (servicePointage != null) {
+				servicePointage.stopCountDownTimer();
+			}
+			// Si le temps etait dépassé on cache le chrono
+			if (elapsedTime.getVisibility() == View.VISIBLE) {
+				elapsedTime.setVisibility(View.GONE);
+			}
 
-		// On recréer le timer avec le nouveau temps
-		// si le service est null, attendre un peu et retester (temps de
-		// connexion au service)
-		if (servicePointage == null) {
-			remainingTime.postDelayed(new Runnable() {
+			// On recréer le timer avec le nouveau temps
+			// si le service est null, attendre un peu et retester (temps de
+			// connexion au service)
+			if (servicePointage == null) {
+				remainingTime.postDelayed(new Runnable() {
 
-				@Override
-				public void run() {
-					if (servicePointage != null) {
-						servicePointage.startCountDownTimer(remaining, 1000);
+					@Override
+					public void run() {
+						if (servicePointage != null) {
+							servicePointage
+									.startCountDownTimer(remaining, 1000);
+						}
 					}
-				}
-			}, 250);
-		} else {
-			servicePointage.startCountDownTimer(remaining, 1000);
+				}, 250);
+			} else {
+				servicePointage.startCountDownTimer(remaining, 1000);
+			}
 		}
 	}
 
