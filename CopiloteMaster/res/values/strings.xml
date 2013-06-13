@@ -113,6 +113,8 @@
     <string name="previous">Previous</string>
     <string name="close">Close</string>
     
+    <string name="message_google_maps_introuvable">Google Maps not installed ! Please download it from Google Play to be able to use the navigation feature.</string>
+    
     <string name="help_map_1">Click on this button to center the map to your position</string>
     <string name="help_map_2">Here, your real speed is displayed with the current GPS precision</string>
     <string name="help_map_3">Long click on the map to add a POI (e.g. start SS, assitance parc, ...)</string>
