@@ -16,7 +16,11 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.telephony.SmsManager;
+import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -123,242 +127,265 @@ public class NavigationFragment extends MySupportMapFragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		mainView = inflater.inflate(R.layout.navigation_layout, container,
-				false);
-
-		// POI
-		poi_types = new String[] {
-				getActivity().getString(R.string.poi_parc_ferme),
-				getActivity().getString(R.string.poi_parc_assistance),
-				getActivity().getString(R.string.poi_depart_es),
-				getActivity().getString(R.string.poi_arrivee_es),
-				getActivity().getString(R.string.poi_divers) };
-
-		// BDD
-		bdd = new ContactsBDD(getActivity());
-		pois_bdd = new PoisBDD(getActivity());
-
-		selected_contacts = new ArrayList<String>();
-
-		// MAP
-		map = ((SupportMapFragment) ((MainActivity) getActivity())
-				.getSupportFragmentManager().findFragmentById(R.id.map))
-				.getMap();
-
-		layoutButtons = (LinearLayout) mainView
-				.findViewById(R.id.layoutButtonsMap);
-
-		speedText = (TextView) mainView.findViewById(R.id.speedTextMap);
-		accuracyText = (TextView) mainView.findViewById(R.id.accuracyTextMap);
-
-		// GPS
-		mGpsListener = new MyGPSListener();
-		mlocManager = (LocationManager) getActivity().getSystemService(
-				Context.LOCATION_SERVICE);
-		mlocManager.addGpsStatusListener(mGpsListener);
-
-		gpsButton = (ImageButton) mainView.findViewById(R.id.gpsButtonMap);
-		gpsButton.bringToFront();
-		gpsButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(
-						Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-				getActivity().startActivity(intent);
-			}
-		});
-
-		// RADAR
-		radarButton = (ImageButton) mainView.findViewById(R.id.radarButtonMap);
-
-		radarButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				initContacts(); // Initialisation des contacts
-				if (contacts.isEmpty()) {
-					Toast.makeText(getActivity(), R.string.aucun_contacts,
-							Toast.LENGTH_SHORT).show();
-
-				} else {
-					// CONSTRUCTION DIALOG
-					contact_dialog = new AlertDialog.Builder(getActivity());
-					contact_dialog.setTitle(R.string.titre_choix_contact);
-					contact_dialog.setMultiChoiceItems(
-							// Selection multiple
-							contacts.toArray(new CharSequence[contacts.size()]),
-							null, new OnMultiChoiceClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which, boolean isChecked) {
-									// Selection d'un contact ou deselection
-									if (isChecked)
-										selected_contacts.add(contacts.get(
-												which).toString());
-									else
-										selected_contacts.remove(contacts.get(
-												which).toString());
-								}
-							});
-
-					// PARTAGE DU RADAR
-
-					contact_dialog.setPositiveButton(R.string.share_radar,
-							new OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									// CONSTRUCTION DU DIALOG
-									AlertDialog.Builder builder = new AlertDialog.Builder(
-											getActivity());
-									builder.setTitle(R.string.envoi_sms_title);
-									builder.setMessage(getActivity().getString(
-											R.string.confirmation_envoi_sms)
-											+ selected_contacts + " ?");
-									builder.setPositiveButton(
-											android.R.string.ok,
-											new OnClickListener() {
-
-												@Override
-												public void onClick(
-														DialogInterface dialog,
-														int which) {
-													for (String nb : selected_contacts) {
-														sendSms(nb
-																.split(SEPARATEUR)[1],
-																getActivity()
-																		.getString(
-																				R.string.message_sms)); // On
-														// envoi
-														// le
-														// sms
-													}
-													selected_contacts = new ArrayList<String>(); // on
-																									// vide
-																									// la
-																									// selection
-												}
-											});
-									builder.setNegativeButton(
-											android.R.string.cancel, null);
-									builder.show();
-
-								}
-							});
-
-					contact_dialog.show();
-					contact_dialog.setCancelable(true);
-					contact_dialog.setOnCancelListener(new OnCancelListener() {
-
-						@Override
-						public void onCancel(DialogInterface dialog) {
-							selected_contacts = new ArrayList<String>();// on
-							// vide
-							// la
-							// selection
-						}
-					});
-				}
-			}
-		});
-
-		layoutButtons.bringToFront(); // Pour voir le layout par dessus la map
-
-		if (map != null) {
-			// GEOLOCALISATION API V2
-			map.setMyLocationEnabled(true);
-			map.setOnMyLocationChangeListener(this);
-			map.setTrafficEnabled(true);
-			// Ajout d'un POI au longClick
-			map.setOnMapLongClickListener(new OnMapLongClickListener() {
-
-				@Override
-				public void onMapLongClick(final LatLng position) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							getActivity());
-					builder.setTitle(R.string.poi_title);
-					builder.setItems(poi_types, new OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// Construction du POI
-							map.addMarker(new MarkerOptions()
-									.position(position)
-									.title(poi_types[which])
-									.icon(BitmapDescriptorFactory
-											.fromResource(poi_icons[which])));
-							POI p = new POI(which, position);
-							savePOI(p);
-						}
-
-					});
-					builder.show();
-					builder.setCancelable(true);
-					builder.setNeutralButton(android.R.string.cancel, null);
-
-				}
-			});
-			// Action au clic sur le POI
-			map.setOnMarkerClickListener(new OnMarkerClickListener() {
-
-				@Override
-				public boolean onMarkerClick(final Marker marker) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							getActivity());
-					builder.setTitle(marker.getTitle());
-					builder.setCancelable(true);
-					builder.setNeutralButton(android.R.string.cancel, null);
-					builder.setNegativeButton(R.string.erase_poi,
-							new OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									deletePOI(marker);
-								}
-							});
-					builder.setPositiveButton(R.string.navigate_to,
-							new OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									try {
-										Intent intent = new Intent(
-												android.content.Intent.ACTION_VIEW,
-												Uri.parse("google.navigation:q="
-														+ marker.getPosition().latitude
-														+ ","
-														+ marker.getPosition().longitude));
-										startActivity(intent);
-									} catch (Exception e) {
-										AlertDialog.Builder d = new AlertDialog.Builder(
-												getActivity());
-										d.setMessage(R.string.message_google_maps_introuvable);
-										d.setPositiveButton(
-												getString(R.string.close),
-												null);
-										d.show();
-									}
-								}
-							});
-					builder.show();
-
-					return false;
-				}
-			});
-
-			// Initialisation des POIS
-			initPOIs();
+		// TEST si on a deja une instance de la vue alors on defonce tout
+		if (mainView != null) {
+			ViewGroup parent = (ViewGroup) mainView.getParent();
+			if (parent != null)
+				parent.removeView(mainView);
 		}
+		// Et on refait
+		try {
+			mainView = inflater.inflate(R.layout.navigation_layout, container,
+					false);
 
-		setHasOptionsMenu(true);
+			// POI
+			poi_types = new String[] {
+					getActivity().getString(R.string.poi_parc_ferme),
+					getActivity().getString(R.string.poi_parc_assistance),
+					getActivity().getString(R.string.poi_depart_es),
+					getActivity().getString(R.string.poi_arrivee_es),
+					getActivity().getString(R.string.poi_divers) };
+
+			// BDD
+			bdd = new ContactsBDD(getActivity());
+			pois_bdd = new PoisBDD(getActivity());
+
+			selected_contacts = new ArrayList<String>();
+
+			layoutButtons = (LinearLayout) mainView
+					.findViewById(R.id.layoutButtonsMap);
+
+			speedText = (TextView) mainView.findViewById(R.id.speedTextMap);
+			accuracyText = (TextView) mainView
+					.findViewById(R.id.accuracyTextMap);
+
+			// GPS
+			mGpsListener = new MyGPSListener();
+			mlocManager = (LocationManager) getActivity().getSystemService(
+					Context.LOCATION_SERVICE);
+			mlocManager.addGpsStatusListener(mGpsListener);
+
+			gpsButton = (ImageButton) mainView.findViewById(R.id.gpsButtonMap);
+			gpsButton.bringToFront();
+			gpsButton.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(
+							Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+					getActivity().startActivity(intent);
+				}
+			});
+
+			// RADAR
+			radarButton = (ImageButton) mainView
+					.findViewById(R.id.radarButtonMap);
+
+			radarButton.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					initContacts(); // Initialisation des contacts
+					if (contacts.isEmpty()) {
+						Toast.makeText(getActivity(), R.string.aucun_contacts,
+								Toast.LENGTH_SHORT).show();
+
+					} else {
+						// CONSTRUCTION DIALOG
+						contact_dialog = new AlertDialog.Builder(getActivity());
+						contact_dialog.setTitle(R.string.titre_choix_contact);
+						contact_dialog.setMultiChoiceItems(
+								// Selection multiple
+								contacts.toArray(new CharSequence[contacts
+										.size()]), null,
+								new OnMultiChoiceClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which, boolean isChecked) {
+										// Selection d'un contact ou deselection
+										if (isChecked)
+											selected_contacts.add(contacts.get(
+													which).toString());
+										else
+											selected_contacts.remove(contacts
+													.get(which).toString());
+									}
+								});
+
+						// PARTAGE DU RADAR
+
+						contact_dialog.setPositiveButton(R.string.share_radar,
+								new OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// CONSTRUCTION DU DIALOG
+										AlertDialog.Builder builder = new AlertDialog.Builder(
+												getActivity());
+										builder.setTitle(R.string.envoi_sms_title);
+										builder.setMessage(getActivity()
+												.getString(
+														R.string.confirmation_envoi_sms)
+												+ selected_contacts + " ?");
+										builder.setPositiveButton(
+												android.R.string.ok,
+												new OnClickListener() {
+
+													@Override
+													public void onClick(
+															DialogInterface dialog,
+															int which) {
+														for (String nb : selected_contacts) {
+															sendSms(nb
+																	.split(SEPARATEUR)[1],
+																	getActivity()
+																			.getString(
+																					R.string.message_sms)); // On
+															// envoi
+															// le
+															// sms
+														}
+														selected_contacts = new ArrayList<String>(); // on
+																										// vide
+																										// la
+																										// selection
+													}
+												});
+										builder.setNegativeButton(
+												android.R.string.cancel, null);
+										builder.show();
+
+									}
+								});
+
+						contact_dialog.show();
+						contact_dialog.setCancelable(true);
+						contact_dialog
+								.setOnCancelListener(new OnCancelListener() {
+
+									@Override
+									public void onCancel(DialogInterface dialog) {
+										selected_contacts = new ArrayList<String>();// on
+										// vide
+										// la
+										// selection
+									}
+								});
+					}
+				}
+			});
+
+			layoutButtons.bringToFront(); // Pour voir le layout par dessus la
+											// map
+
+			setHasOptionsMenu(true);
+
+			// MAP
+			map = ((SupportMapFragment) ((MainActivity) getActivity())
+					.getSupportFragmentManager().findFragmentById(R.id.map))
+					.getMap();
+			if (map != null) {
+				// GEOLOCALISATION API V2
+				map.setMyLocationEnabled(true);
+				map.setOnMyLocationChangeListener(this);
+				map.setTrafficEnabled(true);
+				// Ajout d'un POI au longClick
+				map.setOnMapLongClickListener(new OnMapLongClickListener() {
+
+					@Override
+					public void onMapLongClick(final LatLng position) {
+						AlertDialog.Builder builder = new AlertDialog.Builder(
+								getActivity());
+						builder.setTitle(R.string.poi_title);
+						builder.setItems(poi_types, new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// Construction du POI
+								map.addMarker(new MarkerOptions()
+										.position(position)
+										.title(poi_types[which])
+										.icon(BitmapDescriptorFactory
+												.fromResource(poi_icons[which])));
+								POI p = new POI(which, position);
+								savePOI(p);
+							}
+
+						});
+						builder.show();
+						builder.setCancelable(true);
+						builder.setNeutralButton(android.R.string.cancel, null);
+
+					}
+				});
+				// Action au clic sur le POI
+				map.setOnMarkerClickListener(new OnMarkerClickListener() {
+
+					@Override
+					public boolean onMarkerClick(final Marker marker) {
+						AlertDialog.Builder builder = new AlertDialog.Builder(
+								getActivity());
+						builder.setTitle(marker.getTitle());
+						builder.setCancelable(true);
+						builder.setNeutralButton(android.R.string.cancel, null);
+						builder.setNegativeButton(R.string.erase_poi,
+								new OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										deletePOI(marker);
+									}
+								});
+						builder.setPositiveButton(R.string.navigate_to,
+								new OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										try {
+											Intent intent = new Intent(
+													android.content.Intent.ACTION_VIEW,
+													Uri.parse("google.navigation:q="
+															+ marker.getPosition().latitude
+															+ ","
+															+ marker.getPosition().longitude));
+											startActivity(intent);
+										} catch (Exception e) {
+											AlertDialog.Builder d = new AlertDialog.Builder(
+													getActivity());
+											d.setMessage(R.string.message_google_maps_introuvable);
+											d.setPositiveButton(
+													getString(R.string.close),
+													null);
+											d.show();
+										}
+									}
+								});
+						builder.show();
+
+						return false;
+					}
+				});
+
+				// Initialisation des POIS
+				initPOIs();
+			}
+		} catch (InflateException e) {
+			((MainActivity) getActivity()).reloadMap();
+		}
 
 		// récupérer la map
 		return mainView;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onViewCreated(view, savedInstanceState);
 	}
 
 	/**
@@ -418,6 +445,12 @@ public class NavigationFragment extends MySupportMapFragment implements
 		// Si tout se passe bien navette
 		if (res > 0) {
 			marker.remove(); // Suppression du marker
+			Log.e("POI", "Suppression OK du POI : " + marker.getPosition());
+			Log.e("POI", "BBD : " + pois_bdd.getAllPOIs());
+		} else {
+			Log.e("POI",
+					"Erreur à la suppression du POI : " + marker.getPosition());
+			Log.e("POI", "BBD : " + pois_bdd.getAllPOIs());
 		}
 
 		pois_bdd.close();
