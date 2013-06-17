@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,6 +103,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onStop() {
 		super.onStop();
+
 		AnalyticsManager.stop(this);
 	}
 
@@ -308,8 +310,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		Intent i = new Intent(MainActivity.this, PointageService.class);
 		startService(i);
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
-		AnalyticsManager.trackScreen(MainActivity.this,
-				this.getClass().getName());
+		AnalyticsManager.trackScreen(MainActivity.this, this.getClass()
+				.getName());
 		AnalyticsManager.dispatch();
 
 	}
@@ -645,6 +647,18 @@ public class MainActivity extends SherlockFragmentActivity implements
 	 */
 	private void loadPreferences() {
 		offset = sharedPrefs.getLong(TAG_PREF_HOUR, 0);
+	}
+
+	public void reloadMap() {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment map = getSupportFragmentManager().findFragmentById(R.id.map);
+		if (map != null)
+			ft.remove(map);
+		else {
+			mapFragment = new NavigationFragment();
+			ft.add(R.id.container, mapFragment);
+		}
+		ft.commit();
 	}
 
 }

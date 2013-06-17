@@ -164,15 +164,15 @@ public class TimeFragment extends SherlockFragment {
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
 			progress.setVisibility(View.GONE);
-			web.setVisibility(View.VISIBLE);
-			web.bringToFront();
+//			web.setVisibility(View.VISIBLE);
+//			web.bringToFront();
 		}
 
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
 			progress.setVisibility(View.VISIBLE);
-			web.setVisibility(View.GONE);
+//			web.setVisibility(View.GONE);
 		}
 
 		@Override
