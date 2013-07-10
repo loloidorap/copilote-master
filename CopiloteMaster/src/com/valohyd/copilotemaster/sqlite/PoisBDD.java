@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.valohyd.copilotemaster.models.POI;
@@ -58,9 +59,27 @@ public class PoisBDD {
 
 	public int removePOIWithLocation(LatLng location) {
 		// Suppression d'un contact de la BDD grâce à l'ID
-		String where = COL_LAT + "= " + "? AND " + COL_LONG + "= " + "?";
+		String where = COL_LAT + "= ? AND " + COL_LONG + "= ?";
+		Log.d("POI", "" + location.latitude + "," + location.longitude);
 		String whereArgs[] = { "" + location.latitude, "" + location.longitude };
-		return bdd.delete(TABLE_POIS, where, whereArgs);
+		int deleted = bdd.delete(TABLE_POIS, where, whereArgs);
+		
+		// si pas de POI supprimés : 2e technique
+		if(deleted == 0){
+		    ArrayList<POI> pois = getAllPOIs();
+		    // get the POI to delete
+		    for(POI poi : pois){
+		        if(poi.getLocation().latitude == location.latitude && 
+		           poi.getLocation().longitude == location.longitude){
+		            // delete it
+		            where = COL_ID + "= ?";
+		            Log.d("POI", "seconde methode");
+		            String whereArgs2[] = { "" + poi.getId() };
+		            return bdd.delete(TABLE_POIS, where, whereArgs2);
+		        }
+		    }
+		}
+		return deleted;
 	}
 
 	/**
