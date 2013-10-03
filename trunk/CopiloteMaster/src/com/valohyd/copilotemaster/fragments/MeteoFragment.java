@@ -74,7 +74,12 @@ public class MeteoFragment extends Fragment {
 					public boolean onEditorAction(TextView v, int actionId,
 							KeyEvent event) {
 						if (actionId == EditorInfo.IME_ACTION_DONE) {
-							performSearch();
+							if(NetworkUtils.networkConnectionAvailable(getActivity())){
+								performSearch();
+							}
+							else{
+								Toast.makeText(getActivity(), "Aucune connexion internet disponible !", Toast.LENGTH_LONG).show();
+							}
 							return true;
 						}
 						return false;
