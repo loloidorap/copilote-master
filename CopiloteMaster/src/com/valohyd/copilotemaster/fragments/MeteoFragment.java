@@ -31,8 +31,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.valohyd.copilotemaster.R;
+import com.valohyd.copilotemaster.utils.NetworkUtils;
 
 public class MeteoFragment extends Fragment {
 
@@ -83,7 +85,12 @@ public class MeteoFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				performSearch();
+				if(NetworkUtils.networkConnectionAvailable(getActivity())){
+					performSearch();
+				}
+				else{
+					Toast.makeText(getActivity(), "Aucune connexion internet disponible !", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 
