@@ -17,13 +17,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -33,6 +28,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.valohyd.copilotemaster.MainActivity;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.service.PointageService;
@@ -43,7 +43,7 @@ import com.valohyd.copilotemaster.service.PointageService;
  * @author parodi
  * 
  */
-public class PointageFragment extends Fragment {
+public class PointageFragment extends SherlockFragment {
 
 	private View mainView;
 

@@ -22,15 +22,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.Tab;
-import android.support.v7.app.ActionBar.TabListener;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -42,6 +34,14 @@ import android.widget.TimePicker.OnTimeChangedListener;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar.TabListener;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.valohyd.copilotemaster.fragments.ChronoFragment;
 import com.valohyd.copilotemaster.fragments.ContactFragment;
 import com.valohyd.copilotemaster.fragments.MeteoFragment;
@@ -52,7 +52,9 @@ import com.valohyd.copilotemaster.service.PointageService;
 import com.valohyd.copilotemaster.utils.AnalyticsManager;
 import com.valohyd.copilotemaster.utils.MyDigitalClock;
 
-public class MainActivity extends ActionBarActivity implements TabListener {
+
+
+public class MainActivity extends SherlockFragmentActivity implements TabListener {
 
 	public static boolean mMapIsTouched = false;
 
@@ -605,7 +607,7 @@ public class MainActivity extends ActionBarActivity implements TabListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.settings, menu);
 		if (mapFragment != null && mapFragment.isVisible()) {
 			MenuItem item = menu.findItem(R.id.help);
