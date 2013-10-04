@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.valohyd.copilotemaster.R;
 import com.valohyd.copilotemaster.models.Contact;
 import com.valohyd.copilotemaster.sqlite.ContactsBDD;
@@ -36,7 +36,7 @@ import com.valohyd.copilotemaster.sqlite.ContactsBDD;
  * @author parodi
  * 
  */
-public class ContactFragment extends Fragment {
+public class ContactFragment extends SherlockFragment {
 
 	ContactsBDD bdd;
 
