@@ -124,8 +124,17 @@
                 android:text="JakeWharton/ActionBarSherlock"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="Turkish translation : Ünsal Deniz (www.unsaldeniz.com)"
+                android:autoLink="web"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
         </LinearLayout>
-        JakeWharton
+        
     </LinearLayout>
 
 </ScrollView>
