@@ -3,7 +3,9 @@ package com.valohyd.copilotemaster.fragments;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -61,7 +64,6 @@ public class ContactFragment extends SherlockFragment {
 
 		mainView = inflater.inflate(R.layout.contact_layout, container, false);
 
-
 		// BDD
 		bdd = new ContactsBDD(getActivity());
 
@@ -72,24 +74,116 @@ public class ContactFragment extends SherlockFragment {
 
 		mAdapter = new MultiSelectionAdapter(getActivity(), contacts);
 		list.setAdapter(mAdapter);
-		
-		//SMS Group Button
-		smsGroupButton = (Button)mainView.findViewById(R.id.smsGroupButton);
+
+		// SMS Group Button
+		smsGroupButton = (Button) mainView.findViewById(R.id.smsGroupButton);
 		smsGroupButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				ArrayList<Contact> mArraySelected = mAdapter
-						.getCheckedItems();
+				ArrayList<Contact> mArraySelected = mAdapter.getCheckedItems();
 				StringBuilder builder = new StringBuilder();
-				for(Contact c : mArraySelected){
-					builder.append(c.getNumber().trim()+";");
+				for (Contact c : mArraySelected) {
+					builder.append(c.getNumber().trim() + ";");
 				}
-				Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+				final Intent smsIntent = new Intent(Intent.ACTION_VIEW);
 				smsIntent.setType("vnd.android-dir/mms-sms");
 				smsIntent.putExtra("address", builder.toString());
-				// smsIntent.putExtra("sms_body","Body of Message");
-				getActivity().startActivity(smsIntent);
+
+				// Dialog de choix : message rapides ou normal
+				AlertDialog.Builder dialogChoix = new AlertDialog.Builder(
+						getActivity());
+				dialogChoix.setIcon(R.drawable.ic_launcher);
+				dialogChoix.setTitle(R.string.quick_messages_dialog_title);
+				final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+						getActivity(), android.R.layout.select_dialog_item);
+				arrayAdapter.add("Normal");
+				arrayAdapter.add("Messages rapide");
+				dialogChoix.setNegativeButton(R.string.close,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss();
+							}
+						});
+
+				dialogChoix.setAdapter(arrayAdapter,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								//Si on a choisi normal on lance l'app de message directement
+								if (which == 0) {
+									ArrayList<Contact> mArraySelected = mAdapter
+											.getCheckedItems();
+									StringBuilder builder = new StringBuilder();
+									for (Contact c : mArraySelected) {
+										builder.append(c.getNumber().trim()
+												+ ";");
+									}
+									Intent smsIntent = new Intent(
+											Intent.ACTION_VIEW);
+									smsIntent
+											.setType("vnd.android-dir/mms-sms");
+									smsIntent.putExtra("address",
+											builder.toString());
+									smsIntent.putExtra("sms_body",":");
+									getActivity().startActivity(smsIntent);
+								}
+								//Sinon on montre les messages rapide
+								else {
+									AlertDialog.Builder dialogMessages = new AlertDialog.Builder(
+											getActivity());
+									String[] quick_messages_array = getResources().getStringArray(R.array.quick_messages);
+									dialogMessages
+											.setIcon(R.drawable.ic_launcher);
+									dialogMessages
+											.setTitle(R.string.quick_messages_dialog_title);
+									final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+											getActivity(),
+											android.R.layout.select_dialog_item,quick_messages_array);
+									
+									dialogMessages
+											.setNegativeButton(
+													R.string.close,
+													new DialogInterface.OnClickListener() {
+
+														@Override
+														public void onClick(
+																DialogInterface dialog,
+																int which) {
+															dialog.dismiss();
+														}
+													});
+
+									dialogMessages
+											.setAdapter(
+													arrayAdapter,
+													new DialogInterface.OnClickListener() {
+
+														@Override
+														public void onClick(
+																DialogInterface dialog,
+																int which) {
+															String message = arrayAdapter
+																	.getItem(which);
+															smsIntent.putExtra(
+																	"sms_body",
+																	message);
+															getActivity()
+																	.startActivity(
+																			smsIntent);
+														}
+													});
+									dialogMessages.show();
+								}
+							}
+						});
+				dialogChoix.show();
+
 			}
 		});
 
@@ -387,13 +481,11 @@ public class ContactFragment extends SherlockFragment {
 				if (getCheckedItems().size() >= 2) {
 					smsGroupButton.setVisibility(View.VISIBLE);
 					addContactButton.setVisibility(View.GONE);
-				}
-				else if(getCheckedItems().size() == 1){
+				} else if (getCheckedItems().size() == 1) {
 					removeContactsButton.setVisibility(View.VISIBLE);
 					smsGroupButton.setVisibility(View.GONE);
 					addContactButton.setVisibility(View.GONE);
-				}
-				else {
+				} else {
 					removeContactsButton.setVisibility(View.GONE);
 					smsGroupButton.setVisibility(View.GONE);
 					addContactButton.setVisibility(View.VISIBLE);
