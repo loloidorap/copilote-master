@@ -10,6 +10,12 @@
     <string name="navigation_title">Harita</string>
     <string name="meteo_title">Hava Durumu</string>
     <string name="horaire_title">Zaman Kontrol</string>
+    
+    <!-- Quick messages -->
+    <string name="quick_message_ok">SS olur</string>
+    <string name="quick_message_pb_voiture">Araç ile yanlış bir şey, onarım gerekir</string>
+    <string name="quick_message_sortie_route">SS yoldan</string>
+    <string name="quick_message_crevaison">SS Delinme</string>
 
     <!-- Menu -->
     <string name="menu_settings">Ayarlar</string>
@@ -24,6 +30,7 @@
     <string name="gps_settings">Ayarlara git</string>
     <string name="resume_chrono">Devam Et</string>
     <string name="stop_chrono">Durdur</string>
+     <string name="quick_messages_dialog_title">Hızlı Mesaj</string>
     <string name="reset_chrono">Sıfırla</string>
     <string name="start_chrono">Başlat</string>
     <string name="erreur_suppression_contact">Hata, kişi silindi</string>

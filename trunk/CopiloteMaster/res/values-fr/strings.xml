@@ -11,6 +11,12 @@
     <string name="meteo_title">Météo</string>
     <string name="contacts_title">Contacts rapides</string>
 
+    <!-- Quick messages -->
+    <string name="quick_message_ok">ES ok</string>
+    <string name="quick_message_pb_voiture">Problème sur la voiture, préparez l\'assistance</string>
+    <string name="quick_message_sortie_route">Sortie de route dans l\'ES</string>
+    <string name="quick_message_crevaison">Crevaison dans l\'ES</string>
+    
     <!-- Menu -->
     <string name="menu_settings">Paramètres</string>
     <string name="close_app">Quitter l\'application</string>
@@ -24,6 +30,7 @@
     <string name="gps_settings">Aller dans les paramètres</string>
     <string name="resume_chrono">Reprendre</string>
     <string name="stop_chrono">Arrêter</string>
+     <string name="quick_messages_dialog_title">Messages Rapides</string>
     <string name="reset_chrono">Réinitialiser</string>
     <string name="start_chrono">Démarrer</string>
     <string name="erreur_suppression_contact">Erreur suppression du contact</string>
