@@ -30,7 +30,8 @@
     <string name="gps_settings">Aller dans les paramètres</string>
     <string name="resume_chrono">Reprendre</string>
     <string name="stop_chrono">Arrêter</string>
-     <string name="quick_messages_dialog_title">Messages Rapides</string>
+    <string name="choice_messages_dialog_title">Type de messagerie</string>
+    <string name="quick_messages_dialog_title">Messages Rapides</string>
     <string name="reset_chrono">Réinitialiser</string>
     <string name="start_chrono">Démarrer</string>
     <string name="erreur_suppression_contact">Erreur suppression du contact</string>
