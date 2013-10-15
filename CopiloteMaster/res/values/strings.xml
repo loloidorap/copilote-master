@@ -29,6 +29,7 @@
     <string name="gps_off">GPS disabled. Do you want to enable it ?</string>
     <string name="gps_settings">Go to settings</string>
     <string name="resume_chrono">Resume</string>
+    <string name="choice_messages_dialog_title">Choose message type</string>
     <string name="quick_messages_dialog_title">Quick Messages</string>
     <string name="stop_chrono">Stop</string>
     <string name="reset_chrono">Reset</string>

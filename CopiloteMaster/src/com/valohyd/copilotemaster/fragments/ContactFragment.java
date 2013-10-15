@@ -94,7 +94,7 @@ public class ContactFragment extends SherlockFragment {
 				AlertDialog.Builder dialogChoix = new AlertDialog.Builder(
 						getActivity());
 				dialogChoix.setIcon(R.drawable.ic_launcher);
-				dialogChoix.setTitle(R.string.quick_messages_dialog_title);
+				dialogChoix.setTitle(R.string.choice_messages_dialog_title);
 				final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
 						getActivity(), android.R.layout.select_dialog_item);
 				arrayAdapter.add("Normal");
