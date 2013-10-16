@@ -89,101 +89,7 @@ public class ContactFragment extends SherlockFragment {
 				final Intent smsIntent = new Intent(Intent.ACTION_VIEW);
 				smsIntent.setType("vnd.android-dir/mms-sms");
 				smsIntent.putExtra("address", builder.toString());
-
-				// Dialog de choix : message rapides ou normal
-				AlertDialog.Builder dialogChoix = new AlertDialog.Builder(
-						getActivity());
-				dialogChoix.setIcon(R.drawable.ic_launcher);
-				dialogChoix.setTitle(R.string.choice_messages_dialog_title);
-				final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-						getActivity(), android.R.layout.select_dialog_item);
-				arrayAdapter.add("Normal");
-				arrayAdapter.add("Messages rapide");
-				dialogChoix.setNegativeButton(R.string.close,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
-
-				dialogChoix.setAdapter(arrayAdapter,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								//Si on a choisi normal on lance l'app de message directement
-								if (which == 0) {
-									ArrayList<Contact> mArraySelected = mAdapter
-											.getCheckedItems();
-									StringBuilder builder = new StringBuilder();
-									for (Contact c : mArraySelected) {
-										builder.append(c.getNumber().trim()
-												+ ";");
-									}
-									Intent smsIntent = new Intent(
-											Intent.ACTION_VIEW);
-									smsIntent
-											.setType("vnd.android-dir/mms-sms");
-									smsIntent.putExtra("address",
-											builder.toString());
-									smsIntent.putExtra("sms_body",":");
-									getActivity().startActivity(smsIntent);
-								}
-								//Sinon on montre les messages rapide
-								else {
-									AlertDialog.Builder dialogMessages = new AlertDialog.Builder(
-											getActivity());
-									String[] quick_messages_array = getResources().getStringArray(R.array.quick_messages);
-									dialogMessages
-											.setIcon(R.drawable.ic_launcher);
-									dialogMessages
-											.setTitle(R.string.quick_messages_dialog_title);
-									final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-											getActivity(),
-											android.R.layout.select_dialog_item,quick_messages_array);
-									
-									dialogMessages
-											.setNegativeButton(
-													R.string.close,
-													new DialogInterface.OnClickListener() {
-
-														@Override
-														public void onClick(
-																DialogInterface dialog,
-																int which) {
-															dialog.dismiss();
-														}
-													});
-
-									dialogMessages
-											.setAdapter(
-													arrayAdapter,
-													new DialogInterface.OnClickListener() {
-
-														@Override
-														public void onClick(
-																DialogInterface dialog,
-																int which) {
-															String message = arrayAdapter
-																	.getItem(which);
-															smsIntent.putExtra(
-																	"sms_body",
-																	message);
-															getActivity()
-																	.startActivity(
-																			smsIntent);
-														}
-													});
-									dialogMessages.show();
-								}
-							}
-						});
-				dialogChoix.show();
-
+				showDialogMessage(smsIntent);
 			}
 		});
 
@@ -219,6 +125,89 @@ public class ContactFragment extends SherlockFragment {
 			}
 		});
 		return mainView;
+	}
+
+	protected void showDialogMessage(final Intent smsIntent) {
+		// Dialog de choix : message rapides ou normal
+		AlertDialog.Builder dialogChoix = new AlertDialog.Builder(
+				getActivity());
+		dialogChoix.setIcon(R.drawable.ic_launcher);
+		dialogChoix.setTitle(R.string.choice_messages_dialog_title);
+		final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+				getActivity(), android.R.layout.select_dialog_item);
+		arrayAdapter.add("Normal");
+		arrayAdapter.add("Messages rapide");
+		dialogChoix.setNegativeButton(R.string.close,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						dialog.dismiss();
+					}
+				});
+
+		dialogChoix.setAdapter(arrayAdapter,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						//Si on a choisi normal on lance l'app de message directement
+						if (which == 0) {
+							
+							getActivity().startActivity(smsIntent);
+						}
+						//Sinon on montre les messages rapide
+						else {
+							AlertDialog.Builder dialogMessages = new AlertDialog.Builder(
+									getActivity());
+							String[] quick_messages_array = getResources().getStringArray(R.array.quick_messages);
+							dialogMessages
+									.setIcon(R.drawable.ic_launcher);
+							dialogMessages
+									.setTitle(R.string.quick_messages_dialog_title);
+							final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+									getActivity(),
+									android.R.layout.select_dialog_item,quick_messages_array);
+							
+							dialogMessages
+									.setNegativeButton(
+											R.string.close,
+											new DialogInterface.OnClickListener() {
+
+												@Override
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+													dialog.dismiss();
+												}
+											});
+
+							dialogMessages
+									.setAdapter(
+											arrayAdapter,
+											new DialogInterface.OnClickListener() {
+
+												@Override
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+													String message = arrayAdapter
+															.getItem(which);
+													smsIntent.putExtra(
+															"sms_body",
+															message);
+													getActivity()
+															.startActivity(
+																	smsIntent);
+												}
+											});
+							dialogMessages.show();
+						}
+					}
+				});
+		dialogChoix.show();
 	}
 
 	/**
@@ -462,8 +451,9 @@ public class ContactFragment extends SherlockFragment {
 					smsIntent.setType("vnd.android-dir/mms-sms");
 					smsIntent.putExtra("address", mList.get(position)
 							.getNumber().trim());
+					showDialogMessage(smsIntent);
 					// smsIntent.putExtra("sms_body","Body of Message");
-					mContext.startActivity(smsIntent);
+					//mContext.startActivity(smsIntent);
 				}
 			});
 
