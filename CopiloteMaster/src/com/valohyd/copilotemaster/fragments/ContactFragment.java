@@ -86,10 +86,13 @@ public class ContactFragment extends SherlockFragment {
 				for (Contact c : mArraySelected) {
 					builder.append(c.getNumber().trim() + ";");
 				}
-				final Intent smsIntent = new Intent(Intent.ACTION_VIEW);
-				smsIntent.setType("vnd.android-dir/mms-sms");
-				smsIntent.putExtra("address", builder.toString());
+				final Intent smsIntent = new Intent( Intent.ACTION_VIEW, Uri.parse( "sms:" + 
+						builder.toString() ) );
 				showDialogMessage(smsIntent);
+				//final Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+				//smsIntent.setType("vnd.android-dir/mms-sms");
+				//smsIntent.putExtra("address", builder.toString());
+				//showDialogMessage(smsIntent);
 			}
 		});
 
@@ -452,11 +455,16 @@ public class ContactFragment extends SherlockFragment {
 
 				@Override
 				public void onClick(View v) {
-					Intent smsIntent = new Intent(Intent.ACTION_VIEW);
-					smsIntent.setType("vnd.android-dir/mms-sms");
-					smsIntent.putExtra("address", mList.get(position)
-							.getNumber().trim());
+					Intent smsIntent = new Intent( Intent.ACTION_VIEW, Uri.parse( "sms:" + 
+													mList.get(position).getNumber().trim() ) );
 					showDialogMessage(smsIntent);
+					//context.startActivity( intent );
+
+					//Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+					//smsIntent.setType("vnd.android-dir/mms-sms");
+					//smsIntent.putExtra("address", mList.get(position)
+					//		.getNumber().trim());
+					//showDialogMessage(smsIntent);
 					// smsIntent.putExtra("sms_body","Body of Message");
 					//mContext.startActivity(smsIntent);
 				}

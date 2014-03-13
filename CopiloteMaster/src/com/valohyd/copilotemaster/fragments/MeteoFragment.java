@@ -250,6 +250,7 @@ public class MeteoFragment extends SherlockFragment {
 					ids_blocks = new ArrayList<String>(Arrays.asList(s
 							.nextLine().split(";")));
 				}
+				s.close();
 			} catch (IOException ex) {
 				// there was some connection problem, or the file did not exist
 				ex.printStackTrace(); // for now, simply output it.
