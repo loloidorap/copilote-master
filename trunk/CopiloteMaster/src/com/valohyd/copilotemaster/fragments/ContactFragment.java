@@ -121,6 +121,11 @@ public class ContactFragment extends SherlockFragment {
 						removeContact(selected);
 					}
 					refreshAdapter();
+					
+					// afficher le bouton "ajouter contact"
+					removeContactsButton.setVisibility(View.GONE);
+					smsGroupButton.setVisibility(View.GONE);
+					addContactButton.setVisibility(View.VISIBLE);					
 				}
 			}
 		});
